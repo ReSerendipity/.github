@@ -69,6 +69,14 @@ on:
         required: false
         type: string
         default: 2.3.1
+      typecheck_extra_pip:
+        description: >-
+          typecheck job 额外 pip 包（空格分隔）。仅装「配置/插件加载所需的最小集合」，
+          如 Seed 的 pyproject plugins=["pydantic.mypy"] 需要 pydantic 可导入。
+          ⚠️ 每改一次本输入都等于换测量口径，必须同步重算该仓基线。
+        required: false
+        type: string
+        default: ''
       # ── 开关 ──
       include_tests:
         description: 是否运行覆盖率测试 job（false 时只跑类型门禁）
@@ -157,7 +165,11 @@ jobs:
           cache-dependency-path: ${{ inputs.pip_cache_dependency_path }}
 
       - name: Install mypy
-        run: pip install mypy==${{ inputs.mypy_version }}
+        run: |
+          pip install mypy==${{ inputs.mypy_version }}
+          if [ -n '${{ inputs.typecheck_extra_pip }}' ]; then
+            pip install ${{ inputs.typecheck_extra_pip }}
+          fi
 
       - name: Run mypy and enforce ratchet
         run: |
