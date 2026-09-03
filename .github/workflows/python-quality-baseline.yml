@@ -97,9 +97,11 @@ permissions:
 
 jobs:
   # ── 覆盖率门禁 ──────────────────────────────────────────────
+  # 注意：jobs.<id>.name 不支持 inputs 上下文（试点实测会原样显示占位符），
+  # 阈值信息放在步骤名与日志里，job 名保持静态。
   test-cov:
     if: inputs.include_tests
-    name: Test + Coverage (>= ${{ inputs.coverage_min }}%)
+    name: Test + Coverage
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
