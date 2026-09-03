@@ -1,0 +1,184 @@
+# 家族质量底线（reusable workflow）
+# ─────────────────────────────────────────────────────────────────────
+# 定位：四仓（Image_MultiModel / TTS_MultiModel / SeedVR2-lite /
+# MiniMax-H3-lite）共用的"底线门禁"统一实现。底线升级只改本文件，
+# 各仓通过 workflow_call 传参保留个性化阈值（覆盖率数字、类型基线等）。
+#
+# 底线三条（2026-09-03 家族标准对齐评审定稿）：
+#   1. 覆盖率：pytest --cov-fail-under 真实生效，禁止 `|| true` 吞门禁；
+#   2. 类型：mypy ratchet——阻断债务上升，不要求清零；基线文件缺失则零容忍；
+#   3. 失败即红：本文件所有步骤不使用 continue-on-error，门禁失败 = job 失败。
+#
+# 各仓调用示例（放入自己仓库的 .github/workflows/ 任一 yml）：
+#
+#   jobs:
+#     quality-baseline:
+#       uses: ReSerendipity/.github/.github/workflows/python-quality-baseline.yml@main
+#       with:
+#         package: app/integrated_app
+#         coverage_min: 65
+#         mypy_target: app/integrated_app
+#         mypy_baseline_file: .ci/mypy_baseline.txt
+#         requirements_file: requirements-lock.txt
+#       permissions:
+#         contents: read
+#
+# ⚠️ 维护约定（证据绑定）：
+#   - 修改本文件等于同时修改四个仓库的门禁行为，合并前须在至少一个
+#     试点仓跑绿；
+#   - mypy 版本升级必须连同各仓基线一起重算（口径见 typecheck 步骤注释）。
+name: Python Quality Baseline (family)
+
+on:
+  workflow_call:
+    inputs:
+      # ── 必填 ──
+      package:
+        description: 被测包路径（pytest --cov 与 mypy 的目标，如 app/integrated_app 或 backend）
+        required: true
+        type: string
+      # ── 覆盖率 ──
+      coverage_min:
+        description: 覆盖率下限（百分比数字，家族底线 50，各仓可上调）
+        required: false
+        type: number
+        default: 50
+      test_paths:
+        description: pytest 目标路径（空格分隔）
+        required: false
+        type: string
+        default: tests/
+      pytest_extra_args:
+        description: 追加的 pytest 参数（如 --ignore=tests/e2e -q）
+        required: false
+        type: string
+        default: ''
+      # ── 类型门禁（ratchet）──
+      mypy_target:
+        description: mypy 检查目标；留空则跳过 typecheck job
+        required: false
+        type: string
+        default: ''
+      mypy_baseline_file:
+        description: 基线文件（含一个整数）；文件不存在则按零容忍执行
+        required: false
+        type: string
+        default: .ci/mypy_baseline.txt
+      mypy_version:
+        description: 锁定的 mypy 版本（升级须同步重算各仓基线）
+        required: false
+        type: string
+        default: 2.3.1
+      # ── 开关 ──
+      include_tests:
+        description: 是否运行覆盖率测试 job（false 时只跑类型门禁）
+        required: false
+        type: boolean
+        default: true
+      # ── 环境 ──
+      python_version:
+        description: Python 版本
+        required: false
+        type: string
+        default: '3.12'
+      requirements_file:
+        description: 测试依赖安装来源（requirements/lock 文件路径）；留空则只装 pytest
+        required: false
+        type: string
+        default: ''
+      pip_cache_dependency_path:
+        description: pip 缓存 key 对应的依赖文件
+        required: false
+        type: string
+        default: requirements*.txt
+
+permissions:
+  contents: read
+
+jobs:
+  # ── 覆盖率门禁 ──────────────────────────────────────────────
+  test-cov:
+    if: inputs.include_tests
+    name: Test + Coverage (>= ${{ inputs.coverage_min }}%)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ inputs.python_version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python_version }}
+          cache: 'pip'
+          cache-dependency-path: ${{ inputs.pip_cache_dependency_path }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov
+          if [ -n "${{ inputs.requirements_file }}" ]; then
+            pip install -r "${{ inputs.requirements_file }}"
+          fi
+
+      # 注意：本步骤故意不加任何 `|| true`——历史上（TTS ci.yml 注释留案）
+      # 覆盖率门禁曾被 `|| true` 吞掉导致覆盖率 0% CI 仍绿。
+      - name: Run tests with coverage gate
+        run: >
+          pytest ${{ inputs.test_paths }}
+          --cov=${{ inputs.package }} --cov-branch
+          --cov-report=term-missing --cov-report=xml:coverage.xml
+          --cov-fail-under=${{ inputs.coverage_min }}
+          ${{ inputs.pytest_extra_args }}
+
+  # ── 类型门禁（mypy ratchet）──────────────────────────────────
+  # 阻断的是「债务上升」，不是「债务为零」。存量错误不要求一次性清零，
+  # 但任何人新增一处类型回归都会让本 job 变红。
+  # ⚠️ 基线与「本 job 只装 mypy、不装项目依赖」强耦合：第三方符号在 mypy
+  #    眼里是 Any，换 mypy 版本或改本 job 依赖集，必须用相同命令重新生成基线：
+  #      pip install mypy==<同版本>
+  #      mypy <target> --ignore-missing-imports --no-error-summary | grep -c 'error:'
+  typecheck:
+    if: inputs.mypy_target != ''
+    name: Typecheck (mypy ratchet)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ inputs.python_version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python_version }}
+          cache: 'pip'
+          cache-dependency-path: ${{ inputs.pip_cache_dependency_path }}
+
+      - name: Install mypy
+        run: pip install mypy==${{ inputs.mypy_version }}
+
+      - name: Run mypy and enforce ratchet
+        run: |
+          mypy ${{ inputs.mypy_target }} --ignore-missing-imports --no-error-summary > mypy.log 2>&1 || true
+          COUNT=$(grep -c 'error:' mypy.log || true)
+          COUNT=${COUNT:-0}
+          if [ -f '${{ inputs.mypy_baseline_file }}' ]; then
+            BASELINE=$(tr -d '[:space:]' < '${{ inputs.mypy_baseline_file }}')
+          else
+            echo "基线文件 ${{ inputs.mypy_baseline_file }} 不存在 → 零容忍（新仓/清零后固化模式）"
+            BASELINE=0
+          fi
+          if ! [ "$COUNT" -eq "$COUNT" ] 2>/dev/null || ! [ "$BASELINE" -eq "$BASELINE" ] 2>/dev/null; then
+            echo "::error::计数解析失败 (COUNT='$COUNT' BASELINE='$BASELINE')，门禁本身出错，拒绝放行"
+            exit 1
+          fi
+          echo "mypy 错误数: $COUNT（基线 $BASELINE）"
+          echo "### mypy: $COUNT errors (baseline $BASELINE)" >> "$GITHUB_STEP_SUMMARY"
+          head -n 60 mypy.log
+          if [ "$COUNT" -gt "$BASELINE" ]; then
+            echo "::error::类型债务上升：$BASELINE -> $COUNT。本门禁只降不升；如确需新增，请连同基线一起说明原因。"
+            exit 1
+          fi
+          if [ "$COUNT" -lt "$BASELINE" ]; then
+            echo "::warning::类型债务已降至 $COUNT，请把 ${{ inputs.mypy_baseline_file }} 从 $BASELINE 下调以固化成果。"
+          fi
