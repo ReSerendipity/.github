@@ -1,0 +1,20 @@
+name: 使用提问
+description: 使用上的疑问、配置求助等
+title: "[QUESTION] "
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: 你的问题
+      description: 请描述你的疑问，包括你已经尝试过的排查步骤
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 相关背景 / 配置
+      description: 项目版本、运行环境、相关配置等（移除敏感信息）
+    validations:
+      required: false

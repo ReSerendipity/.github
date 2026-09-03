@@ -10,6 +10,7 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
+| `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 
 使用规则：
 
