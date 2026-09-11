@@ -19,6 +19,9 @@ permissions:
 jobs:
   self-purify:
     name: 自净化检查
+    # 家族绿线约定：非阻塞在此实现（调用方 uses job 不允许 continue-on-error）。
+    # 任一检查失败会红该 step 并输出 ::error 注解，但 job/run 结论仍为 success。
+    continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
