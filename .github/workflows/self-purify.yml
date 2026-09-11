@@ -1,0 +1,54 @@
+name: Family Self-Purify Check
+
+# 家族「自净化」复用检查（2026-09-10 建立）。
+# 由各仓库 .github/workflows/self-purify.yml 以 workflow_call 接入。
+# 覆盖三类此前无人值守、只能靠人工审计的规则：
+#   ① 本地治理文档（docs/plans|project|_devarchive|agents|execution、LOCAL_RULES、FIX_LOG）被 git 跟踪
+#      注：docs/reports 与 docs/repo-analysis 中经人工审定发布的文档白名单放行（如分发执行总结）
+#   ② 根目录残留 CONTRIBUTING/CODE_OF_CONDUCT/SUPPORT（应继承 org 级 ReSerendipity/.github）
+#   ③ README 未引用 org 级仓库（组织级健康文档链接缺失）
+# 说明：AGENTS.md 为本地独享文件（gitignored），CI 拉取的检出中不存在，
+#       故其行数上限无法在此检查，由 AI 会话自检 + 本地钩子约束。
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  self-purify:
+    name: 自净化检查
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ① 本地治理文档不得被 git 跟踪
+        run: |
+          HITS=$(git ls-files | grep -E '^(docs/(plans|project|_devarchive|agents|execution)/|LOCAL_RULES\.md$|FIX_LOG\.md$)' \
+            | grep -vE '^docs/reports/(落地执行总结|执行对照表)-桌面分发与安全加固-20260910\.md$' || true)
+          if [ -n "$HITS" ]; then
+            echo "::error::以下本地治理文档被 git 跟踪（应 git rm --cached 且由 .gitignore 覆盖）："
+            echo "$HITS"
+            exit 1
+          fi
+          echo "OK：无本地治理文档被跟踪"
+
+      - name: ② 根目录健康文件应继承自 org ReSerendipity/.github
+        run: |
+          HITS=$(git ls-files -- 'CONTRIBUTING.md' 'CODE_OF_CONDUCT.md' 'SUPPORT.md')
+          if [ -n "$HITS" ]; then
+            echo "::error::根目录不应存在以下健康文件（继承自 ReSerendipity/.github）："
+            echo "$HITS"
+            exit 1
+          fi
+          echo "OK：健康文件由 org 级仓库提供"
+
+      - name: ③ README 必须引用 org 级仓库
+        run: |
+          if [ -f README.md ] && ! grep -q 'ReSerendipity/.github' README.md; then
+            echo "::error::README.md 未引用 org 级 ReSerendipity/.github（组织级健康文档链接缺失）"
+            exit 1
+          fi
+          echo "OK：README 已引用 org 级仓库"
