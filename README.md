@@ -12,6 +12,7 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
+| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则）、密钥备份模式、现网命名对照 |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 通用 Pull Request 检查清单 |
 
@@ -22,7 +23,7 @@
 - 本仓库本身不承载任何项目代码。
 - 主页简介由同名仓库 `ReSerendipity/ReSerendipity` 承载。本账号是个人账号，`profile/README.md` 属组织账号（Organization）专属机制，在个人账号下不会渲染，因此本仓库不保留该文件。
 
-治理约定细节见 `CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`。
+治理约定细节见 `REPOSITORY_GUIDELINES.md`（命名/分支/密钥备份规范）、`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`。
 
 ## 维护原则
 
