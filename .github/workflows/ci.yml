@@ -1,0 +1,42 @@
+# .github (org health): validate all reusable workflow definitions
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  actionlint:
+    name: Workflow lint (actionlint + YAML)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Install actionlint
+        run: |
+          bash <(curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          sudo mv actionlint /usr/local/bin/
+      - name: Lint all workflow files
+        run: actionlint -color .github/workflows/*.yml
+      - name: Validate YAML parses
+        run: |
+          python3 - <<'EOF'
+          import glob, sys, yaml
+          bad = []
+          for f in glob.glob('.github/workflows/*.yml'):
+              try:
+                  yaml.safe_load(open(f, encoding='utf-8'))
+              except Exception as e:
+                  bad.append(f'{f}: {e}')
+          if bad:
+              print('\n'.join(bad), file=sys.stderr)
+              sys.exit(1)
+          print(f'YAML OK ({len(glob.glob(".github/workflows/*.yml"))} files)')
+          EOF
