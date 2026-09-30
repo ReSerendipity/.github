@@ -25,6 +25,10 @@
 
 治理约定细节见 `REPOSITORY_GUIDELINES.md`（命名/分支/密钥备份规范）、`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`。
 
+## 复用工作流
+
+`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 默认维持非阻断兼容模式；调用仓完成规则核查后，可设置 `enforce_critical_checks: true`，将“本地治理文档不得被 git 跟踪”作为独立阻断门禁，其余健康检查仍保持告警性质。
+
 ## 维护原则
 
 - 默认文件保持通用，不写入某个项目独有的运行步骤或模型说明。

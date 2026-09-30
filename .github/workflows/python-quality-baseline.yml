@@ -13,7 +13,7 @@
 #
 #   jobs:
 #     quality-baseline:
-#       uses: ReSerendipity/.github/.github/workflows/python-quality-baseline.yml@main
+#       uses: ReSerendipity/.github/.github/workflows/python-quality-baseline.yml@<reviewed-commit-sha>
 #       with:
 #         package: app/integrated_app
 #         coverage_min: 65
@@ -22,6 +22,8 @@
 #         requirements_file: requirements-lock.txt
 #       permissions:
 #         contents: read
+#
+#   可复用工作流调用方应锁定已审阅的提交 SHA，不使用会漂移的 @main。
 #
 # ⚠️ 维护约定（证据绑定）：
 #   - 修改本文件等于同时修改四个仓库的门禁行为，合并前须在至少一个
@@ -114,10 +116,10 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python ${{ inputs.python_version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: ${{ inputs.python_version }}
           cache: 'pip'
@@ -155,10 +157,10 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python ${{ inputs.python_version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: ${{ inputs.python_version }}
           cache: 'pip'
@@ -173,9 +175,18 @@ jobs:
 
       - name: Run mypy and enforce ratchet
         run: |
-          mypy ${{ inputs.mypy_target }} --ignore-missing-imports --no-error-summary > mypy.log 2>&1 || true
+          if mypy ${{ inputs.mypy_target }} --ignore-missing-imports --no-error-summary > mypy.log 2>&1; then
+            MYPY_STATUS=0
+          else
+            MYPY_STATUS=$?
+          fi
           COUNT=$(grep -c 'error:' mypy.log || true)
           COUNT=${COUNT:-0}
+          if [ "$MYPY_STATUS" -gt 1 ] || { [ "$MYPY_STATUS" -eq 1 ] && [ "$COUNT" -eq 0 ]; }; then
+            echo "::error::mypy 执行失败 (exit $MYPY_STATUS)，拒绝将工具/运行时失败误计为零错误"
+            head -n 60 mypy.log
+            exit 1
+          fi
           if [ -f '${{ inputs.mypy_baseline_file }}' ]; then
             BASELINE=$(tr -d '[:space:]' < '${{ inputs.mypy_baseline_file }}')
           else
