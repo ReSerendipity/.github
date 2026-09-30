@@ -9,25 +9,52 @@ name: Family Self-Purify Check
 #   ③ README 未引用 org 级仓库（组织级健康文档链接缺失）
 # 说明：AGENTS.md 为本地独享文件（gitignored），CI 拉取的检出中不存在，
 #       故其行数上限无法在此检查，由 AI 会话自检 + 本地钩子约束。
+# 默认保留家族非阻塞语义。调用方审计并准备好阻断本地治理文档后，可传
+# enforce_critical_checks: true；只有该核心规则会进入独立阻断 job。
 
 on:
   workflow_call:
+    inputs:
+      enforce_critical_checks:
+        description: 是否将本地治理文档不得被跟踪设为阻断门禁（默认关闭以兼容现有仓库）
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
+  critical-governance:
+    if: inputs.enforce_critical_checks
+    name: 自净化核心规则（阻断）
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: 本地治理文档不得被 git 跟踪
+        run: |
+          HITS=$(git ls-files | grep -E '^(docs/(plans|project|_devarchive|agents|execution)/|LOCAL_RULES\.md$|FIX_LOG\.md$)' \
+            | grep -vE '^(docs/reports/(落地执行总结|执行对照表)-桌面分发与安全加固-20260910\.md|docs/execution/(RELEASE_VERIFICATION\.md|(执行对照表|落地执行总结)-桌面分发与安全加固-20260910\.md|依赖与安全跟踪机制-20260911\.md)|docs/project/(KNOWN_GOTCHAS\.md|AI_DEV_SOPS\.md))$' || true)
+          if [ -n "$HITS" ]; then
+            echo "::error::以下本地治理文档被 git 跟踪（应 git rm --cached 且由 .gitignore 覆盖）："
+            echo "$HITS"
+            exit 1
+          fi
+          echo "OK：无本地治理文档被跟踪"
+
   self-purify:
     name: 自净化检查
-    # 家族绿线约定：非阻塞在此实现（调用方 uses job 不允许 continue-on-error）。
-    # 任一检查失败会红该 step 并输出 ::error 注解，但 job/run 结论仍为 success。
+    # 保留现有家族兼容语义：其余健康检查继续告警但不阻断调用仓库。
     continue-on-error: true
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: ① 本地治理文档不得被 git 跟踪
+        if: ${{ !inputs.enforce_critical_checks }}
         run: |
           HITS=$(git ls-files | grep -E '^(docs/(plans|project|_devarchive|agents|execution)/|LOCAL_RULES\.md$|FIX_LOG\.md$)' \
             | grep -vE '^(docs/reports/(落地执行总结|执行对照表)-桌面分发与安全加固-20260910\.md|docs/execution/(RELEASE_VERIFICATION\.md|(执行对照表|落地执行总结)-桌面分发与安全加固-20260910\.md|依赖与安全跟踪机制-20260911\.md)|docs/project/(KNOWN_GOTCHAS\.md|AI_DEV_SOPS\.md))$' || true)
