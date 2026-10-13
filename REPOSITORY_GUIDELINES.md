@@ -137,5 +137,6 @@
 ## 9. 本地产物与依赖不进库（2026-10-13 新增）
 
 - 本地 agent 工作目录一律 ignore：`.qoder/`、`.workbuddy/`、`.workbuddy-ai/`、`.trae/`、`.zcode/` 等。
-- `node_modules/` 等依赖目录不入库；注意 **.gitignore 事后添加对已跟踪文件无效**，必须 `git rm -r --cached` 取消跟踪（参考 Image-Scrapers 2026-10-13 清理 3893 个文件）。
+- `node_modules/` 等依赖目录默认不入库；**例外**：私有仓可显式声明「全量备份」策略将依赖纳入版本管理（如 `Image-Scrapers`，其 `.gitignore` 注释中的策略记录为权威依据）。
+- 注意：`.gitignore` 规则对**已跟踪**文件无效——事后添加 ignore 规则不会取消跟踪；真实排除须 `git rm -r --cached`，但若该跟踪本身是仓级既定策略，应保持跟踪。
 - 运行时日志与扫描快照（`*.log`、`server.log`、`scan_run*.txt` 等）不入库，已有约定以各仓 ADR 为准。
