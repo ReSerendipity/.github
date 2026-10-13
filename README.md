@@ -12,7 +12,7 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则）、密钥备份模式、现网命名对照 |
+| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / docs/README.internal.md 对内不入库）、本地产物排除 |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 通用 Pull Request 检查清单 |
 
