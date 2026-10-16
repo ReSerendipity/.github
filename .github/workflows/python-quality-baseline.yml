@@ -1,7 +1,7 @@
 # 家族质量底线（reusable workflow）
 # ─────────────────────────────────────────────────────────────────────
-# 定位：四仓（Image_MultiModel / TTS_MultiModel / SeedVR2-lite /
-# MiniMax-H3-lite）共用的"底线门禁"统一实现。底线升级只改本文件，
+# 定位：四仓（Image-duoModel / TTS-MultiModel / SeedVR2-Lite /
+# MiniMax-H3-Lite）共用的"底线门禁"统一实现。底线升级只改本文件，
 # 各仓通过 workflow_call 传参保留个性化阈值（覆盖率数字、类型基线等）。
 #
 # 底线三条（2026-09-03 家族标准对齐评审定稿）：

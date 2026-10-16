@@ -45,7 +45,7 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（2026-10-13 更新）
+## 4. 现网仓库命名对照（2026-10-16 更新）
 
 ### 保留名（品牌/专有词，6 个）
 
@@ -58,11 +58,11 @@
 | ReSerendipity | public |
 | .github | public |
 
-### 短横线命名（27 个）
+### 短横线命名（32 个）
 
 | 仓库 | 可见性 |
 |---|---|
-| Image-MultiModel | public |
+| Image-duoModel | public |
 | TTS-MultiModel | public |
 | SeedVR2-Lite | public |
 | RTX-VSR-Lite | public |
@@ -77,6 +77,9 @@
 | ComfyUI-BatchPromptLoader | public |
 | Mooncake-Deconstruction | public |
 | Offer-Landing-Kit | public |
+| Android-IconAutoArrange | public |
+| Free-Model-Probe | public |
+| chatgpt-timezone-fix | public |
 | Bilibili-Follow-Manager | private |
 | Hugging-Face | private |
 | Image-Scrapers | private |
@@ -93,6 +96,12 @@
 | Prompt-Library | private |
 
 > 2026-10-13 变更：`agent-knowledge` → `Agent-Knowledge`、`prompt-library` → `Prompt-Library`（远程 + 本地均已改名，旧名保留重定向）。
+>
+> 2026-10-16 变更：`Image-MultiModel` → `Image-duoModel`（远程已改名，旧名保留重定向，本表此前未跟上）；补入此前完全未登记的 `Android-IconAutoArrange`、`Free-Model-Probe`、`chatgpt-timezone-fix`；本节标题条数由 27 修正为实际 32 行。
+>
+> 已知命名不合规待改名（远程改名需单独授权，检查脚本按此行豁免）：Image-duoModel、chatgpt-timezone-fix
+>
+> 取数口径：`GET /users/ReSerendipity/repos` 只返回公开仓，标为 `private` 的行无法由该端点证实或证伪，本轮未逐一复核（含三个 `-KeyBackup` 仓与 `Image-MultiModel-KeyBackup` 这条沿用旧项目名的条目）。任何"可见性/存在性"结论都要现场重取。
 
 ## 5. 变更流程
 
@@ -116,7 +125,7 @@
 - `.gitignore` 规则：`AGENTS.md`（无斜线模式，匹配任意深度子目录）。
 - 误入库后的恢复流程：`git rm --cached <file>` + `.gitignore` 补规则 + commit + push（本地文件保留）。
 - fresh clone / CI / 协作者环境中不存在 `AGENTS.md` 属**预期行为**；随仓库分发的 agent 权威入口为根 `README.md` 与 `.github/**`。
-- 口径统一基线：DraftPeek / SeedVR2-Lite / SpiritPal / TTS-MultiModel / Image-MultiModel / MiniMax-H3-Lite 长期执行；GalgameShell / Github-Repo-Scan / Image-Scrapers / Prompt-Library 的历史误入库已于 2026-10-13 清除。
+- 口径统一基线：DraftPeek / SeedVR2-Lite / SpiritPal / TTS-MultiModel / Image-duoModel / MiniMax-H3-Lite 长期执行；GalgameShell / Github-Repo-Scan / Image-Scrapers / Prompt-Library 的历史误入库已于 2026-10-13 清除。
 
 ## 8. README 双版本制度（2026-10-13 新增）
 

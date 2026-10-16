@@ -89,19 +89,34 @@ done <<EOF
 $(cut -f1 "$REMOTE_TSV")
 EOF
 
-# 差集 C：名称违反 §1（含下划线，或全小写），系统保留名除外。
+# 差集 C：名称违反 §1（含下划线，或某个短横线分段不以大写开头）。
+# 豁免来源有两个：§1 认可的系统保留名，以及 §4 里那行「已知命名不合规待改名」——
+# 后者把尚未处理的远程改名欠账显式记在文档里，避免检查器长期报红而被当成噪声忽略。
+DOC_EXEMPT=$(grep -oE '已知命名不合规待改名.*' "$GUIDELINES" 2>/dev/null | tail -1 |
+  sed 's/.*：//' | tr '、' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | grep -v '^$' || true)
+
 NONCONFORMING=""
 while IFS= read -r n; do
   [ -n "$n" ] || continue
   case "$n" in
     .*) continue ;;
-    *) echo "$EXEMPT_NAMES" | grep -qx "$n" && continue ;;
   esac
+  if echo "$EXEMPT_NAMES" | grep -qx "$n"; then continue; fi
+  if [ -n "$DOC_EXEMPT" ] && echo "$DOC_EXEMPT" | grep -qx "$n"; then continue; fi
   if echo "$n" | grep -q '_'; then
     NONCONFORMING="${NONCONFORMING}  - $n（含下划线，§1 禁止）\n"
-  elif echo "$n" | grep -qE '^[a-z0-9][a-z0-9.-]*$'; then
-    NONCONFORMING="${NONCONFORMING}  - $n（全小写，§1 要求 Train Case）\n"
+    continue
   fi
+  bad_seg=""
+  IFS='-' read -ra segs <<< "$n"
+  for s in "${segs[@]}"; do
+    [ -n "$s" ] || continue
+    case "$s" in
+      [A-Z]*) ;;
+      *) bad_seg="$s" ;;
+    esac
+  done
+  [ -n "$bad_seg" ] && NONCONFORMING="${NONCONFORMING}  - $n（分段「$bad_seg」未大写开头，§1 要求 Train Case）\n"
 done <<EOF
 $(printf '%s\n' "$REGISTRY_NAMES" "$REMOTE_ALL" | grep -v '^$' | sort -u)
 EOF
@@ -109,6 +124,9 @@ EOF
 echo "仓库注册表对照检查  owner=$OWNER  基准=GitHub API 实际仓名"
 echo "  远程取到 $REMOTE_N 个仓（其中公开 $(echo "$REMOTE_PUBLIC" | grep -c . || true) 个）；§4 表登记 $(printf '%s\n' "$ROWS" | grep -c . || true) 条"
 echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 private 的行无法被该端点证实，故不参与差集 A。"
+if [ -n "$DOC_EXEMPT" ]; then
+  echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
+fi
 echo ""
 
 rc=0
