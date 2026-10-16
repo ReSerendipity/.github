@@ -1,3 +1,7 @@
 
 # Qoder 本地评估产物（不入库，2026-10-13 与各仓统一）
 .qoder/
+
+# REPOSITORY_GUIDELINES.md §7：AGENTS.md 家族是本地维护者上下文，不入库不上传。
+# 无斜线模式，匹配任意深度子目录（根 AGENTS.md 与各模块级 AGENTS.md 一起覆盖）。
+AGENTS.md
