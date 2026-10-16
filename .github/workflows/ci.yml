@@ -64,3 +64,16 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: bash .github/scripts/check-signoff.sh "$BASE_SHA" "$HEAD_SHA"
+
+  # 给本仓自身承载的复用工作流一个真实执行载体：这两个文件都是 on: workflow_call，
+  # 本仓从不触发它们（远程运行史 total_count=0），而 python-quality-baseline.yml
+  # 自己要求「修改等于同时修改四个仓库的门禁行为，合并前须在至少一个试点仓跑绿」，
+  # 此前该要求在本仓没有任何载体，改动只能等下游第一次调用时才暴露问题。
+  # python-quality-baseline.yml 无法在此冒烟：它的 package 输入是必填，且 test-cov
+  # 跑 pytest --cov-fail-under、typecheck 跑 mypy ratchet，而本仓无 Python 包/测试，
+  # 硬套只会常红。仍留在待办（需带样例输入的试点仓）。
+  self-purify-smoke:
+    name: Reusable workflow smoke (self-purify)
+    uses: ./.github/workflows/self-purify.yml
+    with:
+      enforce_critical_checks: true
