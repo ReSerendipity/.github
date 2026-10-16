@@ -1,0 +1,3 @@
+# 仓库内 shell 脚本必须以 LF 落地：本机 core.autocrlf=true 会把检出文件转成 CRLF，
+# 而带 CR 的脚本在 bash 下会连行尾比较一起失效。
+*.sh text eol=lf
