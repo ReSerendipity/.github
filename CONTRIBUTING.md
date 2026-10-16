@@ -32,7 +32,13 @@
 git commit -s
 ```
 
-遗留 commit 可使用 `git commit --amend -s` 补上。DCO 是自动校验的（未经签名的提交会把对应 PR 标红）。
+遗留 commit 可使用 `git commit --amend -s` 补上。
+
+自动校验的实际覆盖范围**只有本仓库（`.github`）**：`.github/workflows/ci.yml` 的 `signoff`
+作业会检查本次改动引入的提交区间，未签名的提交会把对应 PR 标红，直接推送 `main` 同样变红。
+本文件是全账号继承的默认贡献指南，**下属仓库不会因此自动获得该作业**；需要门禁的仓库要自行接入。
+
+本地自查（推送前）：`bash .github/scripts/check-signoff.sh <base> <head>`，退出码非 0 即有缺签名的提交。
 
 ## 许可
 
