@@ -129,6 +129,11 @@
 - 误入库后的恢复流程：`git rm --cached <file>` + `.gitignore` 补规则 + commit + push（本地文件保留）。
 - fresh clone / CI / 协作者环境中不存在 `AGENTS.md` 属**预期行为**；随仓库分发的 agent 权威入口为根 `README.md` 与 `.github/**`。
 - 口径统一基线：DraftPeek / SeedVR2-Lite / SpiritPal / TTS-MultiModel / Image-duoModel / MiniMax-H3-Lite 长期执行；GalgameShell / Github-Repo-Scan / Image-Scrapers / Prompt-Library 的历史误入库已于 2026-10-13 清除。
+- **行数上限：300 行**（2026-10-17 定）。数值不是拍来的，取自本机 14 个根级第一方 `AGENTS.md` 的实测分布：`min=21 median=90.5 p90=163 max=724`，其中 13 个 ≤300、合规簇最大 257 —— 300 因此不会追溯性地把既有文件全判红，又仍是真实约束。
+  执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按本条规则 `AGENTS.md` 永不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
+  调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓没有 `AGENTS.md`，在此装钩子永远不触发，故本仓不预置）。
+  扫描口径：只算活动文件，自动排除归档/备份副本、生成目录，以及**嵌套 git 仓**（其内容归那个仓自己判，`--include-nested` 可显式纳入）。
+  现存欠账（2026-10-17 实测，脚本输出与此对账须一致）：`Prompt-Library/AGENTS.md` 724 行、`MiniMax-H3-Lite/comfy_kernel/AGENTS.md` 361 行。
 
 ## 8. README 双版本制度（2026-10-13 新增）
 
