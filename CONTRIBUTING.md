@@ -34,9 +34,15 @@ git commit -s
 
 遗留 commit 可使用 `git commit --amend -s` 补上。
 
-自动校验的实际覆盖范围**只有本仓库（`.github`）**：`.github/workflows/ci.yml` 的 `signoff`
-作业会检查本次改动引入的提交区间，未签名的提交会把对应 PR 标红，直接推送 `main` 同样变红。
-本文件是全账号继承的默认贡献指南，**下属仓库不会因此自动获得该作业**；需要门禁的仓库要自行接入。
+自动校验的**实际覆盖范围**（2026-10-17 现网核对）：
+
+- 本仓库：`.github/workflows/ci.yml` 的 `signoff` 作业检查本次引入的提交区间，未签名的提交会把 PR 标红，直推 `main` 同样变红。
+- 账号内其它仓库：**不是**靠继承本文件获得检查——默认健康文件只带文字、不带作业。各消费仓各自维护一份
+  `.github/workflows/dco.yml`（`pull_request` 触发，按**每个提交自己的作者邮箱**豁免机器提交），
+  与本仓的 `.github/scripts/check-signoff.sh` 是**两套独立实现**。因此改签名规则时必须两边一起核口径，
+  否则会出现同一句承诺、两种判定。
+- 本仓库的 `main` 已启用分支保护并要求 `Workflow lint`、`DCO sign-off`、`Reusable workflow smoke / 自净化核心规则（阻断）`
+  三项检查通过；但 `enforce_admins` 为关闭状态，即**账号本人仍可直推并绕过这三项**（与 §2「本人可直推」一致）。
 
 本地自查（推送前）：`bash .github/scripts/check-signoff.sh <base> <head>`，退出码非 0 即有缺签名的提交。
 

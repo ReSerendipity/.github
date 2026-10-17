@@ -28,12 +28,13 @@
 ## 2. 分支规范（Branch Convention）
 
 - 所有仓库默认分支统一为 **`main`**（不使用 `master`）。
-- `main` 分支受保护 —— **这是应然状态，不是已核验事实，须逐仓实测确认**：
-  - 截至 2026-10-17 实测，本仓 `.github` 的 `branches/main/protection` 返回 404 `Branch not protected`、`rulesets` 返回 `[]`，即服务端未配置任何保护（公开仓可用免费分支保护，补齐属远端写操作，需单独授权）。
+- `main` 分支受保护 —— **本仓已实际配置，其余仓库仍须逐仓实测确认**：
+  - 本仓 `.github`：2026-10-17 此前实测为 `404 Branch not protected` + `rulesets: []`（即毫无保护），现已配置经典分支保护并回读确认 `protected=true`，必需检查为 `Workflow lint (actionlint + YAML)`、`DCO sign-off (Signed-off-by)`、`Reusable workflow smoke (self-purify) / 自净化核心规则（阻断）` 三项，且禁止 force push 与删除分支。
+  - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述三项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
   - **账号本人（Doro / ReSerendipity）可直接推送**，跳过 PR 流程；
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
-  - 保护未实际配置时，上面两条只是文档约定，GitHub 侧不会拦截任何人直推 `main`，也不会把任何检查设为合并前提。
-  - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。
+  - 其它仓库在核到保护之前，上面两条只是文档约定，GitHub 侧不会拦截任何人直推 `main`，也不会把任何检查设为合并前提。
+  - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。
 - 功能开发使用独立分支（`feat/*`、`fix/*`、`ci/*`、`chore/*`），完成后合入 `main`。
 - 本地与远程命名保持一致；远程重命名后需同步本地 remote URL。
 
