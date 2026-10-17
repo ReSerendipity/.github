@@ -83,7 +83,7 @@
 | Offer-Landing-Kit | public |
 | Android-IconAutoArrange | public |
 | Free-Model-Probe | public |
-| chatgpt-timezone-fix | public |
+| ChatGPT-Timezone-Fix | public |
 | Bilibili-Follow-Manager | private |
 | Hugging-Face | private |
 | Image-Scrapers | private |
@@ -103,7 +103,10 @@
 >
 > 2026-10-16 变更：`Image-MultiModel` → `Image-duoModel`（远程已改名，旧名保留重定向，本表此前未跟上）；补入此前完全未登记的 `Android-IconAutoArrange`、`Free-Model-Probe`、`chatgpt-timezone-fix`；本节标题条数由 27 修正为实际 32 行。
 >
-> 已知命名不合规待改名（远程改名需单独授权，检查脚本按此行豁免）：Image-duoModel、chatgpt-timezone-fix
+> 2026-10-17 变更：`chatgpt-timezone-fix` → `ChatGPT-Timezone-Fix`（`gh repo rename`，同一仓库 id 1421498928，旧名保留重定向；本机无该仓克隆，故 §6 的目录同步三步不适用）。
+>
+> 已知命名不合规待改名（远程改名需单独授权，检查脚本按此行豁免）：Image-duoModel
+> 该项未一并改名的实测理由：改名请求发出时该仓 `pushed_at=2026-10-17T03:02:10Z`（数分钟前仍在被写入），且 `Image-duoModel → Image-DuoModel` 属**仅大小写不同**的改名——GitHub 对仓名大小写不敏感解析（`Image-DuoModel` 当前即解析到本仓），这种改名的重定向与本机凭据/目录行为风险高于普通改名。待确认无并发写入后再做。
 >
 > 取数口径：`GET /users/ReSerendipity/repos` 只返回公开仓，标为 `private` 的行无法由该端点证实或证伪，本轮未逐一复核（含三个 `-KeyBackup` 仓与 `Image-MultiModel-KeyBackup` 这条沿用旧项目名的条目）。任何"可见性/存在性"结论都要现场重取。
 
