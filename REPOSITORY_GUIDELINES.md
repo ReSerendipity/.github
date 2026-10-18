@@ -186,7 +186,7 @@
 
 - 版本号遵循 **SemVer** `MAJOR.MINOR.PATCH`，预发布用 `-alpha.N` / `-beta.N` / `-rc.N`。
 - CHANGELOG 遵循 **Keep a Changelog**：每次合并 `main` 在 `[Unreleased]` 追加，`feat→Added`、`fix→Fixed`、`refactor→Changed`；发版时 `[Unreleased]` → `[VERSION] - YYYY-MM-DD`。
-- **版本位须多点一致，漂一处即判红**。可参照的实现：TTS-MultiModel `tests/test_version_consistency.py::test_all_version_sites_agree` 逐条比对仓内跟踪的版本位；Image-DuoModel 以 `config.yaml` 顶层 `version` 为唯一权威位，并要求 `AGENTS.md` 与 `CHANGELOG.md` 跟随。
+- **版本位须多点一致，漂一处即判红**。可参照的实现：TTS-MultiModel `tests/test_version_consistency.py::test_all_version_sites_agree` 逐条比对仓内跟踪的版本位；Image-DuoModel 已恢复 release-please 自动（`version.txt` 自动改写、`config.yaml` 顶层 `version` 由人补齐），另需 `CHANGELOG.md` 跟随。
 - 发布链固定为：本地 `git tag v<X.Y.Z>` → `git push origin v<X.Y.Z>` → **远端**建 draft Release 并挂资产 → 人工审核后 `published`（DraftPeek 口径）。
 - **回滚**以 `git revert` 为主（保历史、可再 forward）。**重指向或删除 tag、移动任何远端 ref 属破坏性远端动作，须仓库所有者单独授权**——`release.yml` 由 `push: tags` 触发，移动已发布 tag 会当场重跑发布链，DraftPeek 历史上因此产出过混年代 Release 资产。
 
@@ -220,8 +220,8 @@
 - 能远端完成的部署动作 → **默认执行**（远端），无需另行确认；
 - 不能远端完成、且使用者**未明确提出**的部署动作 → **一律不做**：不主动在本机执行、不主动做远端化改造、不要求使用者配合改动本地环境。
 
-- 部署前扫描：镜像发布前须经 **Trivy**（`CRITICAL,HIGH`、`ignore-unfixed`），**默认阻断**；豁免须在 `.trivyignore.yaml` 逐条登记理由与 expiration。**2026-10-18 收敛结果**：TTS 与 SeedVR2 的 `docker-publish.yml` 均为阻断（`exit-code: '1'`）；SeedVR2 转阻断前实测该镜像在门禁口径下**零发现**（日志中无 CVE 行、无 `Total:` 行），故不需要任何存量豁免条目。**剩余差异**：MiniMax-H3-Lite 同一仓内两套口径并存——`trivy.yml` 阻断、`docker-scan.yml` 仍是报告模式（见 §10.6）。
-- SBOM / provenance：**推荐开启**。SeedVR2 已开 `provenance: true` + `sbom: true`；TTS 为 `provenance: false` 且未开 `sbom: true`，原因是其发布链是「build（`push: false`）→ Trivy 扫 → 手动 `docker push`」，attestation 只能由 buildx 在自身 push 时附加，且该镜像是单架构——**这是未采纳推荐口径的 WARN（理由已写入该仓文档），不是欠账**。
+- 部署前扫描：镜像发布前须经 **Trivy**（`CRITICAL,HIGH`、`ignore-unfixed`），**默认阻断**；豁免须在 `.trivyignore.yaml` 逐条登记理由与 expiration。**2026-10-18 收敛结果**：TTS 与 SeedVR2 的 `docker-publish.yml` 均为阻断（`exit-code: '1'`）；SeedVR2 转阻断前实测该镜像在门禁口径下**零发现**（日志中无 CVE 行、无 `Total:` 行），故不需要任何存量豁免条目。**2026-10-18 批 4 收敛**：MiniMax-H3-Lite 的 `docker-scan.yml` 亦已转阻断（PR #98），账号内镜像扫描已统一为阻断口径。
+- SBOM / provenance：**推荐开启**。SeedVR2-Lite 与 MiniMax-H3-Lite 用 buildx 内联字段（`provenance: true` + `sbom: true`）；TTS 因发布链是「build（`push: false`）→ Trivy 扫 → 手动 `docker push`」，buildx 内联 attestation 不可用，已改用 `actions/attest-sbom` + `attest-build-provenance` 绑定**已推送 digest**（机制等价替代，见 §10.6）。
 
 ### 10.5 发布验证产物
 
