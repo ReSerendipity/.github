@@ -12,7 +12,7 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / docs/README.internal.md 对内不入库）、本地产物排除 |
+| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / docs/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先） |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 通用 Pull Request 检查清单 |
 
@@ -27,7 +27,7 @@
 
 ## 复用工作流
 
-`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 默认维持非阻断兼容模式；调用仓完成规则核查后，可设置 `enforce_critical_checks: true`，将“本地治理文档不得被 git 跟踪”作为独立阻断门禁，其余健康检查仍保持告警性质。
+`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 默认维持非阻断兼容模式；调用仓完成规则核查后，可设置 `enforce_critical_checks: true`，将“本地治理文档不得被 git 跟踪”作为独立阻断门禁，其余健康检查仍保持告警性质。本仓 `ci.yml` 自身另有四项检查（工作流 lint、DCO 签名、复用工作流冒烟、§4 仓库对照表），其中 §4 对照另带 `schedule` 周检，用于捕捉账号内新建/改名/删除仓库造成的台账漂移。
 
 ## 维护原则
 

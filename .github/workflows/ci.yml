@@ -5,6 +5,11 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    # 周检（周一 03:00 UTC = 11:00 Asia/Shanghai）。§4 台账的漂移由本仓之外的动作引起
+    # （新建 / 改名 / 删除仓库），只在"本仓有改动"时触发会静默漏掉，故补一条定期触发。
+    # schedule 会唤醒本文件的所有作业，因此其余三个作业各自带 if 排除（见各自注释）。
+    - cron: '0 3 * * 1'
 
 permissions:
   contents: read
@@ -16,6 +21,8 @@ concurrency:
 jobs:
   actionlint:
     name: Workflow lint (actionlint + YAML)
+    # 与周期性对账无关：周检只跑 §4 对照，本作业排除以免空跑。
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -50,6 +57,9 @@ jobs:
 
   signoff:
     name: DCO sign-off (Signed-off-by)
+    # 周检不带 PR/push 上下文：BASE_SHA 会取到空值，check-signoff.sh 按"失败关闭"退 2，
+    # 不加这条会变成每周固定白红一次（常红的门禁等于没有门禁）。
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -74,6 +84,7 @@ jobs:
   # 硬套只会常红。仍留在待办（需带样例输入的试点仓）。
   self-purify-smoke:
     name: Reusable workflow smoke (self-purify)
+    if: github.event_name != 'schedule'
     uses: ./.github/workflows/self-purify.yml
     with:
       enforce_critical_checks: true
@@ -81,6 +92,7 @@ jobs:
   # §4 现网仓库对照表此前只有本地命令 `bash .github/scripts/check-repo-registry.sh`
   # 一个载体，跑不跑取决于人记不记得，属"本机算力 + 记性"两重依赖的手工检查。
   # 挪到远端后，任何 PR 与本仓推送都会自动对账文档与 GitHub 现网，本机不再需要跑它。
+  # 它也是本文件唯一在 schedule 上跑的作业（周一对账，见 on.schedule 注释）。
   # 退出码口径沿用脚本：1=文档与现网有差集，2=取数无法判定（网络/凭据/限流）；
   # 两者都判红，与本仓"失败关闭、不把空集合当通过"的口径一致。
   repo-registry:

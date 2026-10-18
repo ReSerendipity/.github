@@ -29,8 +29,8 @@
 
 - 所有仓库默认分支统一为 **`main`**（不使用 `master`）。
 - `main` 分支受保护 —— **本仓已实际配置，其余仓库仍须逐仓实测确认**：
-  - 本仓 `.github`：2026-10-17 此前实测为 `404 Branch not protected` + `rulesets: []`（即毫无保护），现已配置经典分支保护并回读确认 `protected=true`，必需检查为 `Workflow lint (actionlint + YAML)`、`DCO sign-off (Signed-off-by)`、`Reusable workflow smoke (self-purify) / 自净化核心规则（阻断）` 三项，且禁止 force push 与删除分支。
-  - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述三项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
+  - 本仓 `.github`：2026-10-17 此前实测为 `404 Branch not protected` + `rulesets: []`（即毫无保护），现已配置经典分支保护并回读确认 `protected=true`，必需检查为 `Workflow lint (actionlint + YAML)`、`DCO sign-off (Signed-off-by)`、`Reusable workflow smoke (self-purify) / 自净化核心规则（阻断）`、`Repository registry (§4 vs GitHub)` **四项**（第四项 2026-10-18 新增，见 §4），且禁止 force push 与删除分支。
+  - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述四项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
   - **账号本人（Doro / ReSerendipity）可直接推送**，跳过 PR 流程；
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
   - 其它仓库在核到保护之前，上面两条只是文档约定，GitHub 侧不会拦截任何人直推 `main`，也不会把任何检查设为合并前提。
@@ -108,6 +108,8 @@
 > 2026-10-17 变更：`Image-duoModel` → `Image-DuoModel`（`gh repo rename`，同一仓库 id 1329392361；改名前后 `pushed_at=2026-10-17T03:21:29Z` 未变，据此判定无并发写入）。本机克隆目录 `Image-MultiModel` 与 remote URL 已按 §6 三步一并校正为 `Image-DuoModel`。旧名 `Image-duoModel` / `Image-MultiModel` 均保留 GitHub 重定向，外链不断。**命名不合规欠账至此清零**，§4 检查脚本不再需要任何命名欠账豁免行。
 >
 > 取数口径：`GET /users/ReSerendipity/repos` 只返回公开仓，标为 `private` 的行无法由该端点证实或证伪，本轮未逐一复核（含三个 `-KeyBackup` 仓与 `Image-MultiModel-KeyBackup` 这条沿用旧项目名的条目）。任何"可见性/存在性"结论都要现场重取。
+>
+> 2026-10-18 新增：本节对照表已从「本地命令手工跑」改为**远端 CI 门禁**——`ci.yml` 的 `repo-registry` 作业在任何 PR 与本仓推送时自动对账，并挂 `schedule` 周检（周一 03:00 UTC），覆盖「本仓无改动、台账却被外部动作改漂移」的场景。脚本与退出码口径不变（1=有差集，2=无法判定，两者都判红），本机不再需要跑它。该作业同时是 `main` 的必需检查之一（见 §2）。
 
 ## 5. 变更流程
 
@@ -161,3 +163,58 @@
 - `node_modules/` 等依赖目录默认不入库；**例外**：私有仓可显式声明「全量备份」策略将依赖纳入版本管理（如 `Image-Scrapers`，其 `.gitignore` 注释中的策略记录为权威依据）。
 - 注意：`.gitignore` 规则对**已跟踪**文件无效——事后添加 ignore 规则不会取消跟踪；真实排除须 `git rm -r --cached`，但若该跟踪本身是仓级既定策略，应保持跟踪。
 - 运行时日志与扫描快照（`*.log`、`server.log`、`scan_run*.txt` 等）不入库，已有约定以各仓 ADR 为准。
+
+---
+
+## 10. 发布 / 分发统一规范（Release / Package / Deployment，2026-10-18 新增）
+
+本节把此前散在各处的发布口径收敛为**一条标准**，同时覆盖 **release（发布）、package（打包）、deployment（部署）** 三类：源头是 Image-DuoModel / SeedVR2-Lite / TTS-MultiModel 的三份 `docs/release-governance.md`、DraftPeek `docs/VERSIONING.md`，以及各仓的 `release.yml` / `docker-publish.yml` / `pages-deploy.yml`。
+
+> **范围声明**：本轮只把标准写入本规范仓，**未同步到账号内其它现存仓库**。各仓现有发布文档与工作流暂按现状运行，逐仓对齐属后续单独动作（差异清单见 §10.6）。
+
+### 10.1 三条根原则
+
+1. **远端优先**：发布链的构建、打包、签名、扫描、上传、推送**一律在 GitHub Actions 远端完成**；本地只保留三件轻量动作——改版本位、落 CHANGELOG、`git tag` + `git push`。**本地不执行打包 / 签名 / 镜像构建 / 发布上传**：既减少本机压力，也让产物可复现（runner 固定、依赖锁定）。
+2. **tag 驱动**：`push: tags: v*` 触发发布链；禁止在本地产出交付物后手工上传充当发布。
+3. **产物必须可校验**：Release 资产须附 `SHA256SUMS.txt`；桌面与敏感分发须附分离签名 `SHA256SUMS.gpg`。
+
+### 10.2 release（发布）
+
+- 版本号遵循 **SemVer** `MAJOR.MINOR.PATCH`，预发布用 `-alpha.N` / `-beta.N` / `-rc.N`。
+- CHANGELOG 遵循 **Keep a Changelog**：每次合并 `main` 在 `[Unreleased]` 追加，`feat→Added`、`fix→Fixed`、`refactor→Changed`；发版时 `[Unreleased]` → `[VERSION] - YYYY-MM-DD`。
+- **版本位须多点一致，漂一处即判红**。可参照的实现：TTS-MultiModel `tests/test_version_consistency.py::test_all_version_sites_agree` 逐条比对仓内跟踪的版本位；Image-DuoModel 以 `config.yaml` 顶层 `version` 为唯一权威位，并要求 `AGENTS.md` 与 `CHANGELOG.md` 跟随。
+- 发布链固定为：本地 `git tag v<X.Y.Z>` → `git push origin v<X.Y.Z>` → **远端**建 draft Release 并挂资产 → 人工审核后 `published`（DraftPeek 口径）。
+- **回滚**以 `git revert` 为主（保历史、可再 forward）。**重指向或删除 tag、移动任何远端 ref 属破坏性远端动作，须仓库所有者单独授权**——`release.yml` 由 `push: tags` 触发，移动已发布 tag 会当场重跑发布链，DraftPeek 历史上因此产出过混年代 Release 资产。
+
+### 10.3 package（打包 / 可分发产物）
+
+- **Python**：以 `pyproject.toml` 为唯一声明源；依赖改动同步 `requirements.txt` / `requirements-lock.txt`；wheel / sdist 由远端构建。
+- **容器镜像**：统一推 **ghcr.io**，`permissions: packages: write`，用 `GITHUB_TOKEN` 登录；tag 取**不可变标签**——semver（`{{version}}` / `{{major}}.{{minor}}`）+ 每次构建的 `sha`。
+  - **不以 floating `latest` 作为发布基线**（SeedVR2 口径，其评估报告把 latest 列为反模式 #3）。`latest` 若保留，只允许在默认分支上启用，且不得作为任何下游引用的版本依据（TTS 现状，属差异，见 §10.6）。
+  - **镜像引用必须全小写**：`${{ github.repository }}` 展开带大写，而 OCI 引用规范只允许小写，Trivy 在解析阶段会直接 FATAL「could not parse reference」。TTS 与 SeedVR2 都踩过这个坑。
+  - 镜像内不含模型权重（`.dockerignore` 排除 `model/`），运行时挂载。
+- **桌面分发**（Tauri / NSIS / APK）：签名密钥**不入库**，按 §3 走私有 `<项目名>-KeyBackup`；构建与签名在远端完成，密钥经 Actions Secrets 注入。
+- **npm**：目前仅 `Image-Scrapers` 使用；其 `node_modules` 入库属 §9 已登记的私有仓例外。
+
+### 10.4 deployment（部署）
+
+- **能远端化的一律远端**：GitHub Pages、镜像推送后的滚动更新、需集群凭据的 K8s 部署（凭据存 GitHub Secrets，不落本地）。
+- **明确不远端化的部分**：本机运行的自部署服务（本地 Web 服务、桌面应用、GPU 推理进程）属既定形态，不在本节范围，也不要求远端化。
+- 部署前扫描：镜像发布前须经 **Trivy**（`CRITICAL,HIGH`、`ignore-unfixed`），**默认阻断**；豁免须在 `.trivyignore.yaml` 逐条登记理由与 expiration。TTS 的实现符合本口径（扫描通过后才 push），SeedVR2 目前是报告模式（`exit-code: 0`），属差异，见 §10.6。
+- SBOM / provenance：推荐开启（SeedVR2 已开 `provenance: true` + `sbom: true`）；TTS 因单架构冲突设 `provenance: false`，口径尚未统一，见 §10.6。
+
+### 10.5 发布验证产物
+
+发布后须留可复核记录，落 `docs/execution/RELEASE_VERIFICATION.md`。该路径已在 `self-purify.yml` 白名单内放行，属允许入库的样例。
+
+### 10.6 现状差异与欠账（本轮未处理）
+
+| 项 | 现状 | 待收敛方向 |
+|---|---|---|
+| 发布总纲 | 三份 `docs/release-governance.md` 内容各异（MD5 互不相同）；源头家族模板 `.spec_audit/family_release_governance.md` 已于 2026-09-17 归档 | 逐仓按本节收敛（模板已不存在） |
+| 版本自动化 | Image-DuoModel 已停用 release-please 走手动 tag；TTS 仍走 release-please（其 release PR 拿不到 CI、若干版本位必须人补） | 二选一，并写入各仓文档 |
+| 镜像 tag | `latest` 保留策略不一致 | 按 §10.3 统一 |
+| 镜像扫描 | TTS 阻断、SeedVR2 报告模式 | 按 §10.4 统一 |
+| SBOM / provenance | SeedVR2 开、TTS 关 | 按 §10.4 评估 |
+| GPG 签名 | 已覆盖 SpiritPal 家族 / SeedVR2-Lite / Image-DuoModel / DraftPeek / TTS-MultiModel / MiniMax-H3-Lite，尚未覆盖全部仓；私钥未配置时以 notice 跳过（不算失败） | 清点覆盖率 |
+| 标准下发 | 本节只写入本规范仓，未同步到各现存仓库 | 需单独一轮授权后逐仓同步 |
