@@ -109,6 +109,8 @@
 >
 > 取数口径：`GET /users/ReSerendipity/repos` 只返回公开仓，标为 `private` 的行无法由该端点证实或证伪，本轮未逐一复核（含三个 `-KeyBackup` 仓与 `Image-MultiModel-KeyBackup` 这条沿用旧项目名的条目）。任何"可见性/存在性"结论都要现场重取。
 >
+> 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）二者未登记于此；表内已有的 4 个 `*-KeyBackup` 按 §3 属密钥备份仓。该排除清单与 **§10 范围声明的排除清单同源**，并在校验脚本 `.github/scripts/check-repo-registry.sh` 内以 `EXCLUDED_DECLARED` 显式声明同步维护（改一处即改两处）。
+>
 > 2026-10-18 新增：本节对照表已从「本地命令手工跑」改为**远端 CI 门禁**——`ci.yml` 的 `repo-registry` 作业在任何 PR 与本仓推送时自动对账，并挂 `schedule` 周检（周一 03:00 UTC），覆盖「本仓无改动、台账却被外部动作改漂移」的场景。脚本与退出码口径不变（1=有差集，2=无法判定，两者都判红），本机不再需要跑它。该作业同时是 `main` 的必需检查之一（见 §2）。
 
 ## 5. 变更流程
@@ -220,6 +222,7 @@
 - 能远端完成的部署动作 → **默认执行**（远端），无需另行确认；
 - 不能远端完成、且使用者**未明确提出**的部署动作 → **一律不做**：不主动在本机执行、不主动做远端化改造、不要求使用者配合改动本地环境。
 
+**部署前扫描与供应链元数据（2026-10-18 收敛）**：
 - 部署前扫描：镜像发布前须经 **Trivy**（`CRITICAL,HIGH`、`ignore-unfixed`），**默认阻断**；豁免须在 `.trivyignore.yaml` 逐条登记理由与 expiration。**2026-10-18 收敛结果**：TTS 与 SeedVR2 的 `docker-publish.yml` 均为阻断（`exit-code: '1'`）；SeedVR2 转阻断前实测该镜像在门禁口径下**零发现**（日志中无 CVE 行、无 `Total:` 行），故不需要任何存量豁免条目。**2026-10-18 批 4 收敛**：MiniMax-H3-Lite 的 `docker-scan.yml` 亦已转阻断（PR #98），账号内镜像扫描已统一为阻断口径。
 - SBOM / provenance：**推荐开启**。SeedVR2-Lite 与 MiniMax-H3-Lite 用 buildx 内联字段（`provenance: true` + `sbom: true`）；TTS 因发布链是「build（`push: false`）→ Trivy 扫 → 手动 `docker push`」，buildx 内联 attestation 不可用，已改用 `actions/attest-sbom` + `attest-build-provenance` 绑定**已推送 digest**（机制等价替代，见 §10.6）。
 
@@ -252,8 +255,9 @@
 | 项 | 实测现状 | 待办 |
 |---|---|---|
 | 私有仓 Actions 账单/额度 | Prompt-Library / Image-Scrapers / Nekogal-DL 的作业因账号级账单注解无法启动（annotation 原文已取证） | **账号级问题、非仓库代码问题**；由账号所有者处理 Billing 后自动恢复（用户已指示本轮跳过） |
-| 发布链空白仓（明确不补链） | `Offer-Landing-Kit`（静态单文件站：无构建步骤、无打包脚本、无版本位，对外分发即 Pages 线上站点，已满足 §10.4 远端部署）、`Hugging-Face`（无 `.github/`、无构建产物）、`Unity`（Unity 工程需 Unity 授权，托管 runner 无法构建） | 不补空链；待这些仓真正产生需版本化分发的产物时再立项 |
-| TTS 镜像 attestation 机制 | TTS 因「先构建不推送 → 扫描 → 再推送」结构，无法用 buildx 内联 `provenance: true`（docker exporter 不承载 attestation），已改用官方 attest-action 绑定已推送 digest | 机制等价替代、非欠账；若将来重构为 buildx 推送，可换回内联字段 |
+**非欠账说明（列出仅为留痕，不构成待办）**
+**明确不补链的仓**：`Offer-Landing-Kit`（静态单文件站：无构建步骤、无打包脚本、无版本位，对外分发即 Pages 线上站点，已满足 §10.4 远端部署）、`Hugging-Face`（无 `.github/`、无构建产物）、`Unity`（Unity 工程需 Unity 授权，托管 runner 无法构建）——不补空链；待这些仓真正产生需版本化分发的产物时再立项。
+**TTS 镜像 attestation 机制**：TTS 因「先构建不推送 → 扫描 → 再推送」结构，无法用 buildx 内联 `provenance: true`（docker exporter 不承载 attestation），已改用官方 attest-action 绑定已推送 digest；属机制等价替代，非欠账。
 
 ### 10.7 本节的执行件
 
