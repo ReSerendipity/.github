@@ -239,12 +239,12 @@
 | 镜像扫描 | TTS 与 SeedVR2 的 `docker-publish.yml` 均转阻断（`exit-code: '1'`） | SeedVR2-Lite PR #164；转阻断前实测该镜像零发现，故未建豁免条目 |
 | GPG 分离签名 | 6 仓的 `gpg-signed-release.yml` 已**全部删除并合并** | SpiritPal #146 / MiniMax-H3-Lite #95 / DraftPeek #131 / Image-DuoModel #129 / SeedVR2-Lite #164 / TTS-MultiModel #190 |
 | 发布链最小修正 | 4 仓补上远端 SHA256SUMS 生成与挂载 | GalgameShell #10 / Health-Info-Card #3 / RTX-VSR-Lite #9 / ComfyUI-Experiment-Toolbox #2 —— 均只动 `release.yml` / `build-firmware.yml`，符合 §10.1 |
+| 根级 `CHANGELOG.md` | **29 仓全部建立**（Keep a Changelog）：Unity 由既有 `docs/CHANGELOG.md` 搬迁至根级并留指针、`Health-Info-Card` 按本仓惯例双语配对（`CHANGELOG.md` + `CHANGELOG.zh_CN.md`）；无 tag / Release 的仓仅含 `[Unreleased]` 并如实注明，未编造版本号与日期 | 21 单 PR：#2 Unity / #11 GalgameShell / #6 ReSerendipity / #3 ComfyUI-Experiment-Toolbox / #4 Github-Repo-Scan / #7 Lineart-Painter / #2 Unfading-Wall / #9 Multi-Tracker / #4 Health-Info-Card / #6 Card-Studio / #4 Mooncake-Deconstruction / #2 Offer-Landing-Kit / #3 Android-IconAutoArrange / #4 Free-Model-Probe / #2 ChatGPT-Timezone-Fix / #2 Bilibili-Follow-Manager / #2 Hugging-Face / #2 Nekogal-DL / #2 Agent-Knowledge / #2 Prompt-Library / #3 ComfyUI-BatchPromptLoader。有 tag 的 5 仓版本段日期逐仓与真实 tag 提交/发布时间核对一致 |
 
 **剩余欠账（§10.7 的核验脚本定位为审计 + 进度对账，不是每 PR 门禁，故下面各项不阻断合并）**
 
 | 项 | 实测现状 | 待办 |
 |---|---|---|
-| CHANGELOG.md | 29 仓中 **21 仓缺根级 `CHANGELOG.md`**：Unity（版本口径在 `docs/CHANGELOG.md`）、GalgameShell、ReSerendipity、ComfyUI-Experiment-Toolbox、Github-Repo-Scan、Health-Info-Card、Multi-Tracker、Unfading-Wall、Lineart-Painter、Card-Studio、Mooncake-Deconstruction、Offer-Landing-Kit、Android-IconAutoArrange、Free-Model-Probe、ChatGPT-Timezone-Fix、Bilibili-Follow-Manager、Hugging-Face、Nekogal-DL、Agent-Knowledge、Prompt-Library、ComfyUI-BatchPromptLoader | 逐仓补建，或在仓内文档登记豁免理由；在此之前 `check-release-standard.sh` 对上述仓判 FAIL（§10.2） |
 | 镜像扫描双口径 | MiniMax-H3-Lite 同一仓内 `trivy.yml` 阻断、`docker-scan.yml` 仍是报告模式 | 统一到阻断（§10.4） |
 | SBOM / provenance | 仅 SeedVR2 已开；TTS 未开（WARN，理由已写入该仓文档）；MiniMax-H3-Lite 未开 | 按 §10.4 评估，待定（负责人 + 触发条件） |
 | 版本自动化 | Image-DuoModel 走手动 tag；TTS 走 release-please（其 release PR 拿不到 CI、若干版本位须人补） | 是否统一为 release-please 自动，待单独立项 |
