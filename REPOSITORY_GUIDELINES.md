@@ -170,7 +170,11 @@
 
 本节把此前散在各处的发布口径收敛为**一条标准**，同时覆盖 **release（发布）、package（打包）、deployment（部署）** 三类：源头是 Image-DuoModel / SeedVR2-Lite / TTS-MultiModel 的三份 `docs/release-governance.md`、DraftPeek `docs/VERSIONING.md`，以及各仓的 `release.yml` / `docker-publish.yml` / `pages-deploy.yml`。
 
-> **范围声明**：本轮只把标准写入本规范仓，**未同步到账号内其它现存仓库**。各仓现有发布文档与工作流暂按现状运行，逐仓对齐属后续单独动作（差异清单见 §10.6）。
+> **范围声明（2026-10-18 更新）**：**已完成对账号内现存仓库的下发**——共 **29 个仓**在默认分支上持有本地化 `docs/release-governance.md`（28 个在 `main`，`ComfyUI-BatchPromptLoader` 在 `master`），且均含「远端优先」标记。逐仓差异与剩余欠账见 §10.6。
+>
+> 下发方式：**逐仓开分支 + 开 PR + 合并**（不直推默认分支）；文档一律以本仓 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款，只填本仓特有项，不得改写公共条款。
+>
+> **不适用 §10 的排除清单（逐条留痕）**：4 个 `*-KeyBackup` 私有仓（`DraftPeek-KeyBackup` / `Image-MultiModel-KeyBackup` / `SeedVR2-Lite-KeyBackup` / `TTS-MultiModel-KeyBackup`，按 §3 属密钥备份仓、无发布链）；4 个网站仓（`Website-Genshin-Impact` / `Website-Honkai-Star-Rail` / `Website-Wuthering-Waves` / `Website-Zenless-Zone-Zero`）；`rewq`（非 §4 台账副本）；`Android-IconAutoArrange-Assets-Backup`（资源备份仓，无发布链）。
 
 ### 10.1 三条根原则
 
@@ -190,7 +194,7 @@
 
 - **Python**：以 `pyproject.toml` 为唯一声明源；依赖改动同步 `requirements.txt` / `requirements-lock.txt`；wheel / sdist 由远端构建。
 - **容器镜像**：统一推 **ghcr.io**，`permissions: packages: write`，用 `GITHUB_TOKEN` 登录；tag 取**不可变标签**——semver（`{{version}}` / `{{major}}.{{minor}}`）+ 每次构建的 `sha`。
-  - **不以 floating `latest` 作为发布基线**（SeedVR2 口径，其评估报告把 latest 列为反模式 #3）。`latest` 若保留，只允许在默认分支上启用，且不得作为任何下游引用的版本依据（TTS 现状，属差异，见 §10.6）。
+  - **不以 floating `latest` 作为发布基线**（SeedVR2 口径，其评估报告把 latest 列为反模式 #3）。**2026-10-18 收敛后账号内已无仓启用 floating `latest`**：TTS 的 `type=raw,value=latest,enable={{is_default_branch}}` 行已删除；GHCR 上的历史 `:latest` tag 仍在，但不再更新、不作任何下游引用的版本依据。
   - **镜像引用必须全小写**：`${{ github.repository }}` 展开带大写，而 OCI 引用规范只允许小写，Trivy 在解析阶段会直接 FATAL「could not parse reference」。TTS 与 SeedVR2 都踩过这个坑。
   - 镜像内不含模型权重（`.dockerignore` 排除 `model/`），运行时挂载。
 - **桌面分发**（Tauri / NSIS / APK）：签名密钥**不入库**，按 §3 走私有 `<项目名>-KeyBackup`；构建与签名在远端完成，密钥经 Actions Secrets 注入。**防伪造仅由 Tauri 的 ed25519 更新器签名承担**（`*.sig` / `*.sig.ed25519`）；`SHA256SUMS.txt` 只用于防传输损坏；**GPG 分离签名已撤掉**（见 §10.6）。
@@ -216,24 +220,35 @@
 - 能远端完成的部署动作 → **默认执行**（远端），无需另行确认；
 - 不能远端完成、且使用者**未明确提出**的部署动作 → **一律不做**：不主动在本机执行、不主动做远端化改造、不要求使用者配合改动本地环境。
 
-- 部署前扫描：镜像发布前须经 **Trivy**（`CRITICAL,HIGH`、`ignore-unfixed`），**默认阻断**；豁免须在 `.trivyignore.yaml` 逐条登记理由与 expiration。TTS 的实现符合本口径（扫描通过后才 push），SeedVR2 目前是报告模式（`exit-code: 0`），属差异，见 §10.6。
-- SBOM / provenance：推荐开启（SeedVR2 已开 `provenance: true` + `sbom: true`）；TTS 因单架构冲突设 `provenance: false`，口径尚未统一，见 §10.6。
+- 部署前扫描：镜像发布前须经 **Trivy**（`CRITICAL,HIGH`、`ignore-unfixed`），**默认阻断**；豁免须在 `.trivyignore.yaml` 逐条登记理由与 expiration。**2026-10-18 收敛结果**：TTS 与 SeedVR2 的 `docker-publish.yml` 均为阻断（`exit-code: '1'`）；SeedVR2 转阻断前实测该镜像在门禁口径下**零发现**（日志中无 CVE 行、无 `Total:` 行），故不需要任何存量豁免条目。**剩余差异**：MiniMax-H3-Lite 同一仓内两套口径并存——`trivy.yml` 阻断、`docker-scan.yml` 仍是报告模式（见 §10.6）。
+- SBOM / provenance：**推荐开启**。SeedVR2 已开 `provenance: true` + `sbom: true`；TTS 为 `provenance: false` 且未开 `sbom: true`，原因是其发布链是「build（`push: false`）→ Trivy 扫 → 手动 `docker push`」，attestation 只能由 buildx 在自身 push 时附加，且该镜像是单架构——**这是未采纳推荐口径的 WARN（理由已写入该仓文档），不是欠账**。
 
 ### 10.5 发布验证产物
 
 发布后须留可复核记录，落 `docs/execution/RELEASE_VERIFICATION.md`。该路径已在 `self-purify.yml` 白名单内放行，属允许入库的样例。
 
-### 10.6 现状差异与欠账（本轮未处理）
+### 10.6 收敛结果与剩余欠账（2026-10-18 实测更新）
 
-| 项 | 现状 | 待收敛方向 |
+**已收敛（均经远端复核）**
+
+| 项 | 结果 | 落地证据 |
 |---|---|---|
-| 发布总纲 | 三份 `docs/release-governance.md` 内容各异（MD5 互不相同）；源头家族模板 `.spec_audit/family_release_governance.md` 已于 2026-09-17 归档 | 逐仓按本节收敛（模板已不存在） |
-| 版本自动化 | Image-DuoModel 已停用 release-please 走手动 tag；TTS 仍走 release-please（其 release PR 拿不到 CI、若干版本位必须人补） | 二选一，并写入各仓文档 |
-| 镜像 tag | `latest` 保留策略不一致 | 按 §10.3 统一 |
-| 镜像扫描 | TTS 阻断、SeedVR2 报告模式 | 按 §10.4 统一 |
-| SBOM / provenance | SeedVR2 开、TTS 关 | 按 §10.4 评估 |
-| GPG 分离签名 | **2026-10-18 裁决撤掉**。实测依据：本机无任何 GPG 私钥（无密钥环、无密钥文件、无 KeyBackup 本地副本），而 GitHub Secrets **只写不读**，故即使它仍存在也取不回来；历史上仅 SeedVR2-Lite 产出过 3 个 `SHA256SUMS.gpg`，断链有两个原因——私钥未配置时 workflow 以 `notice` **静默跳过**（不算失败），以及 `on: release published` **不被 bot 创建的 Release 唤起**（`GITHUB_TOKEN` 不级联）。另：该 workflow 实际只存在于 **6 个仓**（SpiritPal / DraftPeek / Image-DuoModel / MiniMax-H3-Lite / SeedVR2-Lite / TTS-MultiModel），GalgameShell / Github-Repo-Scan / ComfyUI-Experiment-Toolbox 从来没有该文件 | **删除 / 停用上述 6 仓的 `gpg-signed-release.yml`**（避免继续当静默 no-op）；完整性改由 `SHA256SUMS.txt` + Tauri ed25519 签名承担（§10.1 / §10.3） |
-| 标准下发 | 本节只写入本规范仓，未同步到各现存仓库 | 需单独一轮授权后逐仓同步 |
+| 标准下发 | 29 仓默认分支均有本地化 `docs/release-governance.md`，全部含「远端优先」标记 | 见 §10 范围声明；逐仓开分支 + PR 合并，排除 10 项已逐条留痕 |
+| 发布总纲统一 | 各仓文档以 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款 | DraftPeek 原 `docs/VERSIONING.md` 已收敛为指向 `release-governance.md` 的迁移指针（184 行 → 3 行） |
+| 镜像 tag | **账号内已无仓启用 floating `latest`** | TTS-MultiModel `docker-publish.yml` 的 `type=raw,value=latest` 行已删（PR #190） |
+| 镜像扫描 | TTS 与 SeedVR2 的 `docker-publish.yml` 均转阻断（`exit-code: '1'`） | SeedVR2-Lite PR #164；转阻断前实测该镜像零发现，故未建豁免条目 |
+| GPG 分离签名 | 6 仓的 `gpg-signed-release.yml` 已**全部删除并合并** | SpiritPal #146 / MiniMax-H3-Lite #95 / DraftPeek #131 / Image-DuoModel #129 / SeedVR2-Lite #164 / TTS-MultiModel #190 |
+| 发布链最小修正 | 4 仓补上远端 SHA256SUMS 生成与挂载 | GalgameShell #10 / Health-Info-Card #3 / RTX-VSR-Lite #9 / ComfyUI-Experiment-Toolbox #2 —— 均只动 `release.yml` / `build-firmware.yml`，符合 §10.1 |
+
+**剩余欠账（§10.7 的核验脚本定位为审计 + 进度对账，不是每 PR 门禁，故下面各项不阻断合并）**
+
+| 项 | 实测现状 | 待办 |
+|---|---|---|
+| CHANGELOG.md | 29 仓中 **21 仓缺根级 `CHANGELOG.md`**：Unity（版本口径在 `docs/CHANGELOG.md`）、GalgameShell、ReSerendipity、ComfyUI-Experiment-Toolbox、Github-Repo-Scan、Health-Info-Card、Multi-Tracker、Unfading-Wall、Lineart-Painter、Card-Studio、Mooncake-Deconstruction、Offer-Landing-Kit、Android-IconAutoArrange、Free-Model-Probe、ChatGPT-Timezone-Fix、Bilibili-Follow-Manager、Hugging-Face、Nekogal-DL、Agent-Knowledge、Prompt-Library、ComfyUI-BatchPromptLoader | 逐仓补建，或在仓内文档登记豁免理由；在此之前 `check-release-standard.sh` 对上述仓判 FAIL（§10.2） |
+| 镜像扫描双口径 | MiniMax-H3-Lite 同一仓内 `trivy.yml` 阻断、`docker-scan.yml` 仍是报告模式 | 统一到阻断（§10.4） |
+| SBOM / provenance | 仅 SeedVR2 已开；TTS 未开（WARN，理由已写入该仓文档）；MiniMax-H3-Lite 未开 | 按 §10.4 评估，待定（负责人 + 触发条件） |
+| 版本自动化 | Image-DuoModel 走手动 tag；TTS 走 release-please（其 release PR 拿不到 CI、若干版本位须人补） | 是否统一为 release-please 自动，待单独立项 |
+| 发布链缺口 | Multi-Tracker / Lineart-Painter / ComfyUI-BatchPromptLoader 的 release 链**直发 published、不挂资产、无 draft 审核**；Offer-Landing-Kit / Android-IconAutoArrange / ChatGPT-Timezone-Fix / Hugging-Face / Unity **本仓无发布链** | 各仓文档已如实记录为现状；是否补链、是否改 draft 流程待单独评估 |
 
 ### 10.7 本节的执行件
 
