@@ -241,14 +241,19 @@
 | 发布链最小修正 | 4 仓补上远端 SHA256SUMS 生成与挂载 | GalgameShell #10 / Health-Info-Card #3 / RTX-VSR-Lite #9 / ComfyUI-Experiment-Toolbox #2 —— 均只动 `release.yml` / `build-firmware.yml`，符合 §10.1 |
 | 根级 `CHANGELOG.md` | **29 仓全部建立**（Keep a Changelog）：Unity 由既有 `docs/CHANGELOG.md` 搬迁至根级并留指针、`Health-Info-Card` 按本仓惯例双语配对（`CHANGELOG.md` + `CHANGELOG.zh_CN.md`）；无 tag / Release 的仓仅含 `[Unreleased]` 并如实注明，未编造版本号与日期 | 21 单 PR：#2 Unity / #11 GalgameShell / #6 ReSerendipity / #3 ComfyUI-Experiment-Toolbox / #4 Github-Repo-Scan / #7 Lineart-Painter / #2 Unfading-Wall / #9 Multi-Tracker / #4 Health-Info-Card / #6 Card-Studio / #4 Mooncake-Deconstruction / #2 Offer-Landing-Kit / #3 Android-IconAutoArrange / #4 Free-Model-Probe / #2 ChatGPT-Timezone-Fix / #2 Bilibili-Follow-Manager / #2 Hugging-Face / #2 Nekogal-DL / #2 Agent-Knowledge / #2 Prompt-Library / #3 ComfyUI-BatchPromptLoader。有 tag 的 5 仓版本段日期逐仓与真实 tag 提交/发布时间核对一致 |
 
+| 镜像扫描双口径 | MiniMax-H3-Lite 的 `docker-scan.yml` 已由观察模式转**阻断**（`--exit-code 1`），与仓内 `trivy.yml` / `docker-gate.yml` 同口径 | PR #98 |
+| SBOM / provenance | SeedVR2 用 buildx 内联字段；MiniMax-H3-Lite `ghcr.yml` 补 `provenance: true` + `sbom: true`；TTS 改用 `actions/attest-sbom` + `attest-build-provenance` 绑定**已推送 digest**（机制说明见剩余欠账表） | PR #98 / TTS #191 |
+| 版本自动化 | Image-DuoModel 已**恢复 release-please 自动**（`release-type: simple`；`version.txt` 自动改写、`config.yaml` 人工补齐，与 TTS 口径统一） | PR #130 |
+| 发布链 draft 化 | Multi-Tracker / Lineart-Painter / ComfyUI-BatchPromptLoader 三条链改为 **draft + 远端资产（含 `SHA256SUMS.txt`）**，人工审核后 published | PR #10 / #8 / #4 |
+| 无发布链仓补链 | `Android-IconAutoArrange`（APK，runner 内手搓构建）与 `ChatGPT-Timezone-Fix`（MV3 扩展 zip）已补 tag 驱动 `release.yml` | PR #4 / #3 |
+
 **剩余欠账（§10.7 的核验脚本定位为审计 + 进度对账，不是每 PR 门禁，故下面各项不阻断合并）**
 
 | 项 | 实测现状 | 待办 |
 |---|---|---|
-| 镜像扫描双口径 | MiniMax-H3-Lite 同一仓内 `trivy.yml` 阻断、`docker-scan.yml` 仍是报告模式 | 统一到阻断（§10.4） |
-| SBOM / provenance | 仅 SeedVR2 已开；TTS 未开（WARN，理由已写入该仓文档）；MiniMax-H3-Lite 未开 | 按 §10.4 评估，待定（负责人 + 触发条件） |
-| 版本自动化 | Image-DuoModel 走手动 tag；TTS 走 release-please（其 release PR 拿不到 CI、若干版本位须人补） | 是否统一为 release-please 自动，待单独立项 |
-| 发布链缺口 | Multi-Tracker / Lineart-Painter / ComfyUI-BatchPromptLoader 的 release 链**直发 published、不挂资产、无 draft 审核**；Offer-Landing-Kit / Android-IconAutoArrange / ChatGPT-Timezone-Fix / Hugging-Face / Unity **本仓无发布链** | 各仓文档已如实记录为现状；是否补链、是否改 draft 流程待单独评估 |
+| 私有仓 Actions 账单/额度 | Prompt-Library / Image-Scrapers / Nekogal-DL 的作业因账号级账单注解无法启动（annotation 原文已取证） | **账号级问题、非仓库代码问题**；由账号所有者处理 Billing 后自动恢复（用户已指示本轮跳过） |
+| 发布链空白仓（明确不补链） | `Offer-Landing-Kit`（静态单文件站：无构建步骤、无打包脚本、无版本位，对外分发即 Pages 线上站点，已满足 §10.4 远端部署）、`Hugging-Face`（无 `.github/`、无构建产物）、`Unity`（Unity 工程需 Unity 授权，托管 runner 无法构建） | 不补空链；待这些仓真正产生需版本化分发的产物时再立项 |
+| TTS 镜像 attestation 机制 | TTS 因「先构建不推送 → 扫描 → 再推送」结构，无法用 buildx 内联 `provenance: true`（docker exporter 不承载 attestation），已改用官方 attest-action 绑定已推送 digest | 机制等价替代、非欠账；若将来重构为 buildx 推送，可换回内联字段 |
 
 ### 10.7 本节的执行件
 
