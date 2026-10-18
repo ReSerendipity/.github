@@ -35,19 +35,26 @@ fi
 REMOTE_PUBLIC=$(awk -F'\t' '$2=="false"{print $1}' "$REMOTE_TSV" | sort)
 REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 
-# §10 排除清单的同源声明：备份仓 / 非台账副本不进「现网命名台账」。
+# 「§4 台账豁免」声明：备份仓 / 非台账副本不进「现网命名台账」，也不参与差集 B/C。
 # 为什么在脚本里再声明一次：这些仓目前是私有，`users/<owner>/repos` 端点看不到它们，
 # 因此当下不会触发任何差集；但**一旦某个仓转为公开**，差集 B（远程有、表里无）与差集 C
-# （命名不符 §1）就会凭空报红。把排除显式写在这里，让「§4 台账」与「§10 不适用清单」
-# 两个名单同源，且这份排除有可执行载体。
-# 维护要求：本清单与 §10 范围声明里的排除清单必须同步修改（改一处即改两处）。
-EXCLUDED_DECLARED="rewq
+# （命名不符 §1）就会凭空报红。把排除显式写在这里，这份排除才有可执行载体。
+#
+# 与 §10 的「不适用清单」区分（两个清单语义不同、不可混用）：
+#   - 本清单 = 「§4 台账登记 + §1 命名校验」的豁免，只含备份仓 / 非台账副本。
+#   - §10 的「不适用清单」= 发布规范维度的豁免（见 REPOSITORY_GUIDELINES.md §10 范围声明），
+#     含 6 个用户点名仓（ComfyUI-BatchPromptLoader / Multi-Tracker / Bilibili-Follow-Manager /
+#     Hugging-Face / Unfading-Wall / Unity）——它们**仍在 §4 台账内、命名仍受 §1 约束**，
+#     因此**绝不能进本清单**，否则会静默关掉它们的命名校验。
+# 维护要求：本清单与 §4 的补充说明、以及 C:/Users/Doro/APP/repository/GOVERNANCE-EXCLUSIONS.md 同步修改。
+EXCLUDED_FROM_REGISTRY="rewq
 Android-IconAutoArrange-Assets-Backup
+Android-IconAutoArrange-KeyBackup
 DraftPeek-KeyBackup
 Image-MultiModel-KeyBackup
 SeedVR2-Lite-KeyBackup
 TTS-MultiModel-KeyBackup"
-is_excluded() { printf '%s\n' "$EXCLUDED_DECLARED" | grep -qx "$1"; }
+is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }
 
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。
 ROWS=$(awk -v RS='\r?\n' '
@@ -140,7 +147,8 @@ EOF
 echo "仓库注册表对照检查  owner=$OWNER  基准=GitHub API 实际仓名"
 echo "  远程取到 $REMOTE_N 个仓（其中公开 $(echo "$REMOTE_PUBLIC" | grep -c . || true) 个）；§4 表登记 $(printf '%s\n' "$ROWS" | grep -c . || true) 条"
 echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 private 的行无法被该端点证实，故不参与差集 A。"
-  echo "  本脚本对备份仓/非台账副本有显式排除声明（EXCLUDED_DECLARED），与 §10 排除清单同源。"
+  echo "  本脚本对备份仓/非台账副本有显式声明（EXCLUDED_FROM_REGISTRY），后者不参与差集 B/C。"
+  echo "  §10 的发布规范豁免清单是另一份（含 6 个用户点名仓），不以本脚本的台账豁免表达。"
 if [ -n "$DOC_EXEMPT" ]; then
   echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
 fi
