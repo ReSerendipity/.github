@@ -77,3 +77,21 @@ jobs:
     uses: ./.github/workflows/self-purify.yml
     with:
       enforce_critical_checks: true
+
+  # §4 现网仓库对照表此前只有本地命令 `bash .github/scripts/check-repo-registry.sh`
+  # 一个载体，跑不跑取决于人记不记得，属"本机算力 + 记性"两重依赖的手工检查。
+  # 挪到远端后，任何 PR 与本仓推送都会自动对账文档与 GitHub 现网，本机不再需要跑它。
+  # 退出码口径沿用脚本：1=文档与现网有差集，2=取数无法判定（网络/凭据/限流）；
+  # 两者都判红，与本仓"失败关闭、不把空集合当通过"的口径一致。
+  repo-registry:
+    name: Repository registry (§4 vs GitHub)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      # 该脚本只发 GET（users/<owner>/repos），token 只用于免限流，不需要额外权限。
+      - name: §4 对照表与现网仓库一致
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REGISTRY_OWNER: ReSerendipity
+        run: bash .github/scripts/check-repo-registry.sh
