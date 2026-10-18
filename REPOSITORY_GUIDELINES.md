@@ -176,7 +176,7 @@
 
 1. **远端优先**：发布链的构建、打包、签名、扫描、上传、推送**一律在 GitHub Actions 远端完成**；本地只保留三件轻量动作——改版本位、落 CHANGELOG、`git tag` + `git push`。**本地不执行打包 / 签名 / 镜像构建 / 发布上传**：既减少本机压力，也让产物可复现（runner 固定、依赖锁定）。
 2. **tag 驱动**：`push: tags: v*` 触发发布链；禁止在本地产出交付物后手工上传充当发布。
-3. **产物必须可校验**：Release 资产须附 `SHA256SUMS.txt`；桌面与敏感分发须附分离签名 `SHA256SUMS.gpg`。
+3. **产物必须可校验（2026-10-18 修订）**：Release 资产须附 `SHA256SUMS.txt`；**防伪造**改由桌面壳的 **Tauri ed25519 签名**承担（`*.sig` / `*.sig.ed25519`，已在 SpiritPal / Image-DuoModel 实际产出）。**GPG 分离签名已裁决撤掉**——理由与善后见 §10.6。
 
 ### 10.2 release（发布）
 
@@ -193,7 +193,7 @@
   - **不以 floating `latest` 作为发布基线**（SeedVR2 口径，其评估报告把 latest 列为反模式 #3）。`latest` 若保留，只允许在默认分支上启用，且不得作为任何下游引用的版本依据（TTS 现状，属差异，见 §10.6）。
   - **镜像引用必须全小写**：`${{ github.repository }}` 展开带大写，而 OCI 引用规范只允许小写，Trivy 在解析阶段会直接 FATAL「could not parse reference」。TTS 与 SeedVR2 都踩过这个坑。
   - 镜像内不含模型权重（`.dockerignore` 排除 `model/`），运行时挂载。
-- **桌面分发**（Tauri / NSIS / APK）：签名密钥**不入库**，按 §3 走私有 `<项目名>-KeyBackup`；构建与签名在远端完成，密钥经 Actions Secrets 注入。
+- **桌面分发**（Tauri / NSIS / APK）：签名密钥**不入库**，按 §3 走私有 `<项目名>-KeyBackup`；构建与签名在远端完成，密钥经 Actions Secrets 注入。**防伪造仅由 Tauri 的 ed25519 更新器签名承担**（`*.sig` / `*.sig.ed25519`）；`SHA256SUMS.txt` 只用于防传输损坏；**GPG 分离签名已撤掉**（见 §10.6）。
 - **npm**：目前仅 `Image-Scrapers` 使用；其 `node_modules` 入库属 §9 已登记的私有仓例外。
 
 ### 10.4 deployment（部署）
@@ -232,5 +232,12 @@
 | 镜像 tag | `latest` 保留策略不一致 | 按 §10.3 统一 |
 | 镜像扫描 | TTS 阻断、SeedVR2 报告模式 | 按 §10.4 统一 |
 | SBOM / provenance | SeedVR2 开、TTS 关 | 按 §10.4 评估 |
-| GPG 签名 | 已覆盖 SpiritPal 家族 / SeedVR2-Lite / Image-DuoModel / DraftPeek / TTS-MultiModel / MiniMax-H3-Lite，尚未覆盖全部仓；私钥未配置时以 notice 跳过（不算失败） | 清点覆盖率 |
+| GPG 分离签名 | **2026-10-18 裁决撤掉**。实测依据：本机无任何 GPG 私钥（无密钥环、无密钥文件、无 KeyBackup 本地副本），而 GitHub Secrets **只写不读**，故即使它仍存在也取不回来；历史上仅 SeedVR2-Lite 产出过 3 个 `SHA256SUMS.gpg`，断链有两个原因——私钥未配置时 workflow 以 `notice` **静默跳过**（不算失败），以及 `on: release published` **不被 bot 创建的 Release 唤起**（`GITHUB_TOKEN` 不级联）。另：该 workflow 实际只存在于 **6 个仓**（SpiritPal / DraftPeek / Image-DuoModel / MiniMax-H3-Lite / SeedVR2-Lite / TTS-MultiModel），GalgameShell / Github-Repo-Scan / ComfyUI-Experiment-Toolbox 从来没有该文件 | **删除 / 停用上述 6 仓的 `gpg-signed-release.yml`**（避免继续当静默 no-op）；完整性改由 `SHA256SUMS.txt` + Tauri ed25519 签名承担（§10.1 / §10.3） |
 | 标准下发 | 本节只写入本规范仓，未同步到各现存仓库 | 需单独一轮授权后逐仓同步 |
+
+### 10.7 本节的执行件
+
+| 执行件 | 用途 |
+|---|---|
+| `RELEASE_GOVERNANCE_TEMPLATE.md`（本仓根目录） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
+| `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红 |
