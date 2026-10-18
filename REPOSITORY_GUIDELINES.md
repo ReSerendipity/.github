@@ -109,7 +109,7 @@
 >
 > 取数口径：`GET /users/ReSerendipity/repos` 只返回公开仓，标为 `private` 的行无法由该端点证实或证伪，本轮未逐一复核（含三个 `-KeyBackup` 仓与 `Image-MultiModel-KeyBackup` 这条沿用旧项目名的条目）。任何"可见性/存在性"结论都要现场重取。
 >
-> 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）二者未登记于此；表内已有的 4 个 `*-KeyBackup` 按 §3 属密钥备份仓。该排除清单与 **§10 范围声明的排除清单同源**，并在校验脚本 `.github/scripts/check-repo-registry.sh` 内以 `EXCLUDED_DECLARED` 显式声明同步维护（改一处即改两处）。
+> 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）、`Android-IconAutoArrange-KeyBackup`（密钥备份仓）三者未登记于此；表内已有的 4 个 `*-KeyBackup` 按 §3 属密钥备份仓。**注意区分两个清单**：本处管的是「§4 台账登记 + §1 命名校验」的豁免（登记在脚本的 `EXCLUDED_FROM_REGISTRY`），而 §10 的"不适用清单"是发布规范维度的豁免（含 6 个用户点名仓，它们**仍在 §4 台账内、命名仍受 §1 约束**）——两者不可混用。
 >
 > 2026-10-18 新增：本节对照表已从「本地命令手工跑」改为**远端 CI 门禁**——`ci.yml` 的 `repo-registry` 作业在任何 PR 与本仓推送时自动对账，并挂 `schedule` 周检（周一 03:00 UTC），覆盖「本仓无改动、台账却被外部动作改漂移」的场景。脚本与退出码口径不变（1=有差集，2=无法判定，两者都判红），本机不再需要跑它。该作业同时是 `main` 的必需检查之一（见 §2）。
 
@@ -174,9 +174,19 @@
 
 > **范围声明（2026-10-18 更新）**：**已完成对账号内现存仓库的下发**——共 **29 个仓**在默认分支上持有本地化 `docs/release-governance.md`（28 个在 `main`，`ComfyUI-BatchPromptLoader` 在 `master`），且均含「远端优先」标记。逐仓差异与剩余欠账见 §10.6。
 >
+> 2026-10-18 补：其中 **6 个仓**（`ComfyUI-BatchPromptLoader` / `Multi-Tracker` / `Bilibili-Follow-Manager` / `Hugging-Face` / `Unfading-Wall` / `Unity`）已由用户点名**豁免 §10**——其已落地的文档与流水线**保留不动**，仅不再纳入 §10 的要求与审计范围（详见下方排除清单）。
+>
 > 下发方式：**逐仓开分支 + 开 PR + 合并**（不直推默认分支）；文档一律以本仓 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款，只填本仓特有项，不得改写公共条款。
 >
-> **不适用 §10 的排除清单（逐条留痕）**：4 个 `*-KeyBackup` 私有仓（`DraftPeek-KeyBackup` / `Image-MultiModel-KeyBackup` / `SeedVR2-Lite-KeyBackup` / `TTS-MultiModel-KeyBackup`，按 §3 属密钥备份仓、无发布链）；4 个网站仓（`Website-Genshin-Impact` / `Website-Honkai-Star-Rail` / `Website-Wuthering-Waves` / `Website-Zenless-Zone-Zero`）；`rewq`（非 §4 台账副本）；`Android-IconAutoArrange-Assets-Backup`（资源备份仓，无发布链）。
+> **不适用 §10 的排除清单（2026-10-18 更新，共 17 项，逐条留痕）**：
+>
+> - **密钥 / 资产备份仓（6 个，按 §3 属备份仓、无发布链）**：`DraftPeek-KeyBackup`、`Image-MultiModel-KeyBackup`、`SeedVR2-Lite-KeyBackup`、`TTS-MultiModel-KeyBackup`、`Android-IconAutoArrange-KeyBackup`（2026-10-18 补录，此前误记为"4 个"）、`Android-IconAutoArrange-Assets-Backup`（内含加密签名密钥的口令台账与 PoC APK）。
+> - **网站仓（4 个）**：`Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
+> - **非 §4 台账副本（1 个）**：`rewq`。
+> - **用户点名豁免（6 个，2026-10-18）**：`ComfyUI-BatchPromptLoader`、`Multi-Tracker`、`Bilibili-Follow-Manager`、`Hugging-Face`、`Unfading-Wall`、`Unity`。
+>   **语义边界（重要）**：豁免**只表示"不再要求、不再审计 §10"**；这 6 个仓此前已落地的 `docs/release-governance.md`、根级 `CHANGELOG.md` 与发布链改动**一律保留、不删除、不回滚**。若将来要撤销这些产物，属单独决定。
+>
+> 维护规则：本清单与 `.github/scripts/check-repo-registry.sh` 的台账豁免声明、以及 `C:/Users/Doro/APP/repository/GOVERNANCE-EXCLUSIONS.md`（本机记录）三处必须同步修改。
 
 ### 10.1 三条根原则
 
