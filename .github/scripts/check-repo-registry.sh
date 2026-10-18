@@ -35,6 +35,20 @@ fi
 REMOTE_PUBLIC=$(awk -F'\t' '$2=="false"{print $1}' "$REMOTE_TSV" | sort)
 REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 
+# §10 排除清单的同源声明：备份仓 / 非台账副本不进「现网命名台账」。
+# 为什么在脚本里再声明一次：这些仓目前是私有，`users/<owner>/repos` 端点看不到它们，
+# 因此当下不会触发任何差集；但**一旦某个仓转为公开**，差集 B（远程有、表里无）与差集 C
+# （命名不符 §1）就会凭空报红。把排除显式写在这里，让「§4 台账」与「§10 不适用清单」
+# 两个名单同源，且这份排除有可执行载体。
+# 维护要求：本清单与 §10 范围声明里的排除清单必须同步修改（改一处即改两处）。
+EXCLUDED_DECLARED="rewq
+Android-IconAutoArrange-Assets-Backup
+DraftPeek-KeyBackup
+Image-MultiModel-KeyBackup
+SeedVR2-Lite-KeyBackup
+TTS-MultiModel-KeyBackup"
+is_excluded() { printf '%s\n' "$EXCLUDED_DECLARED" | grep -qx "$1"; }
+
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。
 ROWS=$(awk -v RS='\r?\n' '
   /^## 4\./ { insec=1; next }
@@ -84,6 +98,7 @@ EOF
 UNLISTED=""
 while IFS= read -r n; do
   [ -n "$n" ] || continue
+  is_excluded "$n" && continue
   echo "$REGISTRY_NAMES" | grep -qx "$n" || UNLISTED="${UNLISTED}  - $n\n"
 done <<EOF
 $(cut -f1 "$REMOTE_TSV")
@@ -101,6 +116,7 @@ while IFS= read -r n; do
   case "$n" in
     .*) continue ;;
   esac
+  if is_excluded "$n"; then continue; fi
   if echo "$EXEMPT_NAMES" | grep -qx "$n"; then continue; fi
   if [ -n "$DOC_EXEMPT" ] && echo "$DOC_EXEMPT" | grep -qx "$n"; then continue; fi
   if echo "$n" | grep -q '_'; then
@@ -124,6 +140,7 @@ EOF
 echo "仓库注册表对照检查  owner=$OWNER  基准=GitHub API 实际仓名"
 echo "  远程取到 $REMOTE_N 个仓（其中公开 $(echo "$REMOTE_PUBLIC" | grep -c . || true) 个）；§4 表登记 $(printf '%s\n' "$ROWS" | grep -c . || true) 条"
 echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 private 的行无法被该端点证实，故不参与差集 A。"
+  echo "  本脚本对备份仓/非台账副本有显式排除声明（EXCLUDED_DECLARED），与 §10 排除清单同源。"
 if [ -n "$DOC_EXEMPT" ]; then
   echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
 fi
