@@ -49,11 +49,14 @@ REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 #     且均为私有、公开端点不可见，无需单列亦不触发差集；如转公开需补入本清单）。
 # 维护要求：本清单与 §4 的补充说明、以及本仓根 GOVERNANCE-EXCLUSIONS.md 同步修改。
 # 2026-10-19 豁免升级（用户裁决）：排除清单 17 项由「不适用 §10」升级为「不适用整个规范」。
-# 豁免 = 不进 §4 台账、不参与差集 B/C（§1 命名校验随之关闭）。清单共 13 项：
+# 豁免 = 不进 §4 台账、不参与差集 B/C（§1 命名校验随之关闭）。清单共 19 项：
 #   - 7 项备份/非台账仓（rewq、Assets-Backup、5 个 *-KeyBackup）
-#   - 6 项用户点名仓（ComfyUI-BatchPromptLoader / Multi-Tracker / Bilibili-Follow-Manager /
-#     Hugging-Face / Unfading-Wall / Unity）——2026-10-19 起随豁免升级进入本清单并已
-#     从 §4 表移除；其已交付产物（发布文档 / CHANGELOG / 流水线）一律保留。
+#   - 12 项用户点名仓（两轮，2026-10-18 + 2026-10-19 第二轮）：
+#     ComfyUI-BatchPromptLoader / Multi-Tracker / Bilibili-Follow-Manager /
+#     Hugging-Face / Unfading-Wall / Unity / Mooncake-Deconstruction /
+#     Offer-Landing-Kit / Android-IconAutoArrange / Free-Model-Probe /
+#     ChatGPT-Timezone-Fix / RTX-VSR-Lite——随豁免升级进入本清单并已从 §4 表移除；
+#     其已交付产物（发布文档 / CHANGELOG / 流水线）一律保留。
 EXCLUDED_FROM_REGISTRY="rewq
 Android-IconAutoArrange-Assets-Backup
 Android-IconAutoArrange-KeyBackup
@@ -66,7 +69,13 @@ Multi-Tracker
 Bilibili-Follow-Manager
 Hugging-Face
 Unfading-Wall
-Unity"
+Unity
+Mooncake-Deconstruction
+Offer-Landing-Kit
+Android-IconAutoArrange
+Free-Model-Probe
+ChatGPT-Timezone-Fix
+RTX-VSR-Lite"
 is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }
 
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。
@@ -161,7 +170,7 @@ echo "仓库注册表对照检查  owner=$OWNER  基准=GitHub API 实际仓名"
 echo "  远程取到 $REMOTE_N 个仓（其中公开 $(echo "$REMOTE_PUBLIC" | grep -c . || true) 个）；§4 表登记 $(printf '%s\n' "$ROWS" | grep -c . || true) 条"
 echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 private 的行无法被该端点证实，故不参与差集 A。"
   echo "  本脚本对备份仓/非台账副本有显式声明（EXCLUDED_FROM_REGISTRY），后者不参与差集 B/C。"
-  echo "  §10 的发布规范豁免清单是另一份（含 6 个用户点名仓），不以本脚本的台账豁免表达。"
+  echo "  §10 的发布规范豁免清单（23 项）与本脚本豁免（19 项）同源于 GOVERNANCE-EXCLUSIONS.md，差异为 4 个私有网站仓。"
 if [ -n "$DOC_EXEMPT" ]; then
   echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
 fi

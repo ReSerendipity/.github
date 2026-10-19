@@ -133,10 +133,10 @@ if [ -n "$ROOT" ]; then
   check_one "$ROOT" "$(basename "$ROOT")"
 else
   # 排除清单（REPOSITORY_GUIDELINES.md §10 范围声明，2026-10-19 同源声明）：
-  # 17 项自 2026-10-19 起不适用**整个规范**（用户裁决，非仅 §10），不参与本审计。
-  # 6 个"用户点名豁免"仓虽保留文档产物，但豁免语义 = 不再要求、不再审计，故同样排除。
-  # 改清单须多处同步（规范仓 §10、§4 表、check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY
-  # 〔其中 13 项的台账豁免载体〕、本声明、本机 GOVERNANCE-EXCLUSIONS.md）。
+  # 23 项自 2026-10-19 起不适用**整个规范**（用户裁决，非仅 §10），不参与本审计。
+  # "用户点名豁免"仓虽保留文档产物，但豁免语义 = 不再要求、不再审计，故同样排除。
+  # 改清单须五处同步（规范仓 §10、§4 表、check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY
+  # 〔其中 19 项的台账豁免载体〕、本声明、本仓根 GOVERNANCE-EXCLUSIONS.md）。
   EXCLUDED_FROM_RELEASE_STANDARD="DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
 SeedVR2-Lite-KeyBackup
@@ -153,7 +153,13 @@ Multi-Tracker
 Bilibili-Follow-Manager
 Hugging-Face
 Unfading-Wall
-Unity"
+Unity
+Mooncake-Deconstruction
+Offer-Landing-Kit
+Android-IconAutoArrange
+Free-Model-Probe
+ChatGPT-Timezone-Fix
+RTX-VSR-Lite"
   # 多仓模式：只扫含 .git 的一级子目录。跳过项**逐条显式列出**，不静默吞。
   SKIPPED=()
   SCANNED=0
