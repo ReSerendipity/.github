@@ -133,7 +133,7 @@
   执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按本条规则公开仓的 `AGENTS.md` 不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
   调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓没有 `AGENTS.md`，在此装钩子永远不触发，故本仓不预置）。
   扫描口径：只算活动文件，自动排除归档/备份副本、生成目录，以及**嵌套 git 仓**（其内容归那个仓自己判，`--include-nested` 可显式纳入）。
-  现存欠账（2026-10-19 更新）：`MiniMax-H3-Lite/comfy_kernel/AGENTS.md` 361 行（公开仓，欠账保留）。原 `Prompt-Library/AGENTS.md` 724 行一条已随私有仓例外**改判豁免**（私有仓不受 300 行上限约束）。
+  现存欠账（2026-10-19 更新）：`MiniMax-H3-Lite/comfy_kernel/AGENTS.md` 361 行、`Image-DuoModel/comfy_kernel/AGENTS.md` 386 行（均为公开仓，欠账保留；后者由 2026-10-19 文档审查补登记，此前漏记）。原 `Prompt-Library/AGENTS.md` 724 行一条已随私有仓例外**改判豁免**（私有仓不受 300 行上限约束）。
 
 **私有仓例外（2026-10-19 新增）**：
 
