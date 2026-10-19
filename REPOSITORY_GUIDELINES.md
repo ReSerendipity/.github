@@ -27,14 +27,14 @@
 
 ## 2. 分支规范（Branch Convention）
 
-- 所有仓库默认分支统一为 **`main`**（不使用 `master`）。
-- `main` 分支受保护 —— **本仓已实际配置，其余仓库仍须逐仓实测确认**：
+- 所有仓库默认分支统一为 **`main`**（不使用 `master`）。**2026-10-19 起全账号达成**：最后一个 `master`（`ComfyUI-BatchPromptLoader`）已迁移（同 commit 建 `main` → PATCH 默认分支 → 删 `master`，workflow 无 `master` 硬编码，文档引用随 PR #5 同步）。
+- `main` 分支受保护 —— **逐仓实测已完成（2026-10-19，41 仓全量，取数口径见下，零无法判定）**：
   - 本仓 `.github`：2026-10-17 此前实测为 `404 Branch not protected` + `rulesets: []`（即毫无保护），现已配置经典分支保护并回读确认 `protected=true`，必需检查为 `Workflow lint (actionlint + YAML)`、`DCO sign-off (Signed-off-by)`、`Reusable workflow smoke (self-purify) / 自净化核心规则（阻断）`、`Repository registry (§4 vs GitHub)` **四项**（第四项 2026-10-18 新增，见 §4），且禁止 force push 与删除分支。
   - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述四项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
   - **账号本人（Doro / ReSerendipity）可直接推送**，跳过 PR 流程；
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
-  - 其它仓库在核到保护之前，上面两条只是文档约定，GitHub 侧不会拦截任何人直推 `main`，也不会把任何检查设为合并前提。
-  - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。
+  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**（含全部私有仓与备份仓）。是否给剩余 30 仓批量配置保护（同 `enforce_admins=false` 口径）属**待立项决定**，未配置前 GitHub 侧不会拦截直推 `main`。
+  - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。本轮用 `GET /repos/<owner>/<repo>/branches/<default>` 的 `protected` 字段（认证态），41 仓全部返回明确布尔值，零 403。
 - 功能开发使用独立分支（`feat/*`、`fix/*`、`ci/*`、`chore/*`），完成后合入 `main`。
 - 本地与远程命名保持一致；远程重命名后需同步本地 remote URL。
 
