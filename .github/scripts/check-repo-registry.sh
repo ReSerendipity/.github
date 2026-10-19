@@ -51,7 +51,7 @@ EXCLUDED_FROM_REGISTRY="rewq
 Android-IconAutoArrange-Assets-Backup
 Android-IconAutoArrange-KeyBackup
 DraftPeek-KeyBackup
-Image-MultiModel-KeyBackup
+Image-DuoModel-KeyBackup
 SeedVR2-Lite-KeyBackup
 TTS-MultiModel-KeyBackup"
 is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }

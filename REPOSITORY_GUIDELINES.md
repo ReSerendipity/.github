@@ -93,7 +93,7 @@
 | Website-Wuthering-Waves | private |
 | Website-Zenless-Zone-Zero | private |
 | DraftPeek-KeyBackup | private |
-| Image-MultiModel-KeyBackup | private |
+| Image-DuoModel-KeyBackup | private |
 | SeedVR2-Lite-KeyBackup | private |
 | TTS-MultiModel-KeyBackup | private |
 | Agent-Knowledge | private |
@@ -108,6 +108,8 @@
 > 2026-10-17 变更：`Image-duoModel` → `Image-DuoModel`（`gh repo rename`，同一仓库 id 1329392361；改名前后 `pushed_at=2026-10-17T03:21:29Z` 未变，据此判定无并发写入）。本机克隆目录 `Image-MultiModel` 与 remote URL 已按 §6 三步一并校正为 `Image-DuoModel`。旧名 `Image-duoModel` / `Image-MultiModel` 均保留 GitHub 重定向，外链不断。**命名不合规欠账至此清零**，§4 检查脚本不再需要任何命名欠账豁免行。
 >
 > 取数口径：`GET /users/ReSerendipity/repos` 只返回公开仓，标为 `private` 的行无法由该端点证实或证伪，本轮未逐一复核（含三个 `-KeyBackup` 仓与 `Image-MultiModel-KeyBackup` 这条沿用旧项目名的条目）。任何"可见性/存在性"结论都要现场重取。
+>
+> 2026-10-19 变更：`Image-MultiModel-KeyBackup` → `Image-DuoModel-KeyBackup`（`gh repo rename`，父仓 `Image-MultiModel` → `Image-DuoModel` 两轮改名后，备份仓名按 §3 模式 `<项目名>-KeyBackup` 跟进对齐；旧名保留 GitHub 重定向，实测旧名请求返 200）。
 >
 > 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）、`Android-IconAutoArrange-KeyBackup`（密钥备份仓）三者未登记于此；表内已有的 4 个 `*-KeyBackup` 按 §3 属密钥备份仓。**注意区分两个清单**：本处管的是「§4 台账登记 + §1 命名校验」的豁免（登记在脚本的 `EXCLUDED_FROM_REGISTRY`），而 §10 的"不适用清单"是发布规范维度的豁免（含 6 个用户点名仓，它们**仍在 §4 台账内、命名仍受 §1 约束**）——两者不可混用。
 >
@@ -184,7 +186,7 @@
 
 本节把此前散在各处的发布口径收敛为**一条标准**，同时覆盖 **release（发布）、package（打包）、deployment（部署）** 三类：源头是 Image-DuoModel / SeedVR2-Lite / TTS-MultiModel 的三份 `docs/release-governance.md`、DraftPeek `docs/VERSIONING.md`，以及各仓的 `release.yml` / `docker-publish.yml` / `pages-deploy.yml`。
 
-> **范围声明（2026-10-18 更新）**：**已完成对账号内现存仓库的下发**——共 **29 个仓**在默认分支上持有本地化 `docs/release-governance.md`（28 个在 `main`，`ComfyUI-BatchPromptLoader` 在 `master`），且均含「远端优先」标记。逐仓差异与剩余欠账见 §10.6。
+> **范围声明（2026-10-19 更新）**：**已完成对账号内现存仓库的下发**——共 **29 个仓**在默认分支上持有本地化 `docs/release-governance.md`，全部位于 `main`（`ComfyUI-BatchPromptLoader` 于 2026-10-19 由 `master` 迁移，`master` 分支已删），且均含「远端优先」标记。逐仓差异与剩余欠账见 §10.6。
 >
 > 2026-10-18 补：其中 **6 个仓**（`ComfyUI-BatchPromptLoader` / `Multi-Tracker` / `Bilibili-Follow-Manager` / `Hugging-Face` / `Unfading-Wall` / `Unity`）已由用户点名**豁免 §10**——其已落地的文档与流水线**保留不动**，仅不再纳入 §10 的要求与审计范围（详见下方排除清单）。
 >
@@ -192,7 +194,7 @@
 >
 > **不适用 §10 的排除清单（2026-10-18 更新，共 17 项，逐条留痕）**：
 >
-> - **密钥 / 资产备份仓（6 个，按 §3 属备份仓、无发布链）**：`DraftPeek-KeyBackup`、`Image-MultiModel-KeyBackup`、`SeedVR2-Lite-KeyBackup`、`TTS-MultiModel-KeyBackup`、`Android-IconAutoArrange-KeyBackup`（2026-10-18 补录，此前误记为"4 个"）、`Android-IconAutoArrange-Assets-Backup`（内含加密签名密钥的口令台账与 PoC APK）。
+> - **密钥 / 资产备份仓（6 个，按 §3 属备份仓、无发布链）**：`DraftPeek-KeyBackup`、`Image-DuoModel-KeyBackup`（2026-10-19 前名 `Image-MultiModel-KeyBackup`，随父仓改名跟进）、`SeedVR2-Lite-KeyBackup`、`TTS-MultiModel-KeyBackup`、`Android-IconAutoArrange-KeyBackup`（2026-10-18 补录，此前误记为"4 个"）、`Android-IconAutoArrange-Assets-Backup`（内含加密签名密钥的口令台账与 PoC APK）。
 > - **网站仓（4 个）**：`Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
 > - **非 §4 台账副本（1 个）**：`rewq`。
 > - **用户点名豁免（6 个，2026-10-18）**：`ComfyUI-BatchPromptLoader`、`Multi-Tracker`、`Bilibili-Follow-Manager`、`Hugging-Face`、`Unfading-Wall`、`Unity`。

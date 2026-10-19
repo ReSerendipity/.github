@@ -138,7 +138,6 @@ else
   # check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY〔仅其中 7 项台账豁免〕、本声明）。
   EXCLUDED_FROM_RELEASE_STANDARD="DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
-Image-MultiModel-KeyBackup
 SeedVR2-Lite-KeyBackup
 TTS-MultiModel-KeyBackup
 Android-IconAutoArrange-KeyBackup
