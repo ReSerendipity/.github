@@ -40,20 +40,33 @@ REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 # 因此当下不会触发任何差集；但**一旦某个仓转为公开**，差集 B（远程有、表里无）与差集 C
 # （命名不符 §1）就会凭空报红。把排除显式写在这里，这份排除才有可执行载体。
 #
-# 与 §10 的「不适用清单」区分（两个清单语义不同、不可混用）：
-#   - 本清单 = 「§4 台账登记 + §1 命名校验」的豁免，只含备份仓 / 非台账副本。
-#   - §10 的「不适用清单」= 发布规范维度的豁免（见 REPOSITORY_GUIDELINES.md §10 范围声明），
-#     含 6 个用户点名仓（ComfyUI-BatchPromptLoader / Multi-Tracker / Bilibili-Follow-Manager /
-#     Hugging-Face / Unfading-Wall / Unity）——它们**仍在 §4 台账内、命名仍受 §1 约束**，
-#     因此**绝不能进本清单**，否则会静默关掉它们的命名校验。
+# 与 §10 的关系（2026-10-19 豁免升级后两清单已同源）：
+#   - §10 范围声明的「排除清单」共 17 项 = 不适用**整个规范**（用户裁决，见 §10 与 §4 的
+#     2026-10-19 变更记录）。
+#   - 本清单 = 其中参与「§4 台账 + §1 命名」维度的 13 项载体（§10 清单里其余 4 项为
+#     Website-Genshin-Impact / Website-Honkai-Star-Rail / Website-Wuthering-Waves /
+#     Website-Zenless-Zone-Zero——它们此前就不在 §4 表内、属台账豁免的固有覆盖，
+#     且均为私有、公开端点不可见，无需单列亦不触发差集；如转公开需补入本清单）。
 # 维护要求：本清单与 §4 的补充说明、以及 C:/Users/Doro/APP/repository/GOVERNANCE-EXCLUSIONS.md 同步修改。
+# 2026-10-19 豁免升级（用户裁决）：排除清单 17 项由「不适用 §10」升级为「不适用整个规范」。
+# 豁免 = 不进 §4 台账、不参与差集 B/C（§1 命名校验随之关闭）。清单共 13 项：
+#   - 7 项备份/非台账仓（rewq、Assets-Backup、5 个 *-KeyBackup）
+#   - 6 项用户点名仓（ComfyUI-BatchPromptLoader / Multi-Tracker / Bilibili-Follow-Manager /
+#     Hugging-Face / Unfading-Wall / Unity）——2026-10-19 起随豁免升级进入本清单并已
+#     从 §4 表移除；其已交付产物（发布文档 / CHANGELOG / 流水线）一律保留。
 EXCLUDED_FROM_REGISTRY="rewq
 Android-IconAutoArrange-Assets-Backup
 Android-IconAutoArrange-KeyBackup
 DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
 SeedVR2-Lite-KeyBackup
-TTS-MultiModel-KeyBackup"
+TTS-MultiModel-KeyBackup
+ComfyUI-BatchPromptLoader
+Multi-Tracker
+Bilibili-Follow-Manager
+Hugging-Face
+Unfading-Wall
+Unity"
 is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }
 
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。

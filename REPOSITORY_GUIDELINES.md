@@ -33,7 +33,7 @@
   - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述四项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
   - **账号本人（Doro / ReSerendipity）可直接推送**，跳过 PR 流程；
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
-  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**（含全部私有仓与备份仓）。是否给剩余 30 仓批量配置保护（同 `enforce_admins=false` 口径）属**待立项决定**，未配置前 GitHub 侧不会拦截直推 `main`。
+  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 17 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**待立项候选实为 13 仓**：`Agent-Knowledge`、`Android-IconAutoArrange`、`Card-Studio`、`ChatGPT-Timezone-Fix`、`Free-Model-Probe`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Mooncake-Deconstruction`、`Nekogal-DL`、`Offer-Landing-Kit`、`Prompt-Library`、`RTX-VSR-Lite`。是否批量配置保护（同 `enforce_admins=false` 口径）属**待立项决定**，未配置前 GitHub 侧不会拦截直推 `main`。
   - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。本轮用 `GET /repos/<owner>/<repo>/branches/<default>` 的 `protected` 字段（认证态），41 仓全部返回明确布尔值，零 403。
 - 功能开发使用独立分支（`feat/*`、`fix/*`、`ci/*`、`chore/*`），完成后合入 `main`。
 - 本地与远程命名保持一致；远程重命名后需同步本地 remote URL。
@@ -51,18 +51,17 @@
 
 ## 4. 现网仓库命名对照（2026-10-16 更新）
 
-### 保留名（品牌/专有词，6 个）
+### 保留名（品牌/专有词，5 个）
 
 | 仓库 | 可见性 |
 |---|---|
-| Unity | private |
 | SpiritPal | public |
 | GalgameShell | public |
 | DraftPeek | public |
 | ReSerendipity | public |
 | .github | public |
 
-### 短横线命名（32 个）
+### 短横线命名（23 个）
 
 | 仓库 | 可见性 |
 |---|---|
@@ -74,28 +73,19 @@
 | ComfyUI-Experiment-Toolbox | public |
 | Github-Repo-Scan | public |
 | Health-Info-Card | public |
-| Multi-Tracker | public |
-| Unfading-Wall | public |
 | Lineart-Painter | public |
 | Card-Studio | public |
-| ComfyUI-BatchPromptLoader | public |
 | Mooncake-Deconstruction | public |
 | Offer-Landing-Kit | public |
 | Android-IconAutoArrange | public |
 | Free-Model-Probe | public |
 | ChatGPT-Timezone-Fix | public |
-| Bilibili-Follow-Manager | private |
-| Hugging-Face | private |
-| Image-Scrapers | private |
-| Nekogal-DL | private |
 | Website-Genshin-Impact | private |
 | Website-Honkai-Star-Rail | private |
 | Website-Wuthering-Waves | private |
 | Website-Zenless-Zone-Zero | private |
-| DraftPeek-KeyBackup | private |
-| Image-DuoModel-KeyBackup | private |
-| SeedVR2-Lite-KeyBackup | private |
-| TTS-MultiModel-KeyBackup | private |
+| Image-Scrapers | private |
+| Nekogal-DL | private |
 | Agent-Knowledge | private |
 | Prompt-Library | private |
 
@@ -111,7 +101,9 @@
 >
 > 2026-10-19 变更：`Image-MultiModel-KeyBackup` → `Image-DuoModel-KeyBackup`（`gh repo rename`，父仓 `Image-MultiModel` → `Image-DuoModel` 两轮改名后，备份仓名按 §3 模式 `<项目名>-KeyBackup` 跟进对齐；旧名保留 GitHub 重定向，实测旧名请求返 200）。
 >
-> 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）、`Android-IconAutoArrange-KeyBackup`（密钥备份仓）三者未登记于此；表内已有的 4 个 `*-KeyBackup` 按 §3 属密钥备份仓。**注意区分两个清单**：本处管的是「§4 台账登记 + §1 命名校验」的豁免（登记在脚本的 `EXCLUDED_FROM_REGISTRY`），而 §10 的"不适用清单"是发布规范维度的豁免（含 6 个用户点名仓，它们**仍在 §4 台账内、命名仍受 §1 约束**）——两者不可混用。
+> 2026-10-19 变更（**豁免升级**，用户裁决）：**排除清单 17 项由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§11）」**。据此从本表移除 10 行：`Unity`（保留名）、`Multi-Tracker`、`Unfading-Wall`、`ComfyUI-BatchPromptLoader`、`Bilibili-Follow-Manager`、`Hugging-Face`（用户点名豁免 6 个中的 5 个短横线名）与 4 个 `*-KeyBackup`；保留名 6→5、短横线 32→23，全表 38→28 行。被移除仓不再参与 §1 命名校验与差集 B/C（脚本 `EXCLUDED_FROM_REGISTRY` 扩至 13 项），其存在与豁免语义由脚本声明与本机 `GOVERNANCE-EXCLUSIONS.md` 承载。**已交付产物（发布文档、CHANGELOG、流水线）一律保留。**
+>
+> 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）、`Android-IconAutoArrange-KeyBackup`（密钥备份仓）三者未登记于此（2026-10-19 起表内也不再有任何 `*-KeyBackup` 行，本原则完全成立）。**豁免语义（2026-10-19 升级后）**：排除清单 17 项整体豁免整个规范；脚本 `EXCLUDED_FROM_REGISTRY`（13 项）承载「台账 + 命名」维度的豁免载体——两者同源，不可只改一处。
 >
 > 2026-10-18 新增：本节对照表已从「本地命令手工跑」改为**远端 CI 门禁**——`ci.yml` 的 `repo-registry` 作业在任何 PR 与本仓推送时自动对账，并挂 `schedule` 周检（周一 03:00 UTC），覆盖「本仓无改动、台账却被外部动作改漂移」的场景。脚本与退出码口径不变（1=有差集，2=无法判定，两者都判红），本机不再需要跑它。该作业同时是 `main` 的必需检查之一（见 §2）。
 
@@ -153,6 +145,7 @@
 - 上传方式：调整各仓 `.gitignore` 中对应忽略规则（移除或加白名单），走分支 + PR 合入默认分支。
 - 私有仓的 `AGENTS.md` **不受 300 行上限约束**（上传属备份性质，该上限只约束公开仓的入库质量）。
 - **绝对例外 `rewq`**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；该仓冻结于本地，仅保留本地 git 管理，不新推（2026-10-19 裁决）。
+- **豁免仓不在本要求范围内（2026-10-19）**：排除清单 17 项已升级为不适用整个规范（见 §10），故清单内私有仓（`Bilibili-Follow-Manager`、`Hugging-Face`、`Unity`、4 个网站仓、6 个备份仓）**不受本上传制约束**；此前已完成/已存在的上传一律保留。
 
 ## 8. README 双版本制度（2026-10-13 新增；2026-10-19 按可见性分流）
 
@@ -190,9 +183,11 @@
 >
 > 2026-10-18 补：其中 **6 个仓**（`ComfyUI-BatchPromptLoader` / `Multi-Tracker` / `Bilibili-Follow-Manager` / `Hugging-Face` / `Unfading-Wall` / `Unity`）已由用户点名**豁免 §10**——其已落地的文档与流水线**保留不动**，仅不再纳入 §10 的要求与审计范围（详见下方排除清单）。
 >
+> **2026-10-19 豁免升级（用户裁决）**：下方排除清单 **17 项由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§11）」**——不再要求、不再审计本规范任何章节（含 §1 命名、§2 保护、§4 台账、§7/§8、§10）。台账/命名维度的执行载体见 §4 的 2026-10-19 变更记录与脚本 `EXCLUDED_FROM_REGISTRY`（13 项）。已交付产物（发布文档、CHANGELOG、流水线、AGENTS.md 上传）**一律保留**。
+>
 > 下发方式：**逐仓开分支 + 开 PR + 合并**（不直推默认分支）；文档一律以本仓 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款，只填本仓特有项，不得改写公共条款。
 >
-> **不适用 §10 的排除清单（2026-10-18 更新，共 17 项，逐条留痕）**：
+> **排除清单（2026-10-19 豁免升级：整部规范不适用，共 17 项，逐条留痕）**：
 >
 > - **密钥 / 资产备份仓（6 个，按 §3 属备份仓、无发布链）**：`DraftPeek-KeyBackup`、`Image-DuoModel-KeyBackup`（2026-10-19 前名 `Image-MultiModel-KeyBackup`，随父仓改名跟进）、`SeedVR2-Lite-KeyBackup`、`TTS-MultiModel-KeyBackup`、`Android-IconAutoArrange-KeyBackup`（2026-10-18 补录，此前误记为"4 个"）、`Android-IconAutoArrange-Assets-Backup`（内含加密签名密钥的口令台账与 PoC APK）。
 > - **网站仓（4 个）**：`Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
