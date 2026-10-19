@@ -47,7 +47,7 @@ REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 #     Website-Genshin-Impact / Website-Honkai-Star-Rail / Website-Wuthering-Waves /
 #     Website-Zenless-Zone-Zero——它们此前就不在 §4 表内、属台账豁免的固有覆盖，
 #     且均为私有、公开端点不可见，无需单列亦不触发差集；如转公开需补入本清单）。
-# 维护要求：本清单与 §4 的补充说明、以及 C:/Users/Doro/APP/repository/GOVERNANCE-EXCLUSIONS.md 同步修改。
+# 维护要求：本清单与 §4 的补充说明、以及本仓根 GOVERNANCE-EXCLUSIONS.md 同步修改。
 # 2026-10-19 豁免升级（用户裁决）：排除清单 17 项由「不适用 §10」升级为「不适用整个规范」。
 # 豁免 = 不进 §4 台账、不参与差集 B/C（§1 命名校验随之关闭）。清单共 13 项：
 #   - 7 项备份/非台账仓（rewq、Assets-Backup、5 个 *-KeyBackup）
