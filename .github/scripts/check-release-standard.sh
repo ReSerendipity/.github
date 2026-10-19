@@ -132,6 +132,28 @@ check_one() {
 if [ -n "$ROOT" ]; then
   check_one "$ROOT" "$(basename "$ROOT")"
 else
+  # §10 排除清单（REPOSITORY_GUIDELINES.md §10 范围声明，2026-10-19 同源声明）：
+  # 17 项均不适用 §10，不参与本审计。注意 6 个"用户点名豁免"仓虽保留文档产物，
+  # 但豁免语义 = 不再要求、不再审计，故同样排除。改清单须三处同步（规范仓 §10、
+  # check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY〔仅其中 7 项台账豁免〕、本声明）。
+  EXCLUDED_FROM_RELEASE_STANDARD="DraftPeek-KeyBackup
+Image-DuoModel-KeyBackup
+Image-MultiModel-KeyBackup
+SeedVR2-Lite-KeyBackup
+TTS-MultiModel-KeyBackup
+Android-IconAutoArrange-KeyBackup
+Android-IconAutoArrange-Assets-Backup
+Website-Genshin-Impact
+Website-Honkai-Star-Rail
+Website-Wuthering-Waves
+Website-Zenless-Zone-Zero
+rewq
+ComfyUI-BatchPromptLoader
+Multi-Tracker
+Bilibili-Follow-Manager
+Hugging-Face
+Unfading-Wall
+Unity"
   # 多仓模式：只扫含 .git 的一级子目录。跳过项**逐条显式列出**，不静默吞。
   SKIPPED=()
   SCANNED=0
@@ -147,6 +169,9 @@ else
     skip=0
     for s in ${SKIPS[@]+"${SKIPS[@]}"}; do [ "$s" = "$name" ] && skip=1; done
     if [ "$skip" -eq 1 ]; then SKIPPED+=("$name（--skip 指定）"); continue; fi
+    if printf '%s\n' "$EXCLUDED_FROM_RELEASE_STANDARD" | grep -qx "$name"; then
+      SKIPPED+=("$name（§10 排除清单，不适用发布规范审计）"); continue
+    fi
     SCANNED=$((SCANNED+1))
     check_one "$d" "$name"
   done <<EOF

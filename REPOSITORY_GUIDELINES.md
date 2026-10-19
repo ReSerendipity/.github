@@ -130,24 +130,35 @@
 - 已知历史偏差（2026-10-13 已全部对齐）：`image-scrapers`→`Image-Scrapers`、`MiniMax-H3-lite`→`MiniMax-H3-Lite`、`SeedVR2-lite`→`SeedVR2-Lite`（仅本地）；`prompt-library`→`Prompt-Library`、`agent-knowledge`→`Agent-Knowledge`（远程 + 本地）。
 - 2026-10-17 追加对齐：远程 `Image-MultiModel` 经 `Image-duoModel` 两次改名后定为 `Image-DuoModel`；本机克隆目录与 remote URL 已按本节三步同步为 `Image-DuoModel`。
 
-## 7. AGENTS.md 仅本地保留（2026-10-13 新增）
+## 7. AGENTS.md 仅本地保留（2026-10-13 新增；2026-10-19 按可见性分流）
 
-- 所有仓库的 `AGENTS.md` 及其家族（模块级 `AGENTS.md`、`docs/agents/**`、`FIX_LOG.md`、`LOCAL_RULES.md`）是 AI 辅助开发的**本地维护者上下文**，**不入库、不上传**。
+**本节适用范围：公开仓库。私有仓库走下方「私有仓例外」。**
+
+- **公开仓**的 `AGENTS.md` 及其家族（模块级 `AGENTS.md`、`docs/agents/**`、`FIX_LOG.md`、`LOCAL_RULES.md`）是 AI 辅助开发的**本地维护者上下文**，**不入库、不上传**。
 - `.gitignore` 规则：`AGENTS.md`（无斜线模式，匹配任意深度子目录）。
 - 误入库后的恢复流程：`git rm --cached <file>` + `.gitignore` 补规则 + commit + push（本地文件保留）。
 - fresh clone / CI / 协作者环境中不存在 `AGENTS.md` 属**预期行为**；随仓库分发的 agent 权威入口为根 `README.md` 与 `.github/**`。
-- 口径统一基线：DraftPeek / SeedVR2-Lite / SpiritPal / TTS-MultiModel / Image-DuoModel / MiniMax-H3-Lite 长期执行；GalgameShell / Github-Repo-Scan / Image-Scrapers / Prompt-Library 的历史误入库已于 2026-10-13 清除。
-- **行数上限：300 行**（2026-10-17 定）。数值不是拍来的，取自本机 14 个根级第一方 `AGENTS.md` 的实测分布：`min=21 median=90.5 p90=163 max=724`，其中 13 个 ≤300、合规簇最大 257 —— 300 因此不会追溯性地把既有文件全判红，又仍是真实约束。
-  执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按本条规则 `AGENTS.md` 永不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
+- 口径统一基线：DraftPeek / SeedVR2-Lite / SpiritPal / TTS-MultiModel / Image-DuoModel / MiniMax-H3-Lite 长期执行；GalgameShell / Github-Repo-Scan / Image-Scrapers / Prompt-Library 的历史误入库已于 2026-10-13 清除（后两仓现为私有，2026-10-19 起按下方例外转为**上传制**）。
+- **行数上限：300 行（仅约束公开仓入库内容）**（2026-10-17 定）。数值不是拍来的，取自本机 14 个根级第一方 `AGENTS.md` 的实测分布：`min=21 median=90.5 p90=163 max=724`，其中 13 个 ≤300、合规簇最大 257 —— 300 因此不会追溯性地把既有文件全判红，又仍是真实约束。
+  执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按本条规则公开仓的 `AGENTS.md` 不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
   调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓没有 `AGENTS.md`，在此装钩子永远不触发，故本仓不预置）。
   扫描口径：只算活动文件，自动排除归档/备份副本、生成目录，以及**嵌套 git 仓**（其内容归那个仓自己判，`--include-nested` 可显式纳入）。
-  现存欠账（2026-10-17 实测，脚本输出与此对账须一致）：`Prompt-Library/AGENTS.md` 724 行、`MiniMax-H3-Lite/comfy_kernel/AGENTS.md` 361 行。
+  现存欠账（2026-10-19 更新）：`MiniMax-H3-Lite/comfy_kernel/AGENTS.md` 361 行（公开仓，欠账保留）。原 `Prompt-Library/AGENTS.md` 724 行一条已随私有仓例外**改判豁免**（私有仓不受 300 行上限约束）。
 
-## 8. README 双版本制度（2026-10-13 新增）
+**私有仓例外（2026-10-19 新增）**：
+
+- 私有仓**不适用**"仅本地保留"——相反，**要求尽可能把本地维护者上下文上传入库**作为备份，包括但不限于：根/模块级 `AGENTS.md`、`docs/agents/**`、`docs/README.internal.md`、`FIX_LOG.md`、`LOCAL_RULES.md`（存在哪些传哪些；确实没有的如实记录"无可上传"，不编造）。
+- 上传方式：调整各仓 `.gitignore` 中对应忽略规则（移除或加白名单），走分支 + PR 合入默认分支。
+- 私有仓的 `AGENTS.md` **不受 300 行上限约束**（上传属备份性质，该上限只约束公开仓的入库质量）。
+- **绝对例外 `rewq`**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；该仓冻结于本地，仅保留本地 git 管理，不新推（2026-10-19 裁决）。
+
+## 8. README 双版本制度（2026-10-13 新增；2026-10-19 按可见性分流）
+
+**本节适用范围：公开仓库。私有仓见下方例外。**
 
 每个仓库有且仅有两份 README，分工如下：
 
-| 文件 | 定位 | 是否入库 |
+| 文件 | 定位 | 是否入库（公开仓） |
 |---|---|---|
 | 根目录 `README.md` | **对外展示版**：这是什么、怎么用、怎么参与，面向 GitHub 访客 | 入库、GitHub 渲染 |
 | `docs/README.internal.md` | **对内维护者说明**：本地环境约定、部署细节、内部字段引用、实验产物清单、维护者备忘 | **不入库**（.gitignore 排除） |
@@ -158,6 +169,7 @@
 - 内部版位置统一小写 `docs/README.internal.md`，**禁用** `DOCS/`（大写）变体；历史不一致仓 2026-10-13 已迁移（GalgameShell / Github-Repo-Scan）。
 - 内部版不入库；已误入库的按 §7 恢复流程处理。
 - 根 README 中的仓库链接与远程 URL 必须与实际仓库名大小写一致（例：Github-Repo-Scan 不得写 `github-repo-scan`）。
+- **私有仓例外（2026-10-19 新增）**：私有仓不强制双版本分流，`docs/README.internal.md` **应当入库**（与 §7 私有仓例外同理——尽可能上传作备份）；分流判据在私有仓仅作编写建议，不作入库闸。
 
 ## 9. 本地产物与依赖不进库（2026-10-13 新增）
 
@@ -271,7 +283,17 @@
 
 ### 10.7 本节的执行件
 
-| 执行件 | 用途 |
-|---|---|
-| `RELEASE_GOVERNANCE_TEMPLATE.md`（本仓根目录） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
-| `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红 |
+  | 执行件 | 用途 |
+  |---|---|
+  | `RELEASE_GOVERNANCE_TEMPLATE.md`（本仓根目录） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
+  | `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红；2026-10-19 起已挂入本仓 `ci.yml` 的 `schedule` 周检（`release-standard-audit` 作业，批量浅克隆后跑 `--repos-dir`），排除清单在脚本内 `EXCLUDED_FROM_RELEASE_STANDARD` 声明，与本节范围声明同源 |
+
+---
+
+## 11. 许可证规范（License，2026-10-19 新增）
+
+- **新创建的公开仓库**：默认 **Apache License 2.0**（SPDX: `Apache-2.0`）——建仓时随初始提交在根目录落**官方全文** `LICENSE` 文件（不用自创变体、不用改写版），版权行格式 `Copyright (c) 2026 Doro (ReSerendipity)`。
+- **特殊仓豁免**：`.github`（治理规范仓）与 `ReSerendipity`（profile 仓）等"内容即文档/身份"的仓库**不需要许可证**。
+- **存量仓不追溯**：本条生效（2026-10-19）前创建的仓库不强制补 LICENSE，是否补属各仓单独决定。
+- **私有仓**：不需要许可证（无对外分发语义）。
+- 已持有其他许可证的仓**保持原状**，不强制迁移；更换许可证属单独决定（注意 Apache-2.0 与 GPLv2 的单向兼容等约束）。
