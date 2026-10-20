@@ -12,7 +12,7 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、项目结构规范（§12：跨仓通用件位置 + 存量收敛）、路径规范（§13：正斜杠/相对仓根/逐字符一致 + `local/` 入库分流容器）、硬编码规范（§14：敏感值与机器特定值禁入、owner 名集中声明） |
+| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则 + 合并后自动删除源分支 `delete_branch_on_merge`）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、项目结构规范（§12：跨仓通用件位置 + 存量收敛）、路径规范（§13：正斜杠/相对仓根/逐字符一致 + `local/` 入库分流容器）、硬编码规范（§14：敏感值与机器特定值禁入、owner 名集中声明） |
 | `RELEASE_GOVERNANCE_TEMPLATE.md` | **发布文档统一模板**（§10 的执行件）：各仓复制为 `docs/release-governance.md` 后只填本仓特有项。配套核验脚本 `.github/scripts/check-release-standard.sh`（审计收敛进度，**非**每 PR 门禁） |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 通用 Pull Request 检查清单 |
