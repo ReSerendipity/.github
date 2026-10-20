@@ -75,7 +75,8 @@ Offer-Landing-Kit
 Android-IconAutoArrange
 Free-Model-Probe
 ChatGPT-Timezone-Fix
-RTX-VSR-Lite"
+RTX-VSR-Lite
+code-time-machine-1024"
 is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }
 
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。

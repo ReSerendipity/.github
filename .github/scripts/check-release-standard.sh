@@ -159,7 +159,8 @@ Offer-Landing-Kit
 Android-IconAutoArrange
 Free-Model-Probe
 ChatGPT-Timezone-Fix
-RTX-VSR-Lite"
+RTX-VSR-Lite
+code-time-machine-1024"
   # 多仓模式：只扫含 .git 的一级子目录。跳过项**逐条显式列出**，不静默吞。
   SKIPPED=()
   SCANNED=0

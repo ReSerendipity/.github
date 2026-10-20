@@ -107,6 +107,8 @@
 >
 > 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）、`Android-IconAutoArrange-KeyBackup`（密钥备份仓）三者未登记于此（2026-10-19 起表内也不再有任何 `*-KeyBackup` 行，本原则完全成立）。**豁免语义（2026-10-19 两轮升级后）**：排除清单 23 项整体豁免整个规范；脚本 `EXCLUDED_FROM_REGISTRY`（19 项）承载「台账 + 命名」维度的豁免载体——两者同源，不可只改一处。
 >
+> 2026-10-20 变更（**第三轮豁免**，用户裁决）：`code-time-machine-1024`（当日新建的 TRAE 1024Builder 展示站）加入豁免清单（**共 24 项**），**不登记本表**；脚本 `EXCLUDED_FROM_REGISTRY` 扩至 **20 项**、`EXCLUDED_FROM_RELEASE_STANDARD` 扩至 **24 项**。该仓名称分段 `1024` 不合 §1 Train Case，因整体豁免不作整改；撤销豁免前须先改名并补登本表。
+>
 > 2026-10-18 新增：本节对照表已从「本地命令手工跑」改为**远端 CI 门禁**——`ci.yml` 的 `repo-registry` 作业在任何 PR 与本仓推送时自动对账，并挂 `schedule` 周检（周一 03:00 UTC），覆盖「本仓无改动、台账却被外部动作改漂移」的场景。脚本与退出码口径不变（1=有差集，2=无法判定，两者都判红），本机不再需要跑它。该作业同时是 `main` 的必需检查之一（见 §2）。
 
 ## 5. 变更流程
@@ -196,6 +198,7 @@
 > - **非 §4 台账副本（1 个）**：`rewq`。
 > - **用户点名豁免（6 个，2026-10-18）**：`ComfyUI-BatchPromptLoader`、`Multi-Tracker`、`Bilibili-Follow-Manager`、`Hugging-Face`、`Unfading-Wall`、`Unity`。
 > - **用户点名豁免（第二轮，6 个，2026-10-19）**：`Mooncake-Deconstruction`、`Offer-Landing-Kit`、`Android-IconAutoArrange`、`Free-Model-Probe`、`ChatGPT-Timezone-Fix`、`RTX-VSR-Lite`。
+> - **用户点名豁免（第三轮，1 个，2026-10-20）**：`code-time-machine-1024`（TRAE 1024Builder 作品秀/展示站，2026-10-20 建仓；无 `.github/`、无发布链、无版本位，与 `Offer-Landing-Kit` 同类展示型仓）。其名称分段 `1024` 不符合 §1 Train Case，**因整体豁免故不作命名整改**；若将来撤销豁免，须先按 §1 改名（`Code-Time-Machine-1024`）并补登 §4 台账。
 >   **语义边界（重要）**：豁免**只表示"不再要求、不再审计 §10"**；这些仓此前已落地的 `docs/release-governance.md`、根级 `CHANGELOG.md` 与发布链改动**一律保留、不删除、不回滚**。若将来要撤销这些产物，属单独决定。
 >
 > 维护规则：本清单与 §4 台账表、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、以及本仓根 `GOVERNANCE-EXCLUSIONS.md` **五处同步修改**。
