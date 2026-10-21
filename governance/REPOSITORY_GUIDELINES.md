@@ -37,7 +37,7 @@
   - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。本轮用 `GET /repos/<owner>/<repo>/branches/<default>` 的 `protected` 字段（认证态），41 仓全部返回明确布尔值，零 403。
 - **Ruleset 基线（2026-10-21 新增，按可见性分流）**：
   - **公开仓**统一启用两个 ruleset：`governance-baseline`（branch：`deletion` + `non_fast_forward` + `pull_request` + `required_status_checks`，检查名只填实测近 60 天成功过的项）与 `tag-protection-v`（tag：`v*` 的 `deletion` + `non_fast_forward` + `update`）。
-  - **私有仓不启用 ruleset**：GitHub Free 对私有仓的 rulesets API 返回 `403 Upgrade to GitHub Pro`。2026-10-21 用户裁决——**不为此升级计划、不做替代改造**，维持经典分支保护现状（`enforce_admins=false` 口径），记为**平台能力缺口**而非欠账；将来升级 Pro 后按同一 JSON 补发。
+  - **私有仓不启用 ruleset**：GitHub Free 对私有仓的 rulesets API 返回 `403 Upgrade to GitHub Pro`；**经典分支保护同样 403**（2026-10-21 实测 `PUT /branches/main/protection` on `Agent-Knowledge` → 403）。2026-10-21 用户裁决——**不为此升级计划、不做替代改造**，服务器侧保护对私有仓不可用，记为**平台能力缺口而非欠账**；替代控制是各仓本地 `.githooks/pre-push`（已有多仓在跑）与本地预检脚本。将来升级 Pro 后，ruleset 按同一 JSON 补发，经典保护按需补配。
   - 已下发范围（2026-10-21 实测）：9 个公开管辖仓 branch+tag；`ReSerendipity` 保留既有等价 branch 规则（id 25288027）并补 tag。私有仓 4 个（`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）按上条跳过。
 - 功能开发使用独立分支（`feat/*`、`fix/*`、`ci/*`、`chore/*`），完成后合入 `main`。
 - **合并后自动删除源分支（2026-10-20 新增）**：所有仓库必须将 GitHub 仓库级开关 **`delete_branch_on_merge` 设为 `true`**——PR 合并后由 GitHub 自动删除 head 分支，不依赖合并者手动加 `--delete-branch`（该参数易被遗漏，实测曾导致 13 仓积压 23 条已合并分支）。
