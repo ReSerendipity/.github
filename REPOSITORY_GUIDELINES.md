@@ -129,29 +129,42 @@
 - 已知历史偏差（2026-10-13 已全部对齐）：`image-scrapers`→`Image-Scrapers`、`MiniMax-H3-lite`→`MiniMax-H3-Lite`、`SeedVR2-lite`→`SeedVR2-Lite`（仅本地）；`prompt-library`→`Prompt-Library`、`agent-knowledge`→`Agent-Knowledge`（远程 + 本地）。
 - 2026-10-17 追加对齐：远程 `Image-MultiModel` 经 `Image-duoModel` 两次改名后定为 `Image-DuoModel`；本机克隆目录与 remote URL 已按本节三步同步为 `Image-DuoModel`。
 
-## 7. AGENTS.md 仅本地保留（2026-10-13 新增；2026-10-19 按可见性分流）
+## 7. AGENTS.md 分流（公开仓仅本地保留 / 私有仓上传制）
 
-**本节适用范围：公开仓库。私有仓库走下方「私有仓例外」。**
+**本节适用范围：公开仓库为主；私有仓走 §7.1 末段「私有仓例外」。**
+
+### 7.1 归属与入库分流
 
 - **公开仓**的 `AGENTS.md` 及其家族（模块级 `AGENTS.md`、`local/agents/**`、`FIX_LOG.md`、`LOCAL_RULES.md`）是 AI 辅助开发的**本地维护者上下文**，**不入库、不上传**。（2026-10-19：agent 家族目录由 `docs/agents/` 迁至 `local/agents/`，随 §13.1 的 `local/` 容器统一承载；已跟踪的 `docs/agents/**` 在迁移批次中同步 `git rm --cached`。）
 - `.gitignore` 规则：`AGENTS.md`（无斜线模式，匹配任意深度子目录）。
 - 误入库后的恢复流程：`git rm --cached <file>` + `.gitignore` 补规则 + commit + push（本地文件保留）。
 - fresh clone / CI / 协作者环境中不存在 `AGENTS.md` 属**预期行为**；随仓库分发的 agent 权威入口为根 `README.md` 与 `.github/**`。
 - 口径统一基线：DraftPeek / SeedVR2-Lite / SpiritPal / TTS-MultiModel / Image-DuoModel / MiniMax-H3-Lite 长期执行；GalgameShell / Github-Repo-Scan / Image-Scrapers / Prompt-Library 的历史误入库已于 2026-10-13 清除（后两仓现为私有，2026-10-19 起按下方例外转为**上传制**）。
-- **行数上限：300 行（仅约束公开仓入库内容）**（2026-10-17 定）。数值不是拍来的，取自本机 14 个根级第一方 `AGENTS.md` 的实测分布：`min=21 median=90.5 p90=163 max=724`，其中 13 个 ≤300、合规簇最大 257 —— 300 因此不会追溯性地把既有文件全判红，又仍是真实约束。
-  执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按本条规则公开仓的 `AGENTS.md` 不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
-  调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓没有 `AGENTS.md`，在此装钩子永远不触发，故本仓不预置）。
-  扫描口径：只算活动文件，自动排除归档/备份副本、生成目录，以及**嵌套 git 仓**（其内容归那个仓自己判，`--include-nested` 可显式纳入）。
-  现存欠账（2026-10-21 复核）：**无**。原 `MiniMax-H3-Lite/comfy_kernel/AGENTS.md`（361 行）与 `Image-DuoModel/comfy_kernel/AGENTS.md`（386 行）两条经核实属 **vendored 上游目录**（ComfyUI 源码整份拷贝、自带嵌套 `.git`、父仓 `git ls-files` 为空），不由我方负责，已撤销欠账登记；`Prompt-Library/AGENTS.md` 724 行随私有仓例外**豁免**（私有仓不受 300 行上限约束）。
-- **vendored / 上游子目录不纳入本节质量约束**：以「自带嵌套 `.git` 的第三方源码目录」（如 `Image-DuoModel/comfy_kernel/`、`MiniMax-H3-Lite/comfy_kernel/`）为判据，其 `AGENTS.md`、文档与代码一律归上游；`check-agents-md-size.sh` 默认已排除此类目录，不得把上游文档登记为我方欠账。若需纳入扫描，须用 `--include-nested` 显式声明并在报告中注明「上游」。 
 
 **私有仓例外（2026-10-19 新增）**：
 
 - 私有仓**不适用**"仅本地保留"——相反，**要求尽可能把本地维护者上下文上传入库**作为备份，包括但不限于：根/模块级 `AGENTS.md`、`local/agents/**`、`local/README.internal.md`、`FIX_LOG.md`、`LOCAL_RULES.md`（存在哪些传哪些；确实没有的如实记录"无可上传"，不编造）。
 - 上传方式：调整各仓 `.gitignore` 中对应忽略规则（移除或加白名单），走分支 + PR 合入默认分支。
-- 私有仓的 `AGENTS.md` **不受 300 行上限约束**（上传属备份性质，该上限只约束公开仓的入库质量）。
+- 私有仓的 `AGENTS.md` **不受 §7.2 的 300 行上限约束**（上传属备份性质，该上限只约束公开仓的入库质量）。
 - **绝对例外 `rewq`**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；该仓冻结于本地，仅保留本地 git 管理，不新推（2026-10-19 裁决）。
 - **豁免仓不在本要求范围内（2026-10-19）**：排除清单 29 项已升级为不适用整个规范（见 §10），故清单内私有仓（`Bilibili-Follow-Manager`、`Hugging-Face`、`Unity`、4 个网站仓、7 个备份仓）**不受本上传制约束**；此前已完成/已存在的上传一律保留。
+
+### 7.2 公开仓 AGENTS.md 质量标准
+
+- **行数上限：300 行（仅约束公开仓入库内容）**（2026-10-17 定）。数值不是拍来的，取自本机 14 个根级第一方 `AGENTS.md` 的实测分布：`min=21 median=90.5 p90=163 max=724`，其中 13 个 ≤300、合规簇最大 257 —— 300 因此不会追溯性地把既有文件全判红，又仍是真实约束。
+- **最小结构**：必须含四块——「快速命令（装/跑/测）」「禁区（不许做什么）」「文档索引（去哪儿找）」「已知坑 / GOTCHAS」；缺块即不合规。
+- **单一职责**：不复述根 README 的安装与使用步骤，只写本地事实与指路；同一事实只保留一处权威来源。
+- **模块级边界**：模块级 `AGENTS.md` 只描述本模块的命令与约束，不复制全仓规则；全仓规则只写根文件。
+- **时效性**：文首「最后更新 / 对应版本」必须与版本位（`package.json` / `pyproject.toml` / `Cargo.toml` 等）一致；发布或目录结构变更后同步更新。
+- **引用可解析**：文中出现的仓内路径必须真实存在，由各仓 `scripts/check_spec_refs.py` 型审计覆盖；发现幽灵引用须修正或注明「计划，未落盘」。
+- **vendored / 上游子目录不纳入本节质量约束**：以「自带嵌套 `.git` 的第三方源码目录」（如 `Image-DuoModel/comfy_kernel/`、`MiniMax-H3-Lite/comfy_kernel/`）为判据，其 `AGENTS.md`、文档与代码一律归上游；`check-agents-md-size.sh` 默认已排除此类目录，不得把上游文档登记为我方欠账。若需纳入扫描，须用 `--include-nested` 显式声明并在报告中注明「上游」。
+
+### 7.3 执行载体与欠账
+
+- 执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按 §7.1 公开仓的 `AGENTS.md` 不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
+- 调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓没有 `AGENTS.md`，在此装钩子永远不触发，故本仓不预置）。
+- 扫描口径：只算活动文件，自动排除归档/备份副本、生成目录，以及**嵌套 git 仓**（其内容归那个仓自己判，`--include-nested` 可显式纳入）。
+- 现存欠账（2026-10-21 复核）：**无**。原 `MiniMax-H3-Lite/comfy_kernel/AGENTS.md`（361 行）与 `Image-DuoModel/comfy_kernel/AGENTS.md`（386 行）两条经核实属 **vendored 上游目录**（ComfyUI 源码整份拷贝、自带嵌套 `.git`、父仓 `git ls-files` 为空），不由我方负责，已撤销欠账登记；`Prompt-Library/AGENTS.md` 724 行随私有仓例外**豁免**（私有仓不受 300 行上限约束）。
 
 ## 8. README 双版本制度（2026-10-13 新增；2026-10-19 按可见性分流）
 
@@ -167,10 +180,14 @@
 规则：
 
 - 分流判据：**陌生用户读了能否行动**——能行动的写根 `README.md`；不能行动的一律进内部版，不得写回根 README。
+- 判据落地三问（任一命中即进内部版）：① 是否必须使用本机路径 / 私有账号 / 内部数据才能照做？② 照做后能否得到可验证结果（装好、跑起来、配置生效）？③ 内容是否只对维护者有意义（实验记录、临时备忘、调试过程）？——**三问全否才写根 README**。
+- 正例（留根）：安装与启动命令、环境变量表、端口与访问地址、Docker / APK / 桌面安装步骤、常见报错与处理。
+- 反例（进内部版）：本机模型目录与盘符、内部账号与密钥、实验产物清单、维护者备忘、某次调试过程记录。
+- **边界声明**：上述判据只约束**两份 README 之间**的分工；全仓文档放哪个目录（`docs/` 入库 vs `local/` 不入库）由 §13.1 规定，两者不互相替代。
 - 内部版位置统一 `local/README.internal.md`（§13.1 `local/` 容器）；历史形态 `docs/README.internal.md` 与大写 `DOCS/` 变体均为旧位（`DOCS/` 历史 2026-10-13 已迁移 GalgameShell / Github-Repo-Scan；`docs/` 前缀 2026-10-19 起统一迁 `local/`）。
-- 内部版不入库；已误入库的按 §7 恢复流程处理。
+- 内部版不入库；已误入库的按 §7.1 恢复流程处理。
 - 根 README 中的仓库链接与远程 URL 必须与实际仓库名大小写一致（例：Github-Repo-Scan 不得写 `github-repo-scan`）。
-- **私有仓例外（2026-10-19 新增）**：私有仓不强制双版本分流，`local/README.internal.md` **应当入库**（与 §7 私有仓例外同理——尽可能上传作备份）；分流判据在私有仓仅作编写建议，不作入库闸。
+- **私有仓例外（2026-10-19 新增）**：私有仓不强制双版本分流，`local/README.internal.md` **应当入库**（与 §7.1 私有仓例外同理——尽可能上传作备份）；分流判据在私有仓仅作编写建议，不作入库闸。
 
 ## 9. 本地产物与依赖不进库（2026-10-13 新增）
 
