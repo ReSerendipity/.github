@@ -33,7 +33,7 @@
   - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述四项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
   - **账号本人（Doro / ReSerendipity）可直接推送**，跳过 PR 流程；
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
-  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 23 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**待立项候选实为 7 仓**：`Agent-Knowledge`、`Card-Studio`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Nekogal-DL`、`Prompt-Library`。是否批量配置保护（同 `enforce_admins=false` 口径）属**待立项决定**，未配置前 GitHub 侧不会拦截直推 `main`。
+  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 23 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**待立项候选实为 7 仓**：`Agent-Knowledge`、`Card-Studio`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Nekogal-DL`、`Prompt-Library`（2026-10-21 第四轮豁免后，`Card-Studio` / `Health-Info-Card` / `Lineart-Painter` 已入排除清单，**待立项候选实为 4 仓**：`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）。是否批量配置保护（同 `enforce_admins=false` 口径）属**待立项决定**，未配置前 GitHub 侧不会拦截直推 `main`。
   - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。本轮用 `GET /repos/<owner>/<repo>/branches/<default>` 的 `protected` 字段（认证态），41 仓全部返回明确布尔值，零 403。
 - 功能开发使用独立分支（`feat/*`、`fix/*`、`ci/*`、`chore/*`），完成后合入 `main`。
 - **合并后自动删除源分支（2026-10-20 新增）**：所有仓库必须将 GitHub 仓库级开关 **`delete_branch_on_merge` 设为 `true`**——PR 合并后由 GitHub 自动删除 head 分支，不依赖合并者手动加 `--delete-branch`（该参数易被遗漏，实测曾导致 13 仓积压 23 条已合并分支）。
@@ -41,7 +41,7 @@
   - **不得删除的分支**：默认分支 `main`、Pages 部署目标 `gh-pages`、release-please 工作分支 `release-please--branches--main`（合并后由机器人自行重建，删除属正常行为）、以及刻意命名的归档/备份本地分支（`archive/*DO-NOT-PUSH*`、`backup/*`）——这些是**保留对象**，不是"漏删"。
   - **清理判据**：squash 合并会使分支不再是 `main` 的祖先，`git merge-base --is-ancestor` **不可作为判断依据**；应以其**关联 PR 状态为 `MERGED`** 为准。
   - 存量清理：开关开启后，已合并的残留分支需一次性清理（2026-10-20 已执行：13 管辖仓 23 条 + `.github` 12 条）。
-  - 排除清单（`GOVERNANCE-EXCLUSIONS.md` 25 项）不适用本规范，不强制开启；已开启的一律保留。
+  - 排除清单（`GOVERNANCE-EXCLUSIONS.md` 29 项）不适用本规范，不强制开启；已开启的一律保留。
 - 本地与远程命名保持一致；远程重命名后需同步本地 remote URL。
 
 ## 3. 密钥与敏感信息备份规范（Secret Backup）
@@ -67,7 +67,7 @@
 | ReSerendipity | public |
 | .github | public |
 
-### 短横线命名（17 个）
+### 短横线命名（14 个）
 
 | 仓库 | 可见性 |
 |---|---|
@@ -77,9 +77,6 @@
 | MiniMax-H3-Lite | public |
 | ComfyUI-Experiment-Toolbox | public |
 | Github-Repo-Scan | public |
-| Health-Info-Card | public |
-| Lineart-Painter | public |
-| Card-Studio | public |
 | Website-Genshin-Impact | private |
 | Website-Honkai-Star-Rail | private |
 | Website-Wuthering-Waves | private |
@@ -105,9 +102,11 @@
 >
 > 2026-10-19 变更（**第二轮豁免**，用户裁决）：`Mooncake-Deconstruction`、`Offer-Landing-Kit`、`Android-IconAutoArrange`、`Free-Model-Probe`、`ChatGPT-Timezone-Fix`、`RTX-VSR-Lite` 六仓加入豁免清单（共 23 项）。本表再移除 6 行：短横线 23→17，全表 28→22 行；脚本 `EXCLUDED_FROM_REGISTRY` 扩至 19 项。
 >
-> 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）、`Android-IconAutoArrange-KeyBackup`（密钥备份仓）三者未登记于此（2026-10-19 起表内也不再有任何 `*-KeyBackup` 行，本原则完全成立）。**豁免语义（2026-10-19 两轮升级后）**：排除清单 25 项整体豁免整个规范；脚本 `EXCLUDED_FROM_REGISTRY`（21 项）承载「台账 + 命名」维度的豁免载体——两者同源，不可只改一处。
+> 2026-10-18 追加：**备份仓 / 非台账副本不进本对照表**——`rewq`（非台账副本）、`Android-IconAutoArrange-Assets-Backup`（资源备份仓）、`Android-IconAutoArrange-KeyBackup`（密钥备份仓）三者未登记于此（2026-10-19 起表内也不再有任何 `*-KeyBackup` 行，本原则完全成立）。**豁免语义（2026-10-21 第四轮后）**：排除清单 29 项整体豁免整个规范；脚本 `EXCLUDED_FROM_REGISTRY`（25 项）承载「台账 + 命名」维度的豁免载体——两者同源，不可只改一处。
 >
 > 2026-10-20 变更（**第三轮豁免 + 备份仓补录**，用户裁决）：`Code-Time-Machine-1024`（当日新建的 TRAE 1024Builder 展示站；远程实名即此大写形式）与 `SpiritPal-KeyBackup`（§3 密钥备份仓，2026-10-20 新建、此前遗漏）加入豁免清单（**共 25 项**），**均不登记本表**；脚本 `EXCLUDED_FROM_REGISTRY` 扩至 **21 项**、`EXCLUDED_FROM_RELEASE_STANDARD` 扩至 **25 项**。用户同时裁决：**密钥/资产备份仓按性质即须豁免，不需逐仓审批**。`Code-Time-Machine-1024` 的分段 `1024` 以数字开头、不合 §1 Train Case，因整体豁免不作整改；撤销豁免前须先改名并补登本表。
+>
+> 2026-10-21 变更（**第四轮豁免**，用户点名）：`p0-murder-mystery`、`Health-Info-Card`、`Lineart-Painter`、`Card-Studio` 四仓加入豁免清单（**共 29 项**，均为 public），**均不登记本表**；本表再移除 3 行（后三者原登记于短横线节，`p0-murder-mystery` 此前未登记）：短横线 17→14，全表 22→19 行。脚本 `EXCLUDED_FROM_REGISTRY` 扩至 **25 项**、`EXCLUDED_FROM_RELEASE_STANDARD` 扩至 **29 项**。语义：不适用整部规范，已交付产物一律保留。
 >
 > 2026-10-18 新增：本节对照表已从「本地命令手工跑」改为**远端 CI 门禁**——`ci.yml` 的 `repo-registry` 作业在任何 PR 与本仓推送时自动对账，并挂 `schedule` 周检（周一 03:00 UTC），覆盖「本仓无改动、台账却被外部动作改漂移」的场景。脚本与退出码口径不变（1=有差集，2=无法判定，两者都判红），本机不再需要跑它。该作业同时是 `main` 的必需检查之一（见 §2）。
 
@@ -149,7 +148,7 @@
 - 上传方式：调整各仓 `.gitignore` 中对应忽略规则（移除或加白名单），走分支 + PR 合入默认分支。
 - 私有仓的 `AGENTS.md` **不受 300 行上限约束**（上传属备份性质，该上限只约束公开仓的入库质量）。
 - **绝对例外 `rewq`**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；该仓冻结于本地，仅保留本地 git 管理，不新推（2026-10-19 裁决）。
-- **豁免仓不在本要求范围内（2026-10-19）**：排除清单 25 项已升级为不适用整个规范（见 §10），故清单内私有仓（`Bilibili-Follow-Manager`、`Hugging-Face`、`Unity`、4 个网站仓、7 个备份仓）**不受本上传制约束**；此前已完成/已存在的上传一律保留。
+- **豁免仓不在本要求范围内（2026-10-19）**：排除清单 29 项已升级为不适用整个规范（见 §10），故清单内私有仓（`Bilibili-Follow-Manager`、`Hugging-Face`、`Unity`、4 个网站仓、7 个备份仓）**不受本上传制约束**；此前已完成/已存在的上传一律保留。
 
 ## 8. README 双版本制度（2026-10-13 新增；2026-10-19 按可见性分流）
 
@@ -187,11 +186,11 @@
 >
 > 2026-10-18 补：其中 **6 个仓**（`ComfyUI-BatchPromptLoader` / `Multi-Tracker` / `Bilibili-Follow-Manager` / `Hugging-Face` / `Unfading-Wall` / `Unity`）已由用户点名**豁免 §10**——其已落地的文档与流水线**保留不动**，仅不再纳入 §10 的要求与审计范围（详见下方排除清单）。
 >
-> **2026-10-19 豁免升级（用户裁决）**：下方排除清单由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§11）」——不再要求、不再审计本规范任何章节（含 §1 命名、§2 保护、§4 台账、§7/§8、§10）；同日**第二轮点名**再增 6 仓，2026-10-20 **第三轮点名 +1、备份仓补录 +1**，清单共 **25 项**。台账/命名维度的执行载体见 §4 的 2026-10-19 变更记录与脚本 `EXCLUDED_FROM_REGISTRY`（21 项）。已交付产物（发布文档、CHANGELOG、流水线、AGENTS.md 上传）**一律保留**。
+> **2026-10-19 豁免升级（用户裁决）**：下方排除清单由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§11）」——不再要求、不再审计本规范任何章节（含 §1 命名、§2 保护、§4 台账、§7/§8、§10）；同日**第二轮点名**再增 6 仓，2026-10-20 **第三轮点名 +1、备份仓补录 +1**，2026-10-21 **第四轮点名 +4**，清单共 **29 项**。台账/命名维度的执行载体见 §4 的 2026-10-19 变更记录与脚本 `EXCLUDED_FROM_REGISTRY`（25 项）。已交付产物（发布文档、CHANGELOG、流水线、AGENTS.md 上传）**一律保留**。
 >
 > 下发方式：**逐仓开分支 + 开 PR + 合并**（不直推默认分支）；文档一律以本仓 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款，只填本仓特有项，不得改写公共条款。
 >
-> **排除清单（2026-10-19 豁免升级：整部规范不适用，共 25 项，逐条留痕）**：
+> **排除清单（2026-10-19 豁免升级：整部规范不适用，共 29 项，逐条留痕）**：
 >
 > - **密钥 / 资产备份仓（7 个，按 §3 属备份仓、无发布链）**：`DraftPeek-KeyBackup`、`Image-DuoModel-KeyBackup`（2026-10-19 前名 `Image-MultiModel-KeyBackup`，随父仓改名跟进）、`SeedVR2-Lite-KeyBackup`、`TTS-MultiModel-KeyBackup`、`Android-IconAutoArrange-KeyBackup`（2026-10-18 补录，此前误记为"4 个"）、`Android-IconAutoArrange-Assets-Backup`（内含加密签名密钥的口令台账与 PoC APK）、`SpiritPal-KeyBackup`（2026-10-20 补录）。**此类仓按性质即须豁免，不需逐仓审批（2026-10-20 用户裁决）。**
 > - **网站仓（4 个）**：`Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
@@ -199,6 +198,7 @@
 > - **用户点名豁免（6 个，2026-10-18）**：`ComfyUI-BatchPromptLoader`、`Multi-Tracker`、`Bilibili-Follow-Manager`、`Hugging-Face`、`Unfading-Wall`、`Unity`。
 > - **用户点名豁免（第二轮，6 个，2026-10-19）**：`Mooncake-Deconstruction`、`Offer-Landing-Kit`、`Android-IconAutoArrange`、`Free-Model-Probe`、`ChatGPT-Timezone-Fix`、`RTX-VSR-Lite`。
 > - **用户点名豁免（第三轮，1 个，2026-10-20）**：`Code-Time-Machine-1024`（TRAE 1024Builder 作品秀/展示站，2026-10-20 建仓；无 `.github/`、无发布链、无版本位，与 `Offer-Landing-Kit` 同类展示型仓）。其分段 `1024` 以数字开头，不符合 §1 Train Case，**因整体豁免故不作命名整改**；若将来撤销豁免，须先按 §1 改名并补登 §4 台账。
+> - **用户点名豁免（第四轮，4 个，2026-10-21）**：`p0-murder-mystery`、`Health-Info-Card`、`Lineart-Painter`、`Card-Studio`。（均为公开仓；语义：不适用整部规范，产物保留。）
 >   **语义边界（重要）**：豁免**只表示"不再要求、不再审计 §10"**；这些仓此前已落地的 `docs/release-governance.md`、根级 `CHANGELOG.md` 与发布链改动**一律保留、不删除、不回滚**。若将来要撤销这些产物，属单独决定。
 >
 > 维护规则：本清单与 §4 台账表、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、以及本仓根 `GOVERNANCE-EXCLUSIONS.md` **五处同步修改**。

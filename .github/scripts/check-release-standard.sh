@@ -133,10 +133,11 @@ if [ -n "$ROOT" ]; then
   check_one "$ROOT" "$(basename "$ROOT")"
 else
   # 排除清单（REPOSITORY_GUIDELINES.md §10 范围声明，2026-10-19 同源声明）：
-  # 25 项自 2026-10-19 起不适用**整个规范**（用户裁决，非仅 §10；2026-10-20 补录 SpiritPal-KeyBackup）。
+  # 29 项自 2026-10-19 起不适用**整个规范**（用户裁决，非仅 §10；2026-10-20 补录 SpiritPal-KeyBackup，
+  # 2026-10-21 第四轮 +4）。
   # "用户点名豁免"仓虽保留文档产物，但豁免语义 = 不再要求、不再审计，故同样排除。
   # 改清单须五处同步（规范仓 §10、§4 表、check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY
-  # 〔其中 21 项的台账豁免载体〕、本声明、本仓根 GOVERNANCE-EXCLUSIONS.md）。
+  # 〔其中 25 项的台账豁免载体〕、本声明、本仓根 GOVERNANCE-EXCLUSIONS.md）。
   EXCLUDED_FROM_RELEASE_STANDARD="DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
 SeedVR2-Lite-KeyBackup
@@ -161,7 +162,11 @@ Free-Model-Probe
 ChatGPT-Timezone-Fix
 RTX-VSR-Lite
 Code-Time-Machine-1024
-SpiritPal-KeyBackup"
+SpiritPal-KeyBackup
+p0-murder-mystery
+Health-Info-Card
+Lineart-Painter
+Card-Studio"
   # 多仓模式：只扫含 .git 的一级子目录。跳过项**逐条显式列出**，不静默吞。
   SKIPPED=()
   SCANNED=0
