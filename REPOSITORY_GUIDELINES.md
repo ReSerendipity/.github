@@ -98,7 +98,7 @@
 >
 > 2026-10-19 变更：`Image-MultiModel-KeyBackup` → `Image-DuoModel-KeyBackup`（`gh repo rename`，父仓 `Image-MultiModel` → `Image-DuoModel` 两轮改名后，备份仓名按 §3 模式 `<项目名>-KeyBackup` 跟进对齐；旧名保留 GitHub 重定向，实测旧名请求返 200）。
 >
-> 2026-10-19 变更（**豁免升级**，用户裁决）：**排除清单 17 项由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§11）」**。据此从本表移除 10 行：`Unity`（保留名）、`Multi-Tracker`、`Unfading-Wall`、`ComfyUI-BatchPromptLoader`、`Bilibili-Follow-Manager`、`Hugging-Face`（用户点名豁免 6 个中的 5 个短横线名）与 4 个 `*-KeyBackup`；保留名 6→5、短横线 32→23，全表 38→28 行。被移除仓不再参与 §1 命名校验与差集 B/C（脚本 `EXCLUDED_FROM_REGISTRY` 扩至 13 项），其存在与豁免语义由脚本声明与本仓 `GOVERNANCE-EXCLUSIONS.md` 承载。**已交付产物（发布文档、CHANGELOG、流水线）一律保留。**
+> 2026-10-19 变更（**豁免升级**，用户裁决）：**排除清单 17 项由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§11；2026-10-21 起随 §12-§14 新增，现行范围已扩至 §1–§14）」**。据此从本表移除 10 行：`Unity`（保留名）、`Multi-Tracker`、`Unfading-Wall`、`ComfyUI-BatchPromptLoader`、`Bilibili-Follow-Manager`、`Hugging-Face`（用户点名豁免 6 个中的 5 个短横线名）与 4 个 `*-KeyBackup`；保留名 6→5、短横线 32→23，全表 38→28 行。被移除仓不再参与 §1 命名校验与差集 B/C（脚本 `EXCLUDED_FROM_REGISTRY` 扩至 13 项），其存在与豁免语义由脚本声明与本仓 `GOVERNANCE-EXCLUSIONS.md` 承载。**已交付产物（发布文档、CHANGELOG、流水线）一律保留。**
 >
 > 2026-10-19 变更（**第二轮豁免**，用户裁决）：`Mooncake-Deconstruction`、`Offer-Landing-Kit`、`Android-IconAutoArrange`、`Free-Model-Probe`、`ChatGPT-Timezone-Fix`、`RTX-VSR-Lite` 六仓加入豁免清单（共 23 项）。本表再移除 6 行：短横线 23→17，全表 28→22 行；脚本 `EXCLUDED_FROM_REGISTRY` 扩至 19 项。
 >
@@ -186,11 +186,11 @@
 >
 > 2026-10-18 补：其中 **6 个仓**（`ComfyUI-BatchPromptLoader` / `Multi-Tracker` / `Bilibili-Follow-Manager` / `Hugging-Face` / `Unfading-Wall` / `Unity`）已由用户点名**豁免 §10**——其已落地的文档与流水线**保留不动**，仅不再纳入 §10 的要求与审计范围（详见下方排除清单）。
 >
-> **2026-10-19 豁免升级（用户裁决）**：下方排除清单由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§11）」——不再要求、不再审计本规范任何章节（含 §1 命名、§2 保护、§4 台账、§7/§8、§10）；同日**第二轮点名**再增 6 仓，2026-10-20 **第三轮点名 +1、备份仓补录 +1**，2026-10-21 **第四轮点名 +4**，清单共 **29 项**。台账/命名维度的执行载体见 §4 的 2026-10-19 变更记录与脚本 `EXCLUDED_FROM_REGISTRY`（25 项）。已交付产物（发布文档、CHANGELOG、流水线、AGENTS.md 上传）**一律保留**。
+> **2026-10-19 豁免升级（用户裁决）**：下方排除清单由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§14）」——不再要求、不再审计本规范任何章节（含 §1 命名、§2 保护、§4 台账、§7/§8、§10、§12 结构、§13 路径、§14 硬编码）；同日**第二轮点名**再增 6 仓，2026-10-20 **第三轮点名 +1、备份仓补录 +1**，2026-10-21 **第四轮点名 +4**，清单共 **29 项**。台账/命名维度的执行载体见 §4 的 2026-10-19 变更记录与脚本 `EXCLUDED_FROM_REGISTRY`（25 项）。已交付产物（发布文档、CHANGELOG、流水线、AGENTS.md 上传）**一律保留**。
 >
 > 下发方式：**逐仓开分支 + 开 PR + 合并**（不直推默认分支）；文档一律以本仓 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款，只填本仓特有项，不得改写公共条款。
 >
-> **排除清单（2026-10-19 豁免升级：整部规范不适用，共 29 项，逐条留痕）**：
+> **排除清单（2026-10-19 豁免升级：整部规范（§1–§14）不适用，共 29 项，逐条留痕）**：
 >
 > - **密钥 / 资产备份仓（7 个，按 §3 属备份仓、无发布链）**：`DraftPeek-KeyBackup`、`Image-DuoModel-KeyBackup`（2026-10-19 前名 `Image-MultiModel-KeyBackup`，随父仓改名跟进）、`SeedVR2-Lite-KeyBackup`、`TTS-MultiModel-KeyBackup`、`Android-IconAutoArrange-KeyBackup`（2026-10-18 补录，此前误记为"4 个"）、`Android-IconAutoArrange-Assets-Backup`（内含加密签名密钥的口令台账与 PoC APK）、`SpiritPal-KeyBackup`（2026-10-20 补录）。**此类仓按性质即须豁免，不需逐仓审批（2026-10-20 用户裁决）。**
 > - **网站仓（4 个）**：`Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
@@ -199,7 +199,7 @@
 > - **用户点名豁免（第二轮，6 个，2026-10-19）**：`Mooncake-Deconstruction`、`Offer-Landing-Kit`、`Android-IconAutoArrange`、`Free-Model-Probe`、`ChatGPT-Timezone-Fix`、`RTX-VSR-Lite`。
 > - **用户点名豁免（第三轮，1 个，2026-10-20）**：`Code-Time-Machine-1024`（TRAE 1024Builder 作品秀/展示站，2026-10-20 建仓；无 `.github/`、无发布链、无版本位，与 `Offer-Landing-Kit` 同类展示型仓）。其分段 `1024` 以数字开头，不符合 §1 Train Case，**因整体豁免故不作命名整改**；若将来撤销豁免，须先按 §1 改名并补登 §4 台账。
 > - **用户点名豁免（第四轮，4 个，2026-10-21）**：`p0-murder-mystery`、`Health-Info-Card`、`Lineart-Painter`、`Card-Studio`。（均为公开仓；语义：不适用整部规范，产物保留。）
->   **语义边界（重要）**：豁免**只表示"不再要求、不再审计 §10"**；这些仓此前已落地的 `docs/release-governance.md`、根级 `CHANGELOG.md` 与发布链改动**一律保留、不删除、不回滚**。若将来要撤销这些产物，属单独决定。
+>   **语义边界（重要）**：豁免表示**整部规范（§1–§14）不再要求、不再审计**（不只 §10）；这些仓此前已落地的 `docs/release-governance.md`、根级 `CHANGELOG.md` 与发布链改动**一律保留、不删除、不回滚**。若将来要撤销这些产物，属单独决定。账号级安全与法律义务（密钥泄露、许可证侵权、平台规则）不因本豁免而免除。
 >
 > 维护规则：本清单与 §4 台账表、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、以及本仓根 `GOVERNANCE-EXCLUSIONS.md` **五处同步修改**。
 
