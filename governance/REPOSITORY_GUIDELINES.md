@@ -35,6 +35,10 @@
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
   - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 23 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**待立项候选实为 7 仓**：`Agent-Knowledge`、`Card-Studio`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Nekogal-DL`、`Prompt-Library`（2026-10-21 第四轮豁免后，`Card-Studio` / `Health-Info-Card` / `Lineart-Painter` 已入排除清单，**待立项候选实为 4 仓**：`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）。是否批量配置保护（同 `enforce_admins=false` 口径）属**待立项决定**，未配置前 GitHub 侧不会拦截直推 `main`。
   - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。本轮用 `GET /repos/<owner>/<repo>/branches/<default>` 的 `protected` 字段（认证态），41 仓全部返回明确布尔值，零 403。
+- **Ruleset 基线（2026-10-21 新增，按可见性分流）**：
+  - **公开仓**统一启用两个 ruleset：`governance-baseline`（branch：`deletion` + `non_fast_forward` + `pull_request` + `required_status_checks`，检查名只填实测近 60 天成功过的项）与 `tag-protection-v`（tag：`v*` 的 `deletion` + `non_fast_forward` + `update`）。
+  - **私有仓不启用 ruleset**：GitHub Free 对私有仓的 rulesets API 返回 `403 Upgrade to GitHub Pro`。2026-10-21 用户裁决——**不为此升级计划、不做替代改造**，维持经典分支保护现状（`enforce_admins=false` 口径），记为**平台能力缺口**而非欠账；将来升级 Pro 后按同一 JSON 补发。
+  - 已下发范围（2026-10-21 实测）：9 个公开管辖仓 branch+tag；`ReSerendipity` 保留既有等价 branch 规则（id 25288027）并补 tag。私有仓 4 个（`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）按上条跳过。
 - 功能开发使用独立分支（`feat/*`、`fix/*`、`ci/*`、`chore/*`），完成后合入 `main`。
 - **合并后自动删除源分支（2026-10-20 新增）**：所有仓库必须将 GitHub 仓库级开关 **`delete_branch_on_merge` 设为 `true`**——PR 合并后由 GitHub 自动删除 head 分支，不依赖合并者手动加 `--delete-branch`（该参数易被遗漏，实测曾导致 13 仓积压 23 条已合并分支）。
   - 开关为**仓库级设置**，不是分支保护字段：`PATCH /repos/<owner>/<repo>` 的 `delete_branch_on_merge`。取数口径：`GET /repos/<owner>/<repo>` 的 `delete_branch_on_merge` 字段。
