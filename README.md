@@ -12,9 +12,9 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则 + 合并后自动删除源分支 `delete_branch_on_merge`）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、许可证规范（§11）、项目结构规范（§12：跨仓通用件位置 + 存量收敛）、路径规范（§13：正斜杠/相对仓根/逐字符一致 + `local/` 入库分流容器）、硬编码规范（§14：敏感值与机器特定值禁入、owner 名集中声明） |
-| `GOVERNANCE-EXCLUSIONS.md` | **治理豁免清单**（§10 排除清单的正式记录，五处同步之一）：列明 29 个不适用整部规范的仓（备份仓 / 网站仓 / 点名豁免）及其脚本载体对照 |
-| `RELEASE_GOVERNANCE_TEMPLATE.md` | **发布文档统一模板**（§10 的执行件）：各仓复制为 `docs/release-governance.md` 后只填本仓特有项。配套核验脚本 `.github/scripts/check-release-standard.sh`（审计收敛进度，**非**每 PR 门禁） |
+| `governance/REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则 + 合并后自动删除源分支 `delete_branch_on_merge`）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、许可证规范（§11）、项目结构规范（§12：跨仓通用件位置 + 存量收敛）、路径规范（§13：正斜杠/相对仓根/逐字符一致 + `local/` 入库分流容器）、硬编码规范（§14：敏感值与机器特定值禁入、owner 名集中声明） |
+| `governance/GOVERNANCE-EXCLUSIONS.md` | **治理豁免清单**（§10 排除清单的正式记录，五处同步之一）：列明 29 个不适用整部规范的仓（备份仓 / 网站仓 / 点名豁免）及其脚本载体对照 |
+| `RELEASE_GOVERNANCE_TEMPLATE.md` | **发布文档统一模板**（§10 的执行件）：各仓复制为 `docs/release-governance.md` 后只填本仓特有项。配套核验脚本 `.github/scripts/check-release-standard.sh`（审计收敛进度，**非**每 PR 门禁）。计划迁入 `governance/`，因在途 WIP 暂缓 |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 通用 Pull Request 检查清单 |
 
@@ -25,7 +25,7 @@
 - 本仓库本身不承载任何项目代码。
 - 主页简介由同名仓库 `ReSerendipity/ReSerendipity` 承载。本账号是个人账号，`profile/README.md` 属组织账号（Organization）专属机制，在个人账号下不会渲染，因此本仓库不保留该文件。
 
-治理约定细节见 `REPOSITORY_GUIDELINES.md`（命名/分支/密钥备份规范）、`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`；各仓的豁免范围见 `GOVERNANCE-EXCLUSIONS.md`。
+治理约定细节见 `governance/REPOSITORY_GUIDELINES.md`（命名/分支/密钥备份规范）、`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`；各仓的豁免范围见 `governance/GOVERNANCE-EXCLUSIONS.md`。
 
 ## 复用工作流
 

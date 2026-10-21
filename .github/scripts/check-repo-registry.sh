@@ -6,7 +6,7 @@
 set -uo pipefail
 
 REPO_ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-GUIDELINES="$REPO_ROOT/REPOSITORY_GUIDELINES.md"
+GUIDELINES="$REPO_ROOT/governance/REPOSITORY_GUIDELINES.md"
 OWNER=${REGISTRY_OWNER:-ReSerendipity}
 
 # §1 认可的例外：系统保留名不按 Train Case 判定。
