@@ -57,15 +57,17 @@
 
 ## 4. 现网仓库命名对照（2026-10-16 更新）
 
-### 保留名（品牌/专有词，5 个）
+### 保留名（品牌 4 + 系统保留名 1，共 5 个）
 
-| 仓库 | 可见性 |
-|---|---|
-| SpiritPal | public |
-| GalgameShell | public |
-| DraftPeek | public |
-| ReSerendipity | public |
-| .github | public |
+> **何为品牌名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断），故豁免 §1 的 Train Case 要求。`.github` 属 GitHub **系统保留名**，不是品牌，同一并列出。
+
+| 仓库 | 类型 | 可见性 |
+|---|---|---|
+| SpiritPal | 品牌 | public |
+| GalgameShell | 品牌 | public |
+| DraftPeek | 品牌 | public |
+| ReSerendipity | 品牌（兼账号名） | public |
+| .github | 系统保留名 | public |
 
 ### 短横线命名（14 个）
 
@@ -140,7 +142,8 @@
   执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按本条规则公开仓的 `AGENTS.md` 不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
   调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓没有 `AGENTS.md`，在此装钩子永远不触发，故本仓不预置）。
   扫描口径：只算活动文件，自动排除归档/备份副本、生成目录，以及**嵌套 git 仓**（其内容归那个仓自己判，`--include-nested` 可显式纳入）。
-  现存欠账（2026-10-19 更新）：`MiniMax-H3-Lite/comfy_kernel/AGENTS.md` 361 行、`Image-DuoModel/comfy_kernel/AGENTS.md` 386 行（均为公开仓，欠账保留；后者由 2026-10-19 文档审查补登记，此前漏记）。原 `Prompt-Library/AGENTS.md` 724 行一条已随私有仓例外**改判豁免**（私有仓不受 300 行上限约束）。
+  现存欠账（2026-10-21 复核）：**无**。原 `MiniMax-H3-Lite/comfy_kernel/AGENTS.md`（361 行）与 `Image-DuoModel/comfy_kernel/AGENTS.md`（386 行）两条经核实属 **vendored 上游目录**（ComfyUI 源码整份拷贝、自带嵌套 `.git`、父仓 `git ls-files` 为空），不由我方负责，已撤销欠账登记；`Prompt-Library/AGENTS.md` 724 行随私有仓例外**豁免**（私有仓不受 300 行上限约束）。
+- **vendored / 上游子目录不纳入本节质量约束**：以「自带嵌套 `.git` 的第三方源码目录」（如 `Image-DuoModel/comfy_kernel/`、`MiniMax-H3-Lite/comfy_kernel/`）为判据，其 `AGENTS.md`、文档与代码一律归上游；`check-agents-md-size.sh` 默认已排除此类目录，不得把上游文档登记为我方欠账。若需纳入扫描，须用 `--include-nested` 显式声明并在报告中注明「上游」。 
 
 **私有仓例外（2026-10-19 新增）**：
 
