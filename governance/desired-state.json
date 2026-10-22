@@ -1,0 +1,95 @@
+﻿{
+  "version": 2,
+  "owner": "ReSerendipity",
+  "defaults": {
+    "default_branch": "main",
+    "delete_branch_on_merge": true
+  },
+  "rules": {
+    "lifecycle": {
+      "active": { "audit": "weekly", "allow_new_features": true },
+      "maintenance": { "audit": "monthly", "allow_new_features": false, "allow_key_rotation": true },
+      "archived": { "audit": "skip", "allow_push": false }
+    },
+    "delivery": {
+      "release": { "sections": ["1-14"], "requires_distribution": true },
+      "library": { "sections": ["1", "2", "7", "8", "9", "10-version", "11", "12", "13", "14"] },
+      "service": { "sections": ["1", "2", "7", "8", "9", "10-deploy", "11", "12", "13", "14"], "requires_distribution": true },
+      "tool": { "sections": ["1", "2", "7", "8", "9", "11", "12", "13", "14"] },
+      "content": { "sections": ["1", "2", "7", "8", "9", "12", "13"] },
+      "backup": { "sections": ["3"] },
+      "policy": { "sections": ["1-14"] }
+    },
+    "distribution": {
+      "github-release": { "checks": ["sha256", "release-notes", "rollback"] },
+      "ghcr": { "checks": ["trivy", "provenance", "sbom"] },
+      "pages": { "checks": ["deploy-rollback"] },
+      "direct-ssh": { "checks": ["deploy-rollback"] },
+      "none": { "checks": [] }
+    }
+  },
+  "repos": [
+    { "name": ".github", "visibility": "public", "delivery": "policy", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "Agent-Knowledge", "visibility": "private", "delivery": "content", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "Android-IconAutoArrange", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Android-IconAutoArrange-Assets-Backup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
+    { "name": "Android-IconAutoArrange-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
+    { "name": "Bilibili-Follow-Manager", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Card-Studio", "visibility": "public", "delivery": "release", "distribution": ["github-release", "pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "ChatGPT-Timezone-Fix", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Code-Time-Machine-1024", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "ComfyUI-BatchPromptLoader", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "ComfyUI-Experiment-Toolbox", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "DraftPeek", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "DraftPeek-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
+    { "name": "Free-Model-Probe", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "GalgameShell", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "Github-Repo-Scan", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "Health-Info-Card", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Hugging-Face", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Image-DuoModel", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "Image-DuoModel-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
+    { "name": "Image-Scrapers", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "Lineart-Painter", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "MiniMax-H3-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Mooncake-Deconstruction", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Multi-Tracker", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Nekogal-DL", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Offer-Landing-Kit", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "p0-murder-mystery", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Prompt-Library", "visibility": "private", "delivery": "content", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "ReSerendipity", "visibility": "public", "delivery": "content", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "rewq", "visibility": "private", "delivery": "service", "distribution": ["direct-ssh"], "lifecycle": "active", "risk": ["credentials"], "backup": "github-only" },
+    { "name": "RTX-VSR-Lite", "visibility": "public", "delivery": "library", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "SeedVR2-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "SeedVR2-Lite-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
+    { "name": "SpiritPal", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "SpiritPal-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
+    { "name": "TTS-MultiModel", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "TTS-MultiModel-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
+    { "name": "Unfading-Wall", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Unity", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Website-Genshin-Impact", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Website-Honkai-Star-Rail", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Website-Wuthering-Waves", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Website-Zenless-Zone-Zero", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" }
+  ],
+  "exceptions": {
+    "rewq": { "rule": "no-private-key-upload", "scope": "ssh-backup/" }
+  },
+  "reusable_workflows": {
+    "pinned_ref": "",
+    "callers": [
+      { "repo": "Image-DuoModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
+      { "repo": "Image-DuoModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "SeedVR2-Lite", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
+      { "repo": "SeedVR2-Lite", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "MiniMax-H3-Lite", "file": ".github/workflows/test.yml", "workflow": "python-quality-baseline.yml" },
+      { "repo": "MiniMax-H3-Lite", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "SpiritPal", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "DraftPeek", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "TTS-MultiModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
+      { "repo": "TTS-MultiModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" }
+    ]
+  }
+}

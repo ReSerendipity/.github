@@ -1,0 +1,41 @@
+# 治理漂移审计：期望状态在 governance/desired-state.json，本文件只负责按周触发。
+# 结果写入 step summary；失败即 rc≠0，由 Actions 判红。不加入分支规则的必需检查。
+name: Governance drift audit
+
+on:
+  schedule:
+    # 周检（周一 04:00 UTC = 12:00 Asia/Shanghai）。漂移由本仓之外的动作引起
+    # （新建 / 改名 / 删除仓库、分支默认值被改），只在"本仓有改动"时触发会漏。
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+    inputs:
+      only:
+        description: '只审计指定仓库（逗号分隔，留空=全部）'
+        required: false
+        default: ''
+  pull_request:
+    paths:
+      - 'governance/desired-state.json'
+      - '.github/scripts/audit-drift.py'
+      - '.github/workflows/drift-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: Governance drift audit
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Run drift audit
+        shell: bash
+        run: |
+          set -o pipefail
+          args=()
+          if [ -n "${{ github.event.inputs.only }}" ]; then
+            args+=(--only "${{ github.event.inputs.only }}")
+          fi
+          python3 .github/scripts/audit-drift.py "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
