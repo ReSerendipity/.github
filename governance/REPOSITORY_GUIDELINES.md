@@ -170,9 +170,10 @@
 ### 7.1 归属与入库分流
 
 - **公开仓**的 `AGENTS.md` 及其家族（模块级 `AGENTS.md`、`local/agents/**`、`FIX_LOG.md`、`LOCAL_RULES.md`）是 AI 辅助开发的**本地维护者上下文**，**不入库、不上传**。（2026-10-19：agent 家族目录由 `docs/agents/` 迁至 `local/agents/`，随 §13.1 的 `local/` 容器统一承载；已跟踪的 `docs/agents/**` 在迁移批次中同步 `git rm --cached`。）
-- `.gitignore` 规则：`AGENTS.md`（无斜线模式，匹配任意深度子目录）。
+- **根 `AGENTS.md` 的公开精简版例外（2026-10-22 新增，ADR-0007）**：允许入库，但必须 ≤50 行、含 `<!-- governance:agent-contract v1 -->` 标记、只写公开安全内容，并链接 `docs/agent-contract.md`；本地扩展版移入 `local/AGENTS.md`（不入库）。目的：新会话的 agent 只自动读根 `AGENTS.md` / `README.md`，纯靠 README 里一行链接不足以让它看到治理约束。
+- `.gitignore` 规则：`AGENTS.md` + `!/AGENTS.md`（前者匹配任意深度，后者只放行根文件）。
 - 误入库后的恢复流程：`git rm --cached <file>` + `.gitignore` 补规则 + commit + push（本地文件保留）。
-- fresh clone / CI / 协作者环境中不存在 `AGENTS.md` 属**预期行为**；随仓库分发的 agent 权威入口为根 `README.md` 与 `.github/**`。
+- fresh clone / CI / 协作者环境中的嵌套 `AGENTS.md` 不存在属**预期行为**；根 `AGENTS.md` 精简版与 `docs/agent-contract.md` 随仓库分发，是 agent 的公开入口。
 - 口径统一基线：DraftPeek / SeedVR2-Lite / SpiritPal / TTS-MultiModel / Image-DuoModel / MiniMax-H3-Lite 长期执行；GalgameShell / Github-Repo-Scan / Image-Scrapers / Prompt-Library 的历史误入库已于 2026-10-13 清除（后两仓现为私有，2026-10-19 起按下方例外转为**上传制**）。
 
 **私有仓例外（2026-10-19 新增）**：
@@ -186,8 +187,9 @@
 
 ### 7.2 公开仓 AGENTS.md 质量标准
 
-- **行数上限：300 行（仅约束公开仓入库内容）**（2026-10-17 定）。数值不是拍来的，取自本机 14 个根级第一方 `AGENTS.md` 的实测分布：`min=21 median=90.5 p90=163 max=724`，其中 13 个 ≤300、合规簇最大 257 —— 300 因此不会追溯性地把既有文件全判红，又仍是真实约束。
+- **行数上限（2026-10-22 修订）**：入库的根 `AGENTS.md` ≤**50 行**（公开精简版）；本地扩展版 `local/AGENTS.md` ≤**300 行**。300 的依据取自 2026-10-17 本机 14 个根级第一方 `AGENTS.md` 的实测分布：`min=21 median=90.5 p90=163 max=724`，其中 13 个 ≤300、合规簇最大 257。
 - **最小结构**：必须含四块——「快速命令（装/跑/测）」「禁区（不许做什么）」「文档索引（去哪儿找）」「已知坑 / GOTCHAS」；缺块即不合规。
+- **公开精简版与完整契约（2026-10-22 新增，ADR-0007）**：根 `AGENTS.md` 若入库，按 ≤50 行的精简版标准执行（四块可压缩为「开工前 / 硬约束 / 交付前」三块）；完整契约放 `docs/agent-contract.md`，内容与 `governance/templates/agent-contract.md` 逐字节一致，由漂移审计校验。本地扩展版放 `local/AGENTS.md`，仍受 300 行上限约束（仅本地）。
 - **单一职责**：不复述根 README 的安装与使用步骤，只写本地事实与指路；同一事实只保留一处权威来源。
 - **模块级边界**：模块级 `AGENTS.md` 只描述本模块的命令与约束，不复制全仓规则；全仓规则只写根文件。
 - **时效性**：文首「最后更新 / 对应版本」必须与版本位（`package.json` / `pyproject.toml` / `Cargo.toml` 等）一致；发布或目录结构变更后同步更新。
@@ -196,10 +198,13 @@
 
 ### 7.3 执行载体与欠账
 
-- 执行载体：`.github/scripts/check-agents-md-size.sh`（本地命令，非 CI —— 按 §7.1 公开仓的 `AGENTS.md` 不入库，CI 检出里根本没有该文件，放进 CI 只会是空跑闸）。
-- 调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓没有 `AGENTS.md`，在此装钩子永远不触发，故本仓不预置）。
+- 执行载体（2026-10-22 更新）：
+  - **入库侧**：`self-purify.yml` 的核心规则允许根 `AGENTS.md`（≤50 行 + 契约标记），仍阻断嵌套/模块级 `AGENTS.md` 与其余本地治理文档；
+  - **契约一致性**：`audit-drift.py` 比对仓内 `docs/agent-contract.md` 与 `governance/templates/agent-contract.md`，不一致判红；
+  - **本地行数**：`.github/scripts/check-agents-md-size.sh` 检查 `local/AGENTS.md`（≤300 行），非 CI 门禁。
+- 调用：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；要挂成本地钩子由**各仓自行**把它写进自己的 `.git/hooks/pre-commit`（本 `.github` 仓的根 `AGENTS.md` 已入库，可预置）。
 - 扫描口径：只算活动文件，自动排除归档/备份副本、生成目录，以及**嵌套 git 仓**（其内容归那个仓自己判，`--include-nested` 可显式纳入）。
-- 现存欠账（2026-10-21 复核）：**无**。原 `MiniMax-H3-Lite/comfy_kernel/AGENTS.md`（361 行）与 `Image-DuoModel/comfy_kernel/AGENTS.md`（386 行）两条经核实属 **vendored 上游目录**（ComfyUI 源码整份拷贝、自带嵌套 `.git`、父仓 `git ls-files` 为空），不由我方负责，已撤销欠账登记；`Prompt-Library/AGENTS.md` 724 行随私有仓例外**豁免**（私有仓不受 300 行上限约束）。
+- 现存欠账（2026-10-22 复核）：`local/AGENTS.md` 尚未迁移的仓按 §7.1 例外**允许暂时保留根级本地扩展版**；迁移后根 `AGENTS.md` 转为精简版。`Prompt-Library/AGENTS.md` 724 行仍随私有仓例外豁免。
 
 ## 8. README 双版本制度（2026-10-13 新增；2026-10-19 按可见性分流）
 

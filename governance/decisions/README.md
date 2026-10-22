@@ -18,6 +18,7 @@
 | [ADR-0004](ADR-0004-private-repo-protection-gap.md) | 私有仓分支保护：Free 计划能力缺口 | Accepted |
 | [ADR-0005](ADR-0005-repo-backup-local-mirror.md) | 仓库备份：接受 GitHub 单远端，本地镜像暂缓 | Accepted |
 | [ADR-0006](ADR-0006-two-axis-profiling.md) | lifecycle × delivery 两轴分档与 44 仓重定位 | Accepted |
+| [ADR-0007](ADR-0007-public-agent-contract.md) | 公开仓根 `AGENTS.md` 精简版与 `docs/agent-contract.md` | Accepted |
 
 ## 与规范的关系
 

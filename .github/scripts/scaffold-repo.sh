@@ -14,6 +14,8 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 DEFAULT_REPOS_ROOT=$(cd "$REPO_ROOT/.." && pwd)
 TEMPLATE="$REPO_ROOT/RELEASE_GOVERNANCE_TEMPLATE.md"
+CONTRACT_TEMPLATE="$REPO_ROOT/governance/templates/agent-contract.md"
+AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS.slim.md"
 HOOK_TEMPLATE="$SCRIPT_DIR/templates/pre-push"
 OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
@@ -45,6 +47,8 @@ done
 case "$DELIVERY" in release|service|tool|content) ;; *) err "--delivery 只支持 release|service|tool|content，实际='$DELIVERY'"; exit 2 ;; esac
 [ -d "$REPOS_ROOT" ] || { err "repos-root 不存在：$REPOS_ROOT"; exit 2; }
 [ -f "$TEMPLATE" ] || { err "找不到发布文档模板：$TEMPLATE"; exit 2; }
+[ -f "$CONTRACT_TEMPLATE" ] || { err "找不到 agent 契约模板：$CONTRACT_TEMPLATE"; exit 2; }
+[ -f "$AGENTS_TEMPLATE" ] || { err "找不到 AGENTS 精简版模板：$AGENTS_TEMPLATE"; exit 2; }
 [ -f "$HOOK_TEMPLATE" ] || { err "找不到 pre-push 模板：$HOOK_TEMPLATE"; exit 2; }
 
 # §1 命名：字母/数字/短横线，分段首字母大写，禁止下划线、空段与连续短横线。
@@ -94,9 +98,12 @@ EOF
 cat > .gitignore <<'EOF'
 /local/
 AGENTS.md
+!/AGENTS.md
 EOF
 
 cp "$TEMPLATE" docs/release-governance.md
+cp "$CONTRACT_TEMPLATE" docs/agent-contract.md
+cp "$AGENTS_TEMPLATE" AGENTS.md
 cp "$HOOK_TEMPLATE" .githooks/pre-push
 chmod +x .githooks/pre-push 2>/dev/null || true
 git config core.hooksPath .githooks
@@ -112,7 +119,7 @@ fi
 cat <<EOF
 
 脚手架已生成：$TARGET
-  README.md / CHANGELOG.md / docs/release-governance.md / .gitignore / .githooks/pre-push
+  README.md / CHANGELOG.md / AGENTS.md / docs/release-governance.md / docs/agent-contract.md / .gitignore / .githooks/pre-push
   core.hooksPath=.githooks（删除 main、非快进推送 main 会被本地拦截；逃生阀 SKIP_GOVERNANCE_HOOKS=1）
 
 还需人工完成的五处同步（脚本不自动改文档）：
