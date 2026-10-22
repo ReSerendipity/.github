@@ -39,6 +39,7 @@
   - **公开仓**统一启用两个 ruleset：`governance-baseline`（branch：`deletion` + `non_fast_forward` + `pull_request` + `required_status_checks`，检查名只填实测近 60 天成功过的项）与 `tag-protection-v`（tag：`v*` 的 `deletion` + `non_fast_forward` + `update`）。
   - **私有仓不启用 ruleset**：GitHub Free 对私有仓的 rulesets API 返回 `403 Upgrade to GitHub Pro`；**经典分支保护同样 403**（2026-10-21 实测 `PUT /branches/main/protection` on `Agent-Knowledge` → 403）。2026-10-21 用户裁决——**不为此升级计划、不做替代改造**，服务器侧保护对私有仓不可用，记为**平台能力缺口而非欠账**；替代控制是各仓本地 `.githooks/pre-push`（已有多仓在跑）与本地预检脚本。将来升级 Pro 后，ruleset 按同一 JSON 补发，经典保护按需补配。
   - 已下发范围（2026-10-21 实测）：9 个公开管辖仓 branch+tag；`ReSerendipity` 保留既有等价 branch 规则（id 25288027）并补 tag。私有仓 4 个（`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）按上条跳过。
+  - **按 lifecycle 分档（2026-10-22 新增，ADR-0006）**：`active` 的公开仓必须同时具备 `governance-baseline` 与 `tag-protection-v`；`maintenance` 只要求默认分支 `main` 与 `delete_branch_on_merge=true`（已配置的 ruleset 保留，不强制新增）；`archived` 不要求任何服务器侧保护。
 - 功能开发使用独立分支（`feat/*`、`fix/*`、`ci/*`、`chore/*`），完成后合入 `main`。
 - **合并后自动删除源分支（2026-10-20 新增）**：所有仓库必须将 GitHub 仓库级开关 **`delete_branch_on_merge` 设为 `true`**——PR 合并后由 GitHub 自动删除 head 分支，不依赖合并者手动加 `--delete-branch`（该参数易被遗漏，实测曾导致 13 仓积压 23 条已合并分支）。
   - 开关为**仓库级设置**，不是分支保护字段：`PATCH /repos/<owner>/<repo>` 的 `delete_branch_on_merge`。取数口径：`GET /repos/<owner>/<repo>` 的 `delete_branch_on_merge` 字段。
@@ -59,38 +60,63 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（2026-10-16 更新）
+## 4. 现网仓库命名对照（2026-10-22 更新，37 行）
 
-### 保留名（品牌 4 + 系统保留名 1，共 5 个）
+### 例外名（品牌 / 系统保留名 / 已登记命名债务，9 个）
 
-> **何为品牌名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断），故豁免 §1 的 Train Case 要求。`.github` 属 GitHub **系统保留名**，不是品牌，同一并列出。
+> **何为例外名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断）。
+> `.github` 属 GitHub **系统保留名**；`Code-Time-Machine-1024` 与 `p0-murder-mystery` 是**已登记债务**，
+> 前者因 `1024` 为活动品牌长期保留，后者在阶段 5 改名后转为 Train Case。
 
-| 仓库 | 类型 | 可见性 |
+| 仓库 | 可见性 | delivery | 例外依据 |
+|---|---|---|---|
+| SpiritPal | public | release | 品牌连写（§1） |
+| GalgameShell | public | tool | 品牌连写（§1） |
+| DraftPeek | public | release | 品牌连写（§1） |
+| ReSerendipity | public | content | 品牌兼账号名（§1） |
+| Unity | private | tool | 品牌专有词（§1） |
+| rewq | private | service | 历史品牌名；按 §15.5 `credentials` 管理 |
+| .github | public | policy | 系统保留名（§1） |
+| Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
+| p0-murder-mystery | public | service | 阶段 5 改名为 `P0-Murder-Mystery`，改前登记债务 |
+
+### Train Case（28 个）
+
+| 仓库 | 可见性 | delivery |
 |---|---|---|
-| SpiritPal | 品牌 | public |
-| GalgameShell | 品牌 | public |
-| DraftPeek | 品牌 | public |
-| ReSerendipity | 品牌（兼账号名） | public |
-| .github | 系统保留名 | public |
+| Agent-Knowledge | private | content |
+| Android-IconAutoArrange | public | release |
+| Bilibili-Follow-Manager | private | tool |
+| Card-Studio | public | release |
+| ChatGPT-Timezone-Fix | public | tool |
+| ComfyUI-BatchPromptLoader | public | tool |
+| ComfyUI-Experiment-Toolbox | public | tool |
+| Free-Model-Probe | public | service |
+| Github-Repo-Scan | public | tool |
+| Health-Info-Card | public | release |
+| Hugging-Face | private | tool |
+| Image-DuoModel | public | release |
+| Image-Scrapers | private | tool |
+| Lineart-Painter | public | release |
+| MiniMax-H3-Lite | public | release |
+| Mooncake-Deconstruction | public | service |
+| Multi-Tracker | public | tool |
+| Nekogal-DL | private | tool |
+| Offer-Landing-Kit | public | service |
+| Prompt-Library | private | content |
+| RTX-VSR-Lite | public | library |
+| SeedVR2-Lite | public | release |
+| TTS-MultiModel | public | release |
+| Unfading-Wall | public | service |
+| Website-Genshin-Impact | private | service |
+| Website-Honkai-Star-Rail | private | service |
+| Website-Wuthering-Waves | private | service |
+| Website-Zenless-Zone-Zero | private | service |
 
-### 短横线命名（14 个）
-
-| 仓库 | 可见性 |
-|---|---|
-| Image-DuoModel | public |
-| TTS-MultiModel | public |
-| SeedVR2-Lite | public |
-| MiniMax-H3-Lite | public |
-| ComfyUI-Experiment-Toolbox | public |
-| Github-Repo-Scan | public |
-| Website-Genshin-Impact | private |
-| Website-Honkai-Star-Rail | private |
-| Website-Wuthering-Waves | private |
-| Website-Zenless-Zone-Zero | private |
-| Image-Scrapers | private |
-| Nekogal-DL | private |
-| Agent-Knowledge | private |
-| Prompt-Library | private |
+> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、p0-murder-mystery、Code-Time-Machine-1024
+>
+> 2026-10-22 变更（两轴模型落地，ADR-0006）：本表由 19 行扩为 37 行 = 全部非 `backup` 仓，7 个备份仓退出本表；
+> 例外名独立成表（9 行），不再依赖「豁免清单」隐藏命名问题。此前四轮豁免历史见 `GOVERNANCE-EXCLUSIONS.md`。
 
 > 2026-10-13 变更：`agent-knowledge` → `Agent-Knowledge`、`prompt-library` → `Prompt-Library`（远程 + 本地均已改名，旧名保留重定向）。
 >
@@ -152,6 +178,7 @@
 - 私有仓的 `AGENTS.md` **不受 §7.2 的 300 行上限约束**（上传属备份性质，该上限只约束公开仓的入库质量）。
 - **绝对例外 `rewq`**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；该仓冻结于本地，仅保留本地 git 管理，不新推（2026-10-19 裁决）。
 - **豁免仓不在本要求范围内（2026-10-19）**：排除清单 29 项已升级为不适用整个规范（见 §10），故清单内私有仓（`Bilibili-Follow-Manager`、`Hugging-Face`、`Unity`、4 个网站仓、7 个备份仓）**不受本上传制约束**；此前已完成/已存在的上传一律保留。
+- **`backup` 与 `archived` 仓的重构豁免（2026-10-22 新增）**：`delivery=backup` 的 7 个备份仓与 `lifecycle=archived` 的仓，不适用本节对**已入库内容**的重构要求（既不要求把本地上下文上传，也不要求清理历史误入库）；新增内容仍按 §3 与账号级安全义务处理。
 
 ### 7.2 公开仓 AGENTS.md 质量标准
 
@@ -192,6 +219,7 @@
 - 内部版不入库；已误入库的按 §7.1 恢复流程处理。
 - 根 README 中的仓库链接与远程 URL 必须与实际仓库名大小写一致（例：Github-Repo-Scan 不得写 `github-repo-scan`）。
 - **私有仓例外（2026-10-19 新增）**：私有仓不强制双版本分流，`local/README.internal.md` **应当入库**（与 §7.1 私有仓例外同理——尽可能上传作备份）；分流判据在私有仓仅作编写建议，不作入库闸。
+- **`backup` 与 `archived` 仓的重构豁免（2026-10-22 新增）**：这两类仓不要求把 `local/README.internal.md` 入库，也不对既有 README 做双版本拆分；新建内容仍按判据书写。
 
 ## 9. 本地产物与依赖不进库（2026-10-13 新增）
 
@@ -226,6 +254,12 @@
 >   **语义边界（重要）**：豁免表示**整部规范（§1–§14）不再要求、不再审计**（不只 §10）；这些仓此前已落地的 `docs/release-governance.md`、根级 `CHANGELOG.md` 与发布链改动**一律保留、不删除、不回滚**。若将来要撤销这些产物，属单独决定。账号级安全与法律义务（密钥泄露、许可证侵权、平台规则）不因本豁免而免除。
 >
 > 维护规则：本清单与 §4 台账表、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、以及本仓根 `GOVERNANCE-EXCLUSIONS.md` **五处同步修改**。
+
+> **2026-10-22 起本节的适用范围由 §15 派生**：只有 `delivery=release` 的仓取 §10 全量检查；
+> `library` 只取版本号与 CHANGELOG 子集；`service` 只取部署/回滚子集；`tool` / `content` / `backup`
+> 不适用本节。具体检查项再按 `distribution` 取值细分（`github-release` / `ghcr` / `pages` /
+> `direct-ssh` / `none`）。**下面 2026-10-18/19 的名单与四轮豁免段落转为历史记录**，
+> 不再作为现行范围口径；历史原文保留于本文件与 `GOVERNANCE-EXCLUSIONS.md`。
 
 ### 10.1 三条根原则
 
@@ -422,3 +456,74 @@ AGENTS.md    # §7 家族（无斜线模式，匹配任意深度）
 **允许**：公开文档 URL、第三方公开端点、文档叙事中的历史路径 / 用户名（与 §13「文档叙事中的本机路径允许」同口径）。
 
 **载体**：本节与 §12/§13 先纯条款落地；账号级审计脚本以 SpiritPal `scripts/check_no_hardcoded_paths.py` 为参考实现，收敛批次完成后单独立项。
+
+---
+
+## 15. 治理分档（Governance Tiers，2026-10-22 新增）
+
+> **定位**：把「哪些条款适用、查多严、多久查一次」从人记转为可派生的声明。唯一机器可读载体是
+> `governance/desired-state.json`；本节是它的人类可读版本，两者由 `audit-drift.py` 与
+> `check-governance-consistency.sh` 对账。
+
+### 15.1 两轴模型
+
+单一 profile 会把三件互不相关的事压进一个值：交付形态、维护状态、敏感级别，导致「active 的静态站」
+与「active 的桌面应用」被塞进同一档，条款只能取并集。本节拆为两个正交轴：
+
+| 轴 | 取值 | 决定什么 |
+|---|---|---|
+| **lifecycle**（主轴） | `active` / `maintenance` / `archived` | 变更许可、审计频率、平台要求 |
+| **delivery**（副轴） | `release` / `library` / `service` / `tool` / `content` / `backup` / `policy` | 适用哪些章节 |
+| distribution | `github-release` / `ghcr` / `pages` / `direct-ssh` / `none` | 触发 §10 的哪几条检查 |
+| risk | `signing-key` / `credentials` | 额外的禁止项 |
+| backup | `github-only` / `key-only` / `separate-encrypted` | 副本策略（ADR-0005） |
+
+### 15.2 lifecycle
+
+| lifecycle | 判据 | 变更许可 | 审计 |
+|---|---|---|---|
+| `active` | 近 90 天有新功能提交或新 Release | 允许新功能 | 周检 |
+| `maintenance` | 只修 bug / 依赖 / 安全 | 仅修复与密钥轮换 | 月检 |
+| `archived` | GitHub 已归档 | 平台只读 | 不检查 |
+
+active 与 maintenance 的**适用条款完全相同**，差别只有变更许可、审计频率与平台要求三处。
+「有没有偷偷加功能」审计查不出，靠提交审查与 PR 约定。
+
+平台要求：`active` 的公开仓必须有 `governance-baseline` + `tag-protection-v`；`maintenance`
+只要求 `main` + `delete_branch_on_merge=true`（已配置的 ruleset 保留）；`archived` 不要求。
+私有仓在 Free 计划下无服务器侧保护能力，以本地 `.githooks/pre-push` 作为替代控制（ADR-0004）。
+
+### 15.3 delivery → 适用条款
+
+| delivery | 适用 | 不适用 |
+|---|---|---|
+| `release` | §1–§14 全部（§10 按 distribution 取子集） | — |
+| `library` | §1、§2、§7、§8、§9、§10（仅版本/CHANGELOG）、§11、§12、§13、§14 | 产物完整性、SBOM、镜像扫描 |
+| `service` | §1、§2、§7、§8、§9、§10（部署/回滚）、§11、§12、§13、§14 | §10 版本/产物子集、§3 |
+| `tool` | §1、§2、§7、§8、§9、§11、§12、§13、§14 | §3、§10 |
+| `content` | §1、§2、§7、§8、§9、§12、§13 | §3、§10、§11、§14 |
+| `backup` | §3（KeyBackup 结构、允许轮换更新） | 其余全部 |
+| `policy` | §1–§15 自身维护 | §10 发布链 |
+
+### 15.4 distribution → §10 检查子集
+
+| distribution | 生效检查 |
+|---|---|
+| `github-release` | 资产 SHA256、Release 说明、回滚 |
+| `ghcr` | Trivy、provenance、SBOM |
+| `pages` | 部署回滚 |
+| `direct-ssh` | 部署脚本回滚 |
+| `none` | 无发布检查 |
+
+### 15.5 风险标签与例外
+
+- `signing-key`：签名私钥不得入库；备份按 §3。
+- `credentials`：仓库内含服务器/账号凭据相关内容（当前仅 `rewq`）；硬约束是 `.gitignore`
+  排除 `ssh-backup/` 与私钥，不限制正常提交。
+- 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
+
+### 15.6 44 仓定位
+
+完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
+为唯一事实来源；§4 的 37 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
+修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。

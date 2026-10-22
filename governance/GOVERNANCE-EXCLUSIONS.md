@@ -1,18 +1,31 @@
-# 治理豁免清单（GOVERNANCE-EXCLUSIONS）
+# 治理分档与例外记录（GOVERNANCE-EXCLUSIONS）
 
-> **本文件定位**：治理豁免清单的**正式记录**，承载于本规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
-> **权威条款**：`REPOSITORY_GUIDELINES.md`（§10 范围声明 / §4 变更记录）。
-> **最后更新**：2026-10-21（第四轮点名 +4，清单共 29 项；豁免 = 不适用整部规范）
+> **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
+> **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
+> **最后更新**：2026-10-22（两轴模型落地，ADR-0006；四轮豁免转为历史记录）
 > **同步规则（改一处即改五处）**：
-> 1. 规范仓 `REPOSITORY_GUIDELINES.md` §10 范围声明的排除清单
-> 2. 规范仓 §4 台账表（豁免仓**不登记**）与 §4 变更记录
-> 3. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（25 项台账载体）
-> 4. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（29 项审计载体）
+> 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
+> 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（7 项备份仓）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（34 项非 release 仓）
+> 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
 ---
 
-## 一、豁免语义（2026-10-19，用户两轮裁决）
+## 零、现行口径（2026-10-22 起，ADR-0006）
+
+**本文件自 2026-10-22 起是「治理分档与例外记录」，不再是「整部规范不适用」的白名单。** 现行规则：
+
+1. **`delivery=backup` 的 7 个仓**（密钥 / 资产备份仓）整部规范不适用，只按 §3 的 `<项目名>-KeyBackup` 结构、`SHA256SUMS.txt` 与轮换更新要求管理；不进 §4 台账，不参与 §1 命名与 §10 审计。
+2. **其余 37 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
+3. **命名例外**（品牌 / 系统保留名 / 已登记债务）见 §4「例外名」表；新增例外须先落 ADR。
+4. **`rewq` 的硬约束收窄**：`.gitignore` 必须排除 `ssh-backup/`、`.ssh/` 与 `*.pem` / `*.key` 等私钥；正常提交与推送不受限制（§15.5）。
+
+> 下面第一至五节是 2026-10-18 至 10-21 的四轮豁免**历史原文**，仅作留痕；「29 项不适用整部规范」的语义**已被 ADR-0006 取代**，不再作为执行依据。
+
+---
+
+## 一、旧豁免语义（2026-10-19 / 10-21，已被 ADR-0006 取代）
 
 **清单内 29 个仓库不适用整个 `REPOSITORY_GUIDELINES.md`（§1-§14）**——升级前仅豁免 §10（发布规范）；2026-10-21 起明确 §12（结构）/§13（路径）/§14（硬编码）同样不适用。
 
@@ -96,10 +109,10 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **25** | §4 台账差集 B/C + §1 命名校验（29 − 4 个私有网站仓〔公开端点不可见、固有覆盖〕= 25） |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **29** | §10 收敛审计（全量豁免） |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **7** | 差集 B/C 只看备份仓；其余 37 仓全部参与 §1 命名校验 |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **34** | §10 收敛审计只覆盖 10 个 `release` 仓（44 − 10 = 34） |
 
-> 如某豁免仓**转为公开**，需把它补进 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
+> 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
@@ -107,17 +120,15 @@
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
-| **规范管辖中** | 14 | 受整部规范约束（§1-§14）；均有发布文档 + 根级 CHANGELOG（历史产物保留） |
-| **豁免（清单 29 项）** | 29 | 不适用整部规范；产物保留 |
-| **规范仓自身** | 1 | `.github`（规范由本仓承载，不属被管辖对象） |
+| **§4 登记（含规范仓）** | 37 | 按 §15 派生适用条款；命名例外见 §4 |
+| **备份仓** | 7 | `delivery=backup`，只按 §3 管理，不进 §4 |
+| 合计 | 44 | `gh repo list ReSerendipity` 实测 44 个，零差额 |
 
-合计 14 + 29 + 1 = **44**（`gh repo list ReSerendipity` 实测 44 个，零差额）。
+### §4 台账现状（2026-10-22 两轴落地后）
 
-### §4 台账现状（2026-10-21 第四轮豁免后）
-
-- 台账登记 **19 条**（保留名 5 + 短横线 14）——其中 `.github` 为规范仓自身，4 个私有网站仓按豁免清单不参与审计，其余 14 条为现行管辖仓。
-- 台账之外的豁免仓 **25 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
-- `check-repo-registry.sh` 本地实测（2026-10-21）：`clean：§4 对照表与远程一致`。
+- 台账登记 **37 条**（例外名 9 + Train Case 28），覆盖全部非 `backup` 仓。
+- 台账之外的备份仓 **7 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
+- 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 
 ### 分支保护实测（2026-10-19，41 仓全量，零无法判定）
 

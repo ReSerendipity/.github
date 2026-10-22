@@ -132,41 +132,44 @@ check_one() {
 if [ -n "$ROOT" ]; then
   check_one "$ROOT" "$(basename "$ROOT")"
 else
-  # 排除清单（REPOSITORY_GUIDELINES.md §10 范围声明，2026-10-19 同源声明）：
-  # 29 项自 2026-10-19 起不适用**整个规范**（用户裁决，非仅 §10；2026-10-20 补录 SpiritPal-KeyBackup，
-  # 2026-10-21 第四轮 +4）。
-  # "用户点名豁免"仓虽保留文档产物，但豁免语义 = 不再要求、不再审计，故同样排除。
-  # 改清单须五处同步（规范仓 §10、§4 表、check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY
-  # 〔其中 25 项的台账豁免载体〕、本声明、本仓根 GOVERNANCE-EXCLUSIONS.md）。
-  EXCLUDED_FROM_RELEASE_STANDARD="DraftPeek-KeyBackup
-Image-DuoModel-KeyBackup
-SeedVR2-Lite-KeyBackup
-TTS-MultiModel-KeyBackup
-Android-IconAutoArrange-KeyBackup
+  # 排除清单（2026-10-22 两轴模型）：§10 只覆盖 delivery=release 的 10 个仓，
+  # 其余 34 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
+  # 改清单须五处同步（§15、§4、check-repo-registry.sh、本声明、GOVERNANCE-EXCLUSIONS.md）。
+  EXCLUDED_FROM_RELEASE_STANDARD=".github
+Agent-Knowledge
 Android-IconAutoArrange-Assets-Backup
+Android-IconAutoArrange-KeyBackup
+Bilibili-Follow-Manager
+ChatGPT-Timezone-Fix
+Code-Time-Machine-1024
+ComfyUI-BatchPromptLoader
+ComfyUI-Experiment-Toolbox
+DraftPeek-KeyBackup
+Free-Model-Probe
+GalgameShell
+Github-Repo-Scan
+Hugging-Face
+Image-DuoModel-KeyBackup
+Image-Scrapers
+Mooncake-Deconstruction
+Multi-Tracker
+Nekogal-DL
+Offer-Landing-Kit
+p0-murder-mystery
+Prompt-Library
+ReSerendipity
+rewq
+RTX-VSR-Lite
+SeedVR2-Lite-KeyBackup
+SpiritPal-KeyBackup
+TTS-MultiModel-KeyBackup
+Unfading-Wall
+Unity
 Website-Genshin-Impact
 Website-Honkai-Star-Rail
 Website-Wuthering-Waves
-Website-Zenless-Zone-Zero
-rewq
-ComfyUI-BatchPromptLoader
-Multi-Tracker
-Bilibili-Follow-Manager
-Hugging-Face
-Unfading-Wall
-Unity
-Mooncake-Deconstruction
-Offer-Landing-Kit
-Android-IconAutoArrange
-Free-Model-Probe
-ChatGPT-Timezone-Fix
-RTX-VSR-Lite
-Code-Time-Machine-1024
-SpiritPal-KeyBackup
-p0-murder-mystery
-Health-Info-Card
-Lineart-Painter
-Card-Studio"
+Website-Zenless-Zone-Zero"
+
   # 多仓模式：只扫含 .git 的一级子目录。跳过项**逐条显式列出**，不静默吞。
   SKIPPED=()
   SCANNED=0
