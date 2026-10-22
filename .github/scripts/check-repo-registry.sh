@@ -35,53 +35,16 @@ fi
 REMOTE_PUBLIC=$(awk -F'\t' '$2=="false"{print $1}' "$REMOTE_TSV" | sort)
 REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 
-# 「§4 台账豁免」声明：备份仓 / 非台账副本不进「现网命名台账」，也不参与差集 B/C。
-# 为什么在脚本里再声明一次：这些仓目前是私有，`users/<owner>/repos` 端点看不到它们，
-# 因此当下不会触发任何差集；但**一旦某个仓转为公开**，差集 B（远程有、表里无）与差集 C
-# （命名不符 §1）就会凭空报红。把排除显式写在这里，这份排除才有可执行载体。
-#
-# 与 §10 的关系（2026-10-19 豁免升级后两清单已同源）：
-#   - §10 范围声明的「排除清单」共 29 项 = 不适用**整个规范**（用户裁决，见 §10 与 §4 的
-#     2026-10-19 变更记录）。
-#   - 本清单 = 其中参与「§4 台账 + §1 命名」维度的 25 项载体（§10 清单里其余 4 项为
-#     Website-Genshin-Impact / Website-Honkai-Star-Rail / Website-Wuthering-Waves /
-#     Website-Zenless-Zone-Zero——它们此前就不在 §4 表内、属台账豁免的固有覆盖，
-#     且均为私有、公开端点不可见，无需单列亦不触发差集；如转公开需补入本清单）。
-# 维护要求：本清单与 §4 的补充说明、以及本仓根 GOVERNANCE-EXCLUSIONS.md 同步修改。
-# 2026-10-19 豁免升级（用户裁决）：排除清单 17 项由「不适用 §10」升级为「不适用整个规范」。
-# 豁免 = 不进 §4 台账、不参与差集 B/C（§1 命名校验随之关闭）。清单共 25 项：
-#   - 8 项备份/非台账仓（rewq、Assets-Backup、6 个 *-KeyBackup，含 2026-10-20 补录的 SpiritPal-KeyBackup）
-#   - 17 项用户点名仓（四轮）：第一轮 ComfyUI-BatchPromptLoader / Multi-Tracker / Unfading-Wall /
-#     Bilibili-Follow-Manager / Hugging-Face / Unity；第二轮 Mooncake-Deconstruction /
-#     Offer-Landing-Kit / Android-IconAutoArrange / Free-Model-Probe / ChatGPT-Timezone-Fix /
-#     RTX-VSR-Lite；第三轮 Code-Time-Machine-1024；第四轮 p0-murder-mystery /
-#     Health-Info-Card / Lineart-Painter / Card-Studio。随豁免升级进入本清单并已从 §4 表移除；
-#     其已交付产物（发布文档 / CHANGELOG / 流水线）一律保留。
-EXCLUDED_FROM_REGISTRY="rewq
-Android-IconAutoArrange-Assets-Backup
-Android-IconAutoArrange-KeyBackup
-DraftPeek-KeyBackup
+# 「备份仓豁免」声明（2026-10-22 起）：7 个 delivery=backup 的密钥/资产备份仓不进 §4 台账，
+# 也不参与差集 B/C 与 §1 命名校验；其余 37 仓全部登记。豁免语义见 ADR-0006 与 §15。
+# 维护要求：本清单与 §4、§15、GOVERNANCE-EXCLUSIONS.md、check-release-standard.sh 同步修改。
+EXCLUDED_FROM_REGISTRY="DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
 SeedVR2-Lite-KeyBackup
 TTS-MultiModel-KeyBackup
-ComfyUI-BatchPromptLoader
-Multi-Tracker
-Bilibili-Follow-Manager
-Hugging-Face
-Unfading-Wall
-Unity
-Mooncake-Deconstruction
-Offer-Landing-Kit
-Android-IconAutoArrange
-Free-Model-Probe
-ChatGPT-Timezone-Fix
-RTX-VSR-Lite
-Code-Time-Machine-1024
-SpiritPal-KeyBackup
-p0-murder-mystery
-Health-Info-Card
-Lineart-Painter
-Card-Studio"
+Android-IconAutoArrange-KeyBackup
+Android-IconAutoArrange-Assets-Backup
+SpiritPal-KeyBackup"
 is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }
 
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。
@@ -140,9 +103,9 @@ $(cut -f1 "$REMOTE_TSV")
 EOF
 
 # 差集 C：名称违反 §1（含下划线，或某个短横线分段不以大写开头）。
-# 豁免来源有两个：§1 认可的系统保留名，以及 §4 里那行「已知命名不合规待改名」——
-# 后者把尚未处理的远程改名欠账显式记在文档里，避免检查器长期报红而被当成噪声忽略。
-DOC_EXEMPT=$(grep -oE '已知命名不合规待改名.*' "$GUIDELINES" 2>/dev/null | tail -1 |
+# 豁免来源有两个：§1 认可的系统保留名，以及 §4 里那行「已登记命名例外」——
+# 后者把品牌名与尚未处理的改名债务显式记在文档里，避免检查器长期报红而被当成噪声忽略。
+DOC_EXEMPT=$(grep -oE '已登记命名例外.*' "$GUIDELINES" 2>/dev/null | tail -1 |
   sed 's/.*：//' | tr '、' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | grep -v '^$' || true)
 
 NONCONFORMING=""
@@ -176,7 +139,7 @@ echo "仓库注册表对照检查  owner=$OWNER  基准=GitHub API 实际仓名"
 echo "  远程取到 $REMOTE_N 个仓（其中公开 $(echo "$REMOTE_PUBLIC" | grep -c . || true) 个）；§4 表登记 $(printf '%s\n' "$ROWS" | grep -c . || true) 条"
 echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 private 的行无法被该端点证实，故不参与差集 A。"
   echo "  本脚本对备份仓/非台账副本有显式声明（EXCLUDED_FROM_REGISTRY），后者不参与差集 B/C。"
-  echo "  §10 的发布规范豁免清单（29 项）与本脚本豁免（25 项）同源于 GOVERNANCE-EXCLUSIONS.md，差异为 4 个私有网站仓。"
+  echo "  本脚本只排除 7 个备份仓；§10 审计的 34 项排除见 check-release-standard.sh。"
 if [ -n "$DOC_EXEMPT" ]; then
   echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
 fi

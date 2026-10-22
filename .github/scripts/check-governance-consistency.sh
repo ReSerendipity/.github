@@ -5,10 +5,9 @@
 #   1. governance/desired-state.json 的仓集合 == GitHub 实际仓集合（双向差集为空）
 #   2. desired-state 内部合法：仓名不重复；lifecycle / delivery / distribution 取值均有规则
 #   3. check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY：名字都在 desired-state 内，
-#      项数 == GOVERNANCE-EXCLUSIONS.md 的声明值
-#   4. check-release-standard.sh 的 EXCLUDED_FROM_RELEASE_STANDARD：同上
-#   5. governance/README.md 的「N 项不适用整部规范」+「M 个管辖仓」+ 规范仓自身 1
-#      == desired-state 总数；且 N == §10 审计载体项数
+#      项数 == 文档声明 == desired-state 的 backup 仓数（7）
+#   4. check-release-standard.sh 的 EXCLUDED_FROM_RELEASE_STANDARD：同上，项数应为非 release 仓
+#   5. governance/README.md 的「37 个登记仓」+「7 个备份仓」== desired-state 总数 44
 #
 # 只读：仅向 GitHub 发 GET，不产生任何远端写入。
 # 用法：bash .github/scripts/check-governance-consistency.sh
@@ -67,7 +66,7 @@ print(f"OWNER\t{data.get('owner', '')}")
 for repo in data.get("repos") or []:
     name = repo.get("name")
     if not name:
-        errors.append("存在缺少 name 的条目录")
+        errors.append("存在缺少 name 的条目")
         continue
     names.append(name)
     if repo.get("lifecycle") not in lifecycles:
@@ -80,6 +79,14 @@ for repo in data.get("repos") or []:
 
 for name in sorted({item for item in names if names.count(item) > 1}):
     errors.append(f"仓名重复：{name}")
+
+for key in ("delivery", "lifecycle"):
+    counter = {}
+    for repo in data.get("repos") or []:
+        value = repo.get(key)
+        counter[value] = counter.get(value, 0) + 1
+    for value, count in sorted(counter.items()):
+        print(f"COUNT\t{key}\t{value}\t{count}")
 
 print(f"TOTAL\t{len(names)}")
 for name in names:
@@ -109,6 +116,12 @@ if ! gh repo list "$OWNER" --limit 200 --json name --jq '.[].name' > "$TMP_DIR/r
   exit 2
 fi
 sort -o "$TMP_DIR/remote.names" "$TMP_DIR/remote.names"
+RELEASE_TOTAL=$(awk -F'\t' '$1=="COUNT" && $2=="delivery" && $3=="release"{print $4}' "$TMP_DIR/desired.tsv")
+BACKUP_TOTAL=$(awk -F'\t' '$1=="COUNT" && $2=="delivery" && $3=="backup"{print $4}' "$TMP_DIR/desired.tsv")
+if [ -z "$RELEASE_TOTAL" ] || [ -z "$BACKUP_TOTAL" ]; then
+  err "无法从 desired-state 解析 release / backup 仓数"
+  exit 2
+fi
 REMOTE_TOTAL=$(grep -c . "$TMP_DIR/remote.names" || true)
 if [ "${REMOTE_TOTAL:-0}" -eq 0 ]; then
   err "远程清单返回 0 条，无法判定（拒绝把空集合当通过）"
@@ -140,10 +153,10 @@ fi
 # ---- 文档声明值 -------------------------------------------------------------
 DOC_REGISTRY=$(grep -E '^\| `check-repo-registry\.sh`' "$EXCL" | grep -oE '\*\*[0-9]+\*\*' | head -1 | tr -d '*')
 DOC_RELEASE=$(grep -E '^\| `check-release-standard\.sh`' "$EXCL" | grep -oE '\*\*[0-9]+\*\*' | head -1 | tr -d '*')
-README_EXEMPT=$(grep -oE '[0-9]+ 项不适用整部规范' "$GREAD" | head -1 | grep -oE '[0-9]+')
-README_GOVERNED=$(grep -oE '[0-9]+ 个管辖仓' "$GREAD" | head -1 | grep -oE '[0-9]+')
+README_REGISTERED=$(grep -oE '[0-9]+ 个登记仓' "$GREAD" | head -1 | grep -oE '[0-9]+')
+README_BACKUP=$(grep -oE '[0-9]+ 个备份仓' "$GREAD" | head -1 | grep -oE '[0-9]+')
 
-if [ -z "$DOC_REGISTRY" ] || [ -z "$DOC_RELEASE" ] || [ -z "$README_EXEMPT" ] || [ -z "$README_GOVERNED" ]; then
+if [ -z "$DOC_REGISTRY" ] || [ -z "$DOC_RELEASE" ] || [ -z "$README_REGISTERED" ] || [ -z "$README_BACKUP" ]; then
   err "文档声明值抽取失败（GOVERNANCE-EXCLUSIONS.md 表格或 governance/README.md 措辞已变）"
   exit 2
 fi
@@ -171,15 +184,18 @@ fi
 
 [ "$REGISTRY_N" = "$DOC_REGISTRY" ] || GAPS="${GAPS}  - EXCLUDED_FROM_REGISTRY 实有 $REGISTRY_N 项，GOVERNANCE-EXCLUSIONS.md 声明 $DOC_REGISTRY 项\n"
 [ "$RELEASE_N" = "$DOC_RELEASE" ] || GAPS="${GAPS}  - EXCLUDED_FROM_RELEASE_STANDARD 实有 $RELEASE_N 项，GOVERNANCE-EXCLUSIONS.md 声明 $DOC_RELEASE 项\n"
-[ "$README_EXEMPT" = "$DOC_RELEASE" ] || GAPS="${GAPS}  - governance/README.md 声明 $README_EXEMPT 项豁免，§10 审计载体为 $DOC_RELEASE 项\n"
+[ "$REGISTRY_N" = "$BACKUP_TOTAL" ] || GAPS="${GAPS}  - EXCLUDED_FROM_REGISTRY 实有 $REGISTRY_N 项，desired-state 的 backup 仓为 $BACKUP_TOTAL 个\n"
+[ "$README_BACKUP" = "$BACKUP_TOTAL" ] || GAPS="${GAPS}  - governance/README.md 声明 $README_BACKUP 个备份仓，desired-state 为 $BACKUP_TOTAL 个\n"
+[ "$RELEASE_N" = "$((DESIRED_TOTAL - RELEASE_TOTAL))" ] || GAPS="${GAPS}  - EXCLUDED_FROM_RELEASE_STANDARD 实有 $RELEASE_N 项，应为非 release 仓 $((DESIRED_TOTAL - RELEASE_TOTAL)) 个\n"
+[ "$README_REGISTERED" = "$((DESIRED_TOTAL - BACKUP_TOTAL))" ] || GAPS="${GAPS}  - governance/README.md 声明 $README_REGISTERED 个登记仓，应为 $((DESIRED_TOTAL - BACKUP_TOTAL)) 个\n"
 
-ARITHMETIC=$((README_EXEMPT + README_GOVERNED + 1))
-[ "$ARITHMETIC" = "$DESIRED_TOTAL" ] || GAPS="${GAPS}  - README 分组计数 $README_EXEMPT + $README_GOVERNED + 1 = $ARITHMETIC，desired-state 共 $DESIRED_TOTAL 个仓\n"
+ARITHMETIC=$((README_REGISTERED + README_BACKUP))
+[ "$ARITHMETIC" = "$DESIRED_TOTAL" ] || GAPS="${GAPS}  - README 分组计数 $README_REGISTERED + $README_BACKUP = $ARITHMETIC，desired-state 共 $DESIRED_TOTAL 个仓\n"
 
 echo "治理单一事实来源一致性检查  owner=$OWNER"
-echo "  desired-state：$DESIRED_TOTAL 仓；远程：$REMOTE_TOTAL 仓"
+echo "  desired-state：$DESIRED_TOTAL 仓（release $RELEASE_TOTAL / backup $BACKUP_TOTAL）；远程：$REMOTE_TOTAL 仓"
 echo "  排除数组：EXCLUDED_FROM_REGISTRY=$REGISTRY_N（文档 $DOC_REGISTRY）；EXCLUDED_FROM_RELEASE_STANDARD=$RELEASE_N（文档 $DOC_RELEASE）"
-echo "  README 分组：豁免 $README_EXEMPT + 管辖 $README_GOVERNED + 规范仓 1 = $ARITHMETIC"
+echo "  README 分组：登记 $README_REGISTERED + 备份 $README_BACKUP = $ARITHMETIC"
 echo ""
 
 if [ -n "$GAPS" ]; then

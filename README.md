@@ -12,8 +12,10 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `governance/REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则 + 合并后自动删除源分支 `delete_branch_on_merge`）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、许可证规范（§11）、项目结构规范（§12：跨仓通用件位置 + 存量收敛）、路径规范（§13：正斜杠/相对仓根/逐字符一致 + `local/` 入库分流容器）、硬编码规范（§14：敏感值与机器特定值禁入、owner 名集中声明） |
-| `governance/GOVERNANCE-EXCLUSIONS.md` | **治理豁免清单**（§10 排除清单的正式记录，五处同步之一）：列明 29 个不适用整部规范的仓（备份仓 / 网站仓 / 点名豁免）及其脚本载体对照 |
+| `governance/REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则 + 合并后自动删除源分支 `delete_branch_on_merge`）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 仅本地保留、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、许可证规范（§11）、项目结构规范（§12）、路径规范（§13）、硬编码规范（§14）、治理分档（§15：lifecycle × delivery 两轴派生适用条款） |
+| `governance/GOVERNANCE-EXCLUSIONS.md` | **治理分档与例外记录**：现行口径、7 个备份仓的整部豁免、命名/发布载体对照，以及 2026-10-18~21 四轮豁免的历史原文（语义已被 ADR-0006 取代，仅留痕） |
+| `governance/desired-state.json` | **声明式期望状态**：44 仓的 lifecycle / delivery / distribution / risk / backup 定位与复用工作流调用点；`audit-drift.py` 与 `check-governance-consistency.sh` 的数据源 |
+| `governance/decisions/` | **ADR 决策记录**：ADR-0001 单一事实来源、ADR-0002 旧豁免语义（已取代）、ADR-0003 `enforce_admins=false`、ADR-0004 私有仓保护缺口、ADR-0005 备份策略、ADR-0006 两轴分档 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md` | **发布文档统一模板**（§10 的执行件）：各仓复制为 `docs/release-governance.md` 后只填本仓特有项。配套核验脚本 `.github/scripts/check-release-standard.sh`（审计收敛进度，**非**每 PR 门禁）。计划迁入 `governance/`，因在途 WIP 暂缓 |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 通用 Pull Request 检查清单 |
@@ -25,11 +27,11 @@
 - 本仓库本身不承载任何项目代码。
 - 主页简介由同名仓库 `ReSerendipity/ReSerendipity` 承载。本账号是个人账号，`profile/README.md` 属组织账号（Organization）专属机制，在个人账号下不会渲染，因此本仓库不保留该文件。
 
-治理约定细节见 `governance/REPOSITORY_GUIDELINES.md`（命名/分支/密钥备份规范）、`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`；各仓的豁免范围见 `governance/GOVERNANCE-EXCLUSIONS.md`。
+治理约定细节见 `governance/REPOSITORY_GUIDELINES.md`（命名/分支/密钥备份/两轴分档）、`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`；适用条款派生见 `governance/desired-state.json` 与 §15，例外记录见 `governance/GOVERNANCE-EXCLUSIONS.md`。
 
 ## 复用工作流
 
-`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 默认维持非阻断兼容模式；调用仓完成规则核查后，可设置 `enforce_critical_checks: true`，将“本地治理文档不得被 git 跟踪”作为独立阻断门禁，其余健康检查仍保持告警性质。本仓 `ci.yml` 自身另有五项检查（工作流 lint、DCO 签名、复用工作流冒烟、§4 仓库对照表、§10 发布规范审计），其中 §4 对照在每次 PR/推送与 `schedule` 周检上运行，§10 审计仅在 `schedule` 周检上运行，用于捕捉账号内新建/改名/删除仓库造成的台账漂移与发布链回退。
+`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 默认维持非阻断兼容模式；调用仓完成规则核查后，可设置 `enforce_critical_checks: true`，将“本地治理文档不得被 git 跟踪”作为独立阻断门禁，其余健康检查仍保持告警性质。本仓自身另有六项检查：工作流 lint、DCO 签名、复用工作流冒烟、§4 仓库对照表、§10 发布规范审计、治理漂移审计。其中 §4 对照在每次 PR/推送与 `schedule` 周检上运行；§10 审计仅在 `schedule` 周检上运行；漂移审计在周检、手动触发与命中 `governance/desired-state.json` 的 PR 上运行，用于捕捉账号内新建/改名/删除仓库造成的台账与平台状态漂移。
 
 ## 维护原则
 
