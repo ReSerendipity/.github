@@ -43,7 +43,6 @@ jobs:
           echo "${ARCHIVE_SHA256}  scorecard.tar.gz" | sha256sum --check --strict -
           tar -xzf scorecard.tar.gz scorecard
           sudo install -m 0755 scorecard /usr/local/bin/scorecard
-          scorecard --version
       - name: Run scorecard
         env:
           GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
