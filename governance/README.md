@@ -27,6 +27,16 @@
 
 **不复制正文**，避免多副本漂移。
 
+## 新建仓库
+
+先跑脚手架，再改治理文档：
+
+```bash
+bash .github/scripts/scaffold-repo.sh <Repo-Name> [--private|--public] [--delivery release|service|tool|content] [--create-remote]
+```
+
+脚本生成 README（含治理引用）、CHANGELOG、`docs/release-governance.md`、`.gitignore`、`.githooks/pre-push`，并设置 `core.hooksPath`；不自动改治理文档，结束时打印五处同步清单。
+
 ## 变更流程
 
 - 改动走分支 + PR + DCO 签名，合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`
