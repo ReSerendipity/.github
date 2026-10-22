@@ -1,4 +1,4 @@
-{
+﻿{
   "version": 2,
   "owner": "ReSerendipity",
   "defaults": {
@@ -78,7 +78,7 @@
     "rewq": { "rule": "no-private-key-upload", "scope": "ssh-backup/" }
   },
   "reusable_workflows": {
-    "pinned_ref": "",
+    "pinned_ref": "7c03273a862ffc8136ec886914c6105d77dce32d",
     "callers": [
       { "repo": "Image-DuoModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
       { "repo": "Image-DuoModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
@@ -88,8 +88,8 @@
       { "repo": "MiniMax-H3-Lite", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
       { "repo": "SpiritPal", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
       { "repo": "DraftPeek", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
-      { "repo": "TTS-MultiModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
-      { "repo": "TTS-MultiModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" }
+      { "repo": "TTS-MultiModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml", "ref": "2c0c5abbe2acdb8efb793482b5c79411ed34bde6" },
+      { "repo": "TTS-MultiModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "2c0c5abbe2acdb8efb793482b5c79411ed34bde6" }
     ]
   }
 }

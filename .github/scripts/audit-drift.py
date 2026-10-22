@@ -215,6 +215,7 @@ def check_pins(owner, pins, selected):
         return out
     for caller in callers:
         repo, path, workflow = caller.get("repo"), caller.get("file"), caller.get("workflow")
+        expected = (caller.get("ref") or ref).strip()
         text, err = gh_file(owner, repo, path)
         if text is None:
             out["fatal"].append(f"{repo}/{path} 读取失败：{err}")
@@ -228,8 +229,10 @@ def check_pins(owner, pins, selected):
             out["drift"].append(f"{repo}/{path} 找不到 {workflow} 的调用点")
             continue
         for line in lines:
-            if not line.endswith("@" + ref):
-                out["drift"].append(f"{repo}/{path} 未固定到 {ref[:12]}：{line}")
+            # 允许行尾注释（# pinned YYYY-MM-DD）：只取 @ 后的 ref 字段比对。
+            actual = line.rsplit("@", 1)[-1].split()[0].strip()
+            if actual != expected:
+                out["drift"].append(f"{repo}/{path} 未固定到 {expected[:12]}：{line}")
     return out
 
 
