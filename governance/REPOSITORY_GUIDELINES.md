@@ -144,6 +144,7 @@
 
 ## 5. 变更流程
 
+- **新建仓库**：先跑 `.github/scripts/scaffold-repo.sh <Repo-Name> [--private|--public] [--delivery release|service|tool|content] [--create-remote]` 生成骨架（README 含治理引用、CHANGELOG、`docs/release-governance.md`、`.gitignore`、`.githooks/pre-push`，并设 `core.hooksPath`），再按脚本打印的五处清单补治理文档。**不要先手搓目录**——骨架漏项是最常见的返工来源。
 - 重命名仓库：先改远程（`gh repo rename`，旧名保留重定向），再同步本地目录与 remote URL，详细步骤见 §6。
 - 本地目录被占用（进程/Agent 活动）时不强行改名，等待释放后处理。
 - 本规范变更需同步更新 `.github` 仓库中的本文件与 README 索引。

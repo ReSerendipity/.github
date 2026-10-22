@@ -15,13 +15,21 @@ EXEMPT_NAMES=".github"
 err() { echo "ERROR: $*" >&2; }
 
 [ -f "$GUIDELINES" ] || { err "找不到 $GUIDELINES"; exit 2; }
-command -v gh >/dev/null 2>&1 || { err "需要 gh（只读取数），本机未找到"; exit 2; }
+# 离线注入（REGISTRY_REMOTE_TSV）供门禁反例测试使用；线上未设置时仍要求 gh。
+if [ -z "${REGISTRY_REMOTE_TSV:-}" ]; then
+  command -v gh >/dev/null 2>&1 || { err "需要 gh（只读取数），本机未找到"; exit 2; }
+fi
 
 REMOTE_TSV=$(mktemp)
 trap 'rm -f "$REMOTE_TSV"' EXIT
 
 # 取远程权威清单（分页取满；该端点结构性地只返回公开仓库）。
-if ! gh api "users/$OWNER/repos" --paginate --jq '.[] | "\(.name)\t\(.private)"' > "$REMOTE_TSV" 2>/dev/null; then
+# 离线注入：REGISTRY_REMOTE_TSV 指向 "name<TAB>private" 的 TSV 时跳过网络取数，
+# 供门禁反例测试使用；线上未设置该变量时行为完全不变。
+if [ -n "${REGISTRY_REMOTE_TSV:-}" ]; then
+  [ -f "$REGISTRY_REMOTE_TSV" ] || { err "REGISTRY_REMOTE_TSV 文件不存在：$REGISTRY_REMOTE_TSV"; exit 2; }
+  cp "$REGISTRY_REMOTE_TSV" "$REMOTE_TSV"
+elif ! gh api "users/$OWNER/repos" --paginate --jq '.[] | "\(.name)\t\(.private)"' > "$REMOTE_TSV" 2>/dev/null; then
   err "gh api users/$OWNER/repos 取数失败（网络/凭据/限流）"
   exit 2
 fi
