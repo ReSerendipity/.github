@@ -62,11 +62,11 @@
 
 ## 4. 现网仓库命名对照（2026-10-22 更新，37 行）
 
-### 例外名（品牌 / 系统保留名 / 已登记命名债务，9 个）
+### 例外名（品牌 / 系统保留名 / 已登记命名债务，8 个）
 
 > **何为例外名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断）。
-> `.github` 属 GitHub **系统保留名**；`Code-Time-Machine-1024` 与 `p0-murder-mystery` 是**已登记债务**，
-> 前者因 `1024` 为活动品牌长期保留，后者在阶段 5 改名后转为 Train Case。
+> `.github` 属 GitHub **系统保留名**；`Code-Time-Machine-1024` 是**已登记债务**，
+> 因 `1024` 为活动品牌长期保留。
 
 | 仓库 | 可见性 | delivery | 例外依据 |
 |---|---|---|---|
@@ -78,9 +78,8 @@
 | rewq | private | service | 历史品牌名；按 §15.5 `credentials` 管理 |
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
-| p0-murder-mystery | public | service | 阶段 5 改名为 `P0-Murder-Mystery`，改前登记债务 |
 
-### Train Case（28 个）
+### Train Case（29 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
@@ -103,6 +102,7 @@
 | Multi-Tracker | public | tool |
 | Nekogal-DL | private | tool |
 | Offer-Landing-Kit | public | service |
+| P0-Murder-Mystery | public | service |
 | Prompt-Library | private | content |
 | RTX-VSR-Lite | public | library |
 | SeedVR2-Lite | public | release |
@@ -113,10 +113,13 @@
 | Website-Wuthering-Waves | private | service |
 | Website-Zenless-Zone-Zero | private | service |
 
-> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、p0-murder-mystery、Code-Time-Machine-1024
+> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024
 >
 > 2026-10-22 变更（两轴模型落地，ADR-0006）：本表由 19 行扩为 37 行 = 全部非 `backup` 仓，7 个备份仓退出本表；
 > 例外名独立成表（9 行），不再依赖「豁免清单」隐藏命名问题。此前四轮豁免历史见 `GOVERNANCE-EXCLUSIONS.md`。
+>
+> 2026-10-22 改名：`p0-murder-mystery` → `P0-Murder-Mystery`（`gh repo rename`，旧名保留重定向），
+> 从例外名表转入 Train Case；例外名 9 → 8，Train Case 28 → 29，总数仍 37。
 
 > 2026-10-13 变更：`agent-knowledge` → `Agent-Knowledge`、`prompt-library` → `Prompt-Library`（远程 + 本地均已改名，旧名保留重定向）。
 >
