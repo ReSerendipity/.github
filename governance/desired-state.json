@@ -1,4 +1,4 @@
-﻿{
+{
   "version": 2,
   "owner": "ReSerendipity",
   "defaults": {
@@ -56,7 +56,7 @@
     { "name": "Multi-Tracker", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Nekogal-DL", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Offer-Landing-Kit", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
-    { "name": "p0-murder-mystery", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "P0-Murder-Mystery", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Prompt-Library", "visibility": "private", "delivery": "content", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "ReSerendipity", "visibility": "public", "delivery": "content", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "rewq", "visibility": "private", "delivery": "service", "distribution": ["direct-ssh"], "lifecycle": "active", "risk": ["credentials"], "backup": "github-only" },

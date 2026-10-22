@@ -155,7 +155,7 @@ Mooncake-Deconstruction
 Multi-Tracker
 Nekogal-DL
 Offer-Landing-Kit
-p0-murder-mystery
+P0-Murder-Mystery
 Prompt-Library
 ReSerendipity
 rewq
