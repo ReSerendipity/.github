@@ -72,7 +72,15 @@ def not_found(err):
 
 def check_repo(owner, spec):
     name = spec["name"]
-    out = {"name": name, "drift": [], "unverified": [], "skipped": [], "fatal": []}
+    out = {
+        "name": name,
+        "visible": False,
+        "drift": [],
+        "unverified": [],
+        "skipped": [],
+        "limited": [],
+        "fatal": [],
+    }
 
     facts, err = gh_api(f"repos/{owner}/{name}")
     if facts is None:
@@ -83,6 +91,11 @@ def check_repo(owner, spec):
         else:
             out["fatal"].append(f"读取仓库元数据失败：{err}")
         return out
+
+    out["visible"] = True
+    # delete_branch_on_merge / 分支保护 / ruleset 仅对 admin 可读。Actions 默认
+    # GITHUB_TOKEN 对其它仓只有 read 权限，读到的 dboM 恒为 false，不能当真值。
+    is_admin = bool((facts.get("permissions") or {}).get("admin"))
 
     actual_vis = "private" if facts.get("private") else "public"
     if actual_vis != spec["visibility"]:
@@ -98,14 +111,21 @@ def check_repo(owner, spec):
     if branch != "main":
         out["drift"].append(f"默认分支 {branch!r} ≠ 'main'")
 
-    if not want_archived and not facts.get("delete_branch_on_merge"):
-        out["drift"].append("delete_branch_on_merge=false")
+    if not want_archived:
+        if not is_admin:
+            out["limited"].append("delete_branch_on_merge")
+        elif not facts.get("delete_branch_on_merge"):
+            out["drift"].append("delete_branch_on_merge=false")
 
-    if (
+    required_protection = (
         spec["visibility"] == "public"
         and spec["lifecycle"] == "active"
         and spec["delivery"] != "policy"
-    ):
+    )
+    if required_protection and not is_admin:
+        out["limited"].append("分支保护")
+        out["limited"].append("ruleset")
+    elif required_protection:
         protection, perr = gh_api(f"repos/{owner}/{name}/branches/{branch or 'main'}")
         if protection is None:
             out["unverified"].append(f"分支保护读取失败：{perr}")
@@ -140,14 +160,26 @@ def check_repo(owner, spec):
     return out
 
 
-def check_exception(owner, name, spec):
-    out = {"name": f"{name}（例外）", "drift": [], "unverified": [], "skipped": [], "fatal": []}
+def check_exception(owner, name, spec, visible):
+    out = {
+        "name": name,
+        "drift": [],
+        "unverified": [],
+        "skipped": [],
+        "limited": [],
+        "fatal": [],
+    }
     if spec.get("rule") != "no-private-key-upload":
         out["skipped"].append(f"未知例外规则 {spec.get('rule')!r}，未校验")
         return out
     text, err = gh_file(owner, name, ".gitignore")
     if text is None:
-        out["fatal"].append(f"读取 .gitignore 失败：{err}")
+        if not_found(err) and not visible:
+            out["unverified"].append("私有仓对当前凭据不可见，跳过例外校验")
+        elif not_found(err):
+            out["drift"].append("缺少 .gitignore")
+        else:
+            out["fatal"].append(f"读取 .gitignore 失败：{err}")
         return out
     scope = (spec.get("scope") or "").strip()
     lines = {line.strip() for line in text.splitlines()}
@@ -155,7 +187,10 @@ def check_exception(owner, name, spec):
         out["drift"].append(f".gitignore 不再排除 {scope}")
     tracked, terr = gh_api(f"repos/{owner}/{name}/git/trees/main?recursive=1")
     if tracked is None:
-        out["fatal"].append(f"读取文件树失败：{terr}")
+        if not_found(terr) and not visible:
+            out["unverified"].append("私有仓对当前凭据不可见，跳过密钥目录跟踪校验")
+        else:
+            out["fatal"].append(f"读取文件树失败：{terr}")
     else:
         leaked = [
             node["path"]
@@ -168,7 +203,7 @@ def check_exception(owner, name, spec):
 
 
 def check_pins(owner, pins, selected):
-    out = {"name": "复用工作流 SHA 固定", "drift": [], "unverified": [], "skipped": [], "fatal": []}
+    out = {"name": "复用工作流 SHA 固定", "drift": [], "unverified": [], "skipped": [], "limited": [], "fatal": []}
     ref = (pins.get("pinned_ref") or "").strip()
     callers = [c for c in pins.get("callers", []) if c.get("repo") in selected]
     if not callers:
@@ -256,7 +291,7 @@ def main(argv):
         target = next((item for item in results if item["name"] == name), None)
         if target is None:
             continue
-        extra = check_exception(owner, name, spec)
+        extra = check_exception(owner, name, spec, target.get("visible", False))
         for key in ("drift", "unverified", "skipped", "fatal"):
             target[key].extend(extra[key])
 
@@ -266,20 +301,23 @@ def main(argv):
     lines = [
         "治理漂移审计",
         f"  期望源：governance/desired-state.json  owner={owner}  仓库 {len(selected)} 个",
-        "  口径：只读 gh api；私有仓对当前凭据不可见时记 UNVERIFIABLE（不判红），"
+        "  口径：只读 gh api；私有仓不可见或令牌无 admin 权限时，对应项记 UNVERIFIABLE / PARTIAL（不判红），"
         "完整覆盖需在本地用 owner 凭据运行。",
         "",
     ]
-    counts = {"PASS": 0, "DRIFT": 0, "UNVERIFIABLE": 0, "SKIP": 0}
+    counts = {"PASS": 0, "PARTIAL": 0, "DRIFT": 0, "UNVERIFIABLE": 0, "SKIP": 0}
     drift_details = []
     unverified_details = []
     fatal_details = []
+    limited_fields = set()
 
     for result in all_rows:
         problems = result["drift"]
         unverified = result["unverified"]
         skipped = result["skipped"]
+        limited = result.get("limited") or []
         fatal = result["fatal"]
+        limited_fields.update(limited)
         fatal_details.extend(f"{result['name']}: {item}" for item in fatal)
         if problems:
             status = "DRIFT"
@@ -289,6 +327,9 @@ def main(argv):
             status = "UNVERIFIABLE"
             counts["UNVERIFIABLE"] += 1
             unverified_details.extend(f"{result['name']}: {item}" for item in unverified)
+        elif limited:
+            status = "PARTIAL"
+            counts["PARTIAL"] += 1
         elif skipped:
             status = "SKIP"
             counts["SKIP"] += 1
@@ -306,13 +347,19 @@ def main(argv):
     lines.append("")
     if pins_result:
         lines.append(
-            f"汇总：{len(results)} 仓 + 1 项横切校验 · PASS {counts['PASS']} · DRIFT {counts['DRIFT']} · "
-            f"UNVERIFIABLE {counts['UNVERIFIABLE']} · SKIP {counts['SKIP']}"
+            f"汇总：{len(results)} 仓 + 1 项横切校验 · PASS {counts['PASS']} · PARTIAL {counts['PARTIAL']} · "
+            f"DRIFT {counts['DRIFT']} · UNVERIFIABLE {counts['UNVERIFIABLE']} · SKIP {counts['SKIP']}"
         )
     else:
         lines.append(
-            f"汇总：{len(results)} 仓 · PASS {counts['PASS']} · DRIFT {counts['DRIFT']} · "
-            f"UNVERIFIABLE {counts['UNVERIFIABLE']} · SKIP {counts['SKIP']}"
+            f"汇总：{len(results)} 仓 · PASS {counts['PASS']} · PARTIAL {counts['PARTIAL']} · "
+            f"DRIFT {counts['DRIFT']} · UNVERIFIABLE {counts['UNVERIFIABLE']} · SKIP {counts['SKIP']}"
+        )
+    if limited_fields:
+        lines.append(
+            "口径受限：当前令牌无 admin 权限，"
+            + " / ".join(sorted(limited_fields))
+            + " 未校验（Actions 默认 GITHUB_TOKEN）；完整覆盖需在本地用 owner 凭据运行。"
         )
     if drift_details:
         lines.append("漂移明细：")
