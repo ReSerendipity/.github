@@ -79,10 +79,14 @@ run_case "release 正例" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$F
 run_case "release 缺发布文档" 1 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/release-missing"
 
 # ── agents：正例 / 超行数 ───────────────────────────────────────
+# 夹具以 AGENTS.md.fixture 入库：本仓自我净化规则禁止跟踪任何 AGENTS.md，
+# 测试时复制成真正的 AGENTS.md 再跑。
+mkdir -p "$TMP/agents-ok"
+cp "$FIXTURES/agents-ok/AGENTS.md.fixture" "$TMP/agents-ok/AGENTS.md"
 mkdir -p "$TMP/agents-over"
 seq 1 301 | sed 's/^/line /' > "$TMP/agents-over/AGENTS.md"
 
-run_case "agents 正例" 0 bash "$SCRIPTS/check-agents-md-size.sh" --root "$FIXTURES/agents-ok"
+run_case "agents 正例" 0 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-ok"
 run_case "agents 超行数" 1 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-over"
 
 # ── signoff：正例 / 缺尾注 ──────────────────────────────────────
