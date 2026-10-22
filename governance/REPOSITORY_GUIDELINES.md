@@ -515,6 +515,8 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 | `backup` | §3（KeyBackup 结构、允许轮换更新） | 其余全部 |
 | `policy` | §1–§17 自身维护 | §10 发布链 |
 
+> **跨 delivery 通用条款（2026-10-23）**：§16、§17 不参与本表裁剪，对全部 `delivery` 类型生效；`backup` 仓仅在其 §3 允许的维护动作中适用 §16 / §17。
+
 ### 15.4 distribution → §10 检查子集
 
 | distribution | 生效检查 |
@@ -565,7 +567,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 
 **定位**：把一次会话里得到的可复用事实，沉淀为下一次会话的入口；同时防止根文件无限膨胀。本节与 §7 的入库分流、50 / 300 行上限叠加执行；与 §7 冲突时，入库与可见性以 §7 为准。
 
-**适用范围**：所有带 `AGENTS.md` 家族的仓库。`delivery=backup` 与 `lifecycle=archived` 的仓按只读处理（§15.7），新增内容需先 unarchive。
+**适用范围**：所有维护 `AGENTS.md` 家族的仓库。`lifecycle=archived` 的仓为只读，新增内容需先按 §15.7 unarchive；`delivery=backup` 的仓不是只读，但其自进化内容不得超出 §3 允许的维护动作。
 
 ### 16.1 自进化协议
 
