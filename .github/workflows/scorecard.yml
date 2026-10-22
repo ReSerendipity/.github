@@ -43,25 +43,27 @@ jobs:
           echo "${ARCHIVE_SHA256}  scorecard.tar.gz" | sha256sum --check --strict -
           tar -xzf scorecard.tar.gz scorecard
           sudo install -m 0755 scorecard /usr/local/bin/scorecard
-      - name: Select checks
-        id: checks
-        # 本仓用经典分支保护；GITHUB_TOKEN 读不到经典保护规则，Branch-Protection 会
-        # 直接判 internal error。只对本仓排除该项，其余 10 个 release 仓仍跑全量。
-        run: |
-          if [ "${{ matrix.repo }}" = ".github" ]; then
-            echo "args=--checks Code-Review,Contributors,Dangerous-Workflow,Security-Policy,Vulnerabilities,Fuzzing,SAST,CII-Best-Practices,Token-Permissions,Packaging,License,Binary-Artifacts,Maintained,CI-Tests,Signed-Releases,Pinned-Dependencies,Dependency-Update-Tool" >> "$GITHUB_OUTPUT"
-          else
-            echo "args=" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Run scorecard
+      - name: Run scorecard (full checks)
+        if: matrix.repo != '.github'
         env:
           GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXTRA_ARGS: ${{ steps.checks.outputs.args }}
         run: |
           mkdir -p results
           scorecard --repo="github.com/ReSerendipity/${{ matrix.repo }}" \
             --format json --output "results/result.json" \
-            --show-details ${EXTRA_ARGS}
+            --show-details
+      - name: Run scorecard (本仓排除 Branch-Protection)
+        if: matrix.repo == '.github'
+        # 本仓用经典分支保护；GITHUB_TOKEN 读不到经典保护规则，Branch-Protection 会
+        # 直接判 internal error。只对本仓排除该项，其余 10 个 release 仓仍跑全量。
+        env:
+          GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p results
+          scorecard --repo="github.com/ReSerendipity/${{ matrix.repo }}" \
+            --format json --output "results/result.json" \
+            --show-details \
+            --checks Code-Review,Contributors,Dangerous-Workflow,Security-Policy,Vulnerabilities,Fuzzing,SAST,CII-Best-Practices,Token-Permissions,Packaging,License,Binary-Artifacts,Maintained,CI-Tests,Signed-Releases,Pinned-Dependencies,Dependency-Update-Tool
       - name: Write step summary
         if: always()
         run: |
