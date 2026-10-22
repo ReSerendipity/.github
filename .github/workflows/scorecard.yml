@@ -60,12 +60,12 @@ jobs:
         run: |
           mkdir -p results
           scorecard --repo="github.com/ReSerendipity/${{ matrix.repo }}" \
-            --format json --output "results/${{ matrix.repo }}.json" \
+            --format json --output "results/result.json" \
             --show-details ${EXTRA_ARGS}
       - name: Write step summary
         if: always()
         run: |
-          python3 - "$GITHUB_STEP_SUMMARY" "results/${{ matrix.repo }}.json" <<'PY'
+          python3 - "$GITHUB_STEP_SUMMARY" "results/result.json" <<'PY'
           import json
           import sys
 
