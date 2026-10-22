@@ -494,7 +494,7 @@ AGENTS.md    # §7 家族（无斜线模式，匹配任意深度）
 |---|---|---|---|
 | `active` | 近 90 天有新功能提交或新 Release | 允许新功能 | 周检 |
 | `maintenance` | 只修 bug / 依赖 / 安全 | 仅修复与密钥轮换 | 月检 |
-| `archived` | GitHub 已归档 | 平台只读 | 不检查 |
+| `archived` | GitHub 已归档（暂时归档，可 unarchive） | 平台只读 | 不检查 |
 
 active 与 maintenance 的**适用条款完全相同**，差别只有变更许可、审计频率与平台要求三处。
 「有没有偷偷加功能」审计查不出，靠提交审查与 PR 约定。
@@ -537,3 +537,26 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
 为唯一事实来源；§4 的 37 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
+
+### 15.7 归档操作规范（暂时归档，2026-10-23 新增）
+
+本账号的归档一律是**暂时归档（temporary archive）**：不是永久归档、不是项目终止，也不删除仓库。归档只把仓库切换为 GitHub 只读状态，可随时 unarchive 恢复。
+
+| 项 | 要求 |
+|---|---|
+| 性质 | 暂时只读；代码、历史、已有 Release / Pages 保留；公开仓可克隆、Star、Fork，私有仓仅限现有协作者 |
+| README | **归档前**必须在仓库根 `README.md` 顶部加入下方统一声明块；README 未更新不得归档 |
+| 恢复 | unarchive → 更新 README（移除或改写声明）→ 把 `desired-state.json` 的 `lifecycle` 改回 `active` / `maintenance` → 跑 `audit-drift.py` 确认无漂移 |
+| 已归档仓补声明 | 先 unarchive，补 README 并合并，再重新 archive；期间 `lifecycle` 保持 `archived` |
+| 审计 | 归档仓按 §15.2 跳过常规审计；README 存在性仍属基础要求 |
+
+统一声明块（逐字复制，仅日期按实际归档日调整）：
+
+```markdown
+> **状态：暂时归档（Temporary Archive）｜YYYY-MM-DD**
+>
+> 本仓库处于 GitHub 只读归档状态。这是**暂时归档**，不是永久归档，也不代表项目终止。
+> 归档期间，代码、提交历史以及已有的 Release / Pages 保持可访问；公开仓可克隆、Star、Fork，私有仓仅限现有协作者。不能提交代码、发起 Issue / PR、评论或发布新版本。
+> 恢复开发时，由仓库所有者解除归档（unarchive），更新本声明，并同步修改治理台账中的 `lifecycle`。
+> 治理口径见 [ReSerendipity/.github 治理规范 §15.7](https://github.com/ReSerendipity/.github/blob/main/governance/REPOSITORY_GUIDELINES.md)。
+```
