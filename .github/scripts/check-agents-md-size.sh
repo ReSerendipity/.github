@@ -108,8 +108,8 @@ if [ "${#OVER[@]}" -gt 0 ]; then
   echo "" >&2
   echo "超标文件（${#OVER[@]} 个）：" >&2
   for line in "${OVER[@]}"; do echo "$line" >&2; done
-  echo "拆分办法见 §7/§8：只对本模块有效的内容下沉为模块级 AGENTS.md；" >&2
-  echo "陌生读者读了不能行动的内容移进 docs/README.internal.md（§8 分流判据）。" >&2
+  echo "拆分办法见 §7.5：模块 / 任务内容下沉到 local/agents/<module|task>.md；" >&2
+  echo "本地维护说明进 local/README.internal.md；文档分流判据见 §13.1。" >&2
   exit 1
 fi
 echo "clean：所有活动 AGENTS.md 均未超过 ${MAX} 行"
