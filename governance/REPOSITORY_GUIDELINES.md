@@ -105,6 +105,7 @@
 | Image-Scrapers | private | tool |
 | Lineart-Painter | public | release |
 | MiniMax-H3-Lite | public | release |
+| MiniMax-H3-Lite-Local | private | tool |
 | Mooncake-Deconstruction | public | service |
 | Multi-Tracker | public | tool |
 | Nekogal-DL | private | tool |
