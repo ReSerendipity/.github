@@ -746,22 +746,38 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 - [ ] 需要推送 / 合并的已完成，分支已清理
 ```
 
-### 17.5 多 Agent 并发协作（2026-10-23 新增）
+### 17.5 多 Agent 并发与开工前工作区判定（2026-10-23 新增）
 
-**检测（任一命中即视为多 agent）**：
+**开工前四查（每个仓开始任务前必做）**：
 
-1. `git worktree list` 显示同一仓有多个工作区；
-2. `.git/agent-session.lock` 存在且心跳在 10 分钟内；
-3. `git status` / `git log` 出现非本 session 的改动或提交；
-4. 远端 30 分钟内有 `agent/*` 分支或对应 PR 更新。
+1. `git fetch` + `git status --short` + `git log --oneline -5` + `git rev-list --left-right --count origin/main...HEAD`；
+2. `git worktree list --porcelain`：同一仓多个工作区即多 agent 迹象；
+3. `.git/agent-session.lock`：存在且心跳在 10 分钟内，视为有活跃会话；
+4. 对 dirty 文件取 `LastWriteTime`，与当前时间比较：≤10 分钟 = 高度活跃；10–30 分钟 = 不确定，继续查锁/进程/近期提交；>30 分钟 = 大概率空闲。
+
+**判定矩阵**：
+
+| 工作区 | 其他 agent | 动作 |
+|---|---|---|
+| 干净 | 无 | 直接开始 |
+| 干净 | 有 | 暂缓，或开独立分支 + PR |
+| 不干净 | 有 | 暂缓 / 开分支 + PR；不碰当前工作树 |
+| 不干净 | 无（mtime 久远 / 无锁） | 先解决遗留：逐项确认归属；能独立提交的单独提交；不能确认的保留并报告；禁止 reset / stash / 覆盖 |
+| 不干净 | 不确定 | 按「有 agent」处理，暂缓或开分支 + PR |
+
+**判定口径**：
+
+- mtime 只是线索，必须与 worktree、锁、近期提交、远端分支组合判断；单看 mtime 不下结论。
+- 活跃阈值默认 10 / 30 分钟；项目可调整，但必须在报告中写明实际阈值。
+- 发现陌生提交或 `git status` 突然干净：先 `git log` / `git reflog` 取证，不覆盖、不 reset、不 force push。
+- 遗留处理：只提交本次任务相关文件；无关 WIP 保持原样并在报告中列出；不得删除、stash 或 reset 用户改动。
+- 锁过期：>30 分钟且进程不存在，核对后清理；活锁不删。
 
 **处理**：
 
-- **未检测到**：原子获取 `.git/agent-session.lock`（session id / pid / 开始时间 / 心跳），按 §17.2 直推；收尾释放锁。
+- **未检测到其他 agent**：原子获取 `.git/agent-session.lock`（session id / pid / 开始时间 / 心跳），按 §17.2 直推；收尾释放锁。
 - **检测到**：不加共享锁，立即从当前 HEAD 开 `agent/<session>/<task>-<yyyymmddHHMM>`，在该分支提交并推送，开 PR；不碰 `main`。
-- **锁过期**：超过 30 分钟且进程不存在，先核对 `git log` / `git status`，再清理；不得删除活锁。
 - **共享文件**：`AGENTS.md`、根 README、`desired-state.json`、治理文档即使分支不同也要串行改；后到者等合并后 rebase。
-- **冲突处理**：发现陌生提交或 `git status` 突然干净，先 `git log` / `git reflog` 取证，不覆盖、不 reset、不 force push，直接协调。
 - **收尾**：合并后删除分支与 worktree，释放锁；跑一次全量审计。
 
 ## 18. Markdown 文档健康规范（2026-10-23 新增）

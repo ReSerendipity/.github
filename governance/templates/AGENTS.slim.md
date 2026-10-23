@@ -10,7 +10,8 @@
 
 1. 读 `docs/agent-contract.md` 与根 `README.md`。
 2. 确认本仓定位：`maintenance` 只修 bug / 依赖 / 安全，`active` 才允许新功能。
-3. 需要模块细节时，只读下方索引指向的 `local/agents/*.md`，不要求全读。
+3. 开工前跑 `git status` / `git worktree list` / `git log -5`；工作区不干净时按 §17.5 判定是否有其他 agent，再决定跳过、开分支或清理遗留。
+4. 需要模块细节时，只读下方索引指向的 `local/agents/*.md`，不要求全读。
 
 ## 硬约束
 
