@@ -98,7 +98,6 @@ EOF
 cat > .gitignore <<'EOF'
 /local/
 AGENTS.md
-!/AGENTS.md
 EOF
 
 cp "$TEMPLATE" docs/release-governance.md

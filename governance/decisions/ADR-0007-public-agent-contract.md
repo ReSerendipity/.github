@@ -1,6 +1,8 @@
 # ADR-0007：公开仓根 `AGENTS.md` 精简版与 `docs/agent-contract.md`
 
-- 状态：Accepted
+> **已被 [ADR-0008](ADR-0008-single-local-agents-md.md) 取代（2026-10-23）**：本文仅作决策历史保留，现行口径以 ADR-0008 与 §7 为准。
+
+- 状态：Superseded by ADR-0008
 - 日期：2026-10-22
 - 决策者：ReSerendipity（账号所有者）
 - 相关：§7、ADR-0001、`governance/templates/`

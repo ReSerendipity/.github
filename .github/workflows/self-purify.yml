@@ -51,7 +51,8 @@ jobs:
         run: |
           HITS=$(git ls-files | grep -E '^(docs/(plans|project|_devarchive|agents|execution)/|LOCAL_RULES\.md$|FIX_LOG\.md$|(.*/)?AGENTS\.md$)' \
             | grep -vE '^(docs/reports/(落地执行总结|执行对照表)-桌面分发与安全加固-20260910\.md|docs/execution/(RELEASE_VERIFICATION\.md|(执行对照表|落地执行总结)-桌面分发与安全加固-20260910\.md|依赖与安全跟踪机制-20260911\.md)|docs/project/(KNOWN_GOTCHAS\.md|AI_DEV_SOPS\.md))$' || true)
-          # 根 AGENTS.md 的公开精简版允许入库（§7 / ADR-0007）：≤50 行 + 契约标记。
+          # 存量兼容（2026-10-23）：迁移完成前，≤50 行 + 契约标记的根 AGENTS.md 暂放行；
+          # 目标规则见 §7.3 / ADR-0008：任何被跟踪的 AGENTS.md 均阻断。
           ALLOWED_ROOT_AGENTS=0
           if git ls-files --error-unmatch AGENTS.md >/dev/null 2>&1; then
             LINES=$(wc -l < AGENTS.md | tr -d ' ')
@@ -68,11 +69,11 @@ jobs:
             HITS=$(printf '%s\n' "$HITS" | grep -vE "${{ inputs.extra_exempt_regex }}" || true)
           fi
           if [ -n "$HITS" ]; then
-            echo "::error::以下本地治理文档被 git 跟踪，或根 AGENTS.md 不合规（应 git rm --cached；根精简版须 ≤50 行且含 <!-- governance:agent-contract v1 -->）："
+            echo "::error::以下本地治理文档被 git 跟踪，或根 AGENTS.md 不符合存量兼容条件（应 git rm --cached；迁移目标：任何 tracked AGENTS.md 均阻断，见 §7.3）："
             echo "$HITS"
             exit 1
           fi
-          echo "OK：无本地治理文档被跟踪（根 AGENTS.md 精简版符合要求）"
+          echo "OK：无本地治理文档被跟踪（存量兼容：根 AGENTS.md 暂放行）"
 
   self-purify:
     name: 自净化检查
@@ -88,7 +89,8 @@ jobs:
         run: |
           HITS=$(git ls-files | grep -E '^(docs/(plans|project|_devarchive|agents|execution)/|LOCAL_RULES\.md$|FIX_LOG\.md$|(.*/)?AGENTS\.md$)' \
             | grep -vE '^(docs/reports/(落地执行总结|执行对照表)-桌面分发与安全加固-20260910\.md|docs/execution/(RELEASE_VERIFICATION\.md|(执行对照表|落地执行总结)-桌面分发与安全加固-20260910\.md|依赖与安全跟踪机制-20260911\.md)|docs/project/(KNOWN_GOTCHAS\.md|AI_DEV_SOPS\.md))$' || true)
-          # 根 AGENTS.md 的公开精简版允许入库（§7 / ADR-0007）：≤50 行 + 契约标记。
+          # 存量兼容（2026-10-23）：迁移完成前，≤50 行 + 契约标记的根 AGENTS.md 暂放行；
+          # 目标规则见 §7.3 / ADR-0008：任何被跟踪的 AGENTS.md 均阻断。
           ALLOWED_ROOT_AGENTS=0
           if git ls-files --error-unmatch AGENTS.md >/dev/null 2>&1; then
             LINES=$(wc -l < AGENTS.md | tr -d ' ')
@@ -105,11 +107,11 @@ jobs:
             HITS=$(printf '%s\n' "$HITS" | grep -vE "${{ inputs.extra_exempt_regex }}" || true)
           fi
           if [ -n "$HITS" ]; then
-            echo "::error::以下本地治理文档被 git 跟踪，或根 AGENTS.md 不合规（应 git rm --cached；根精简版须 ≤50 行且含 <!-- governance:agent-contract v1 -->）："
+            echo "::error::以下本地治理文档被 git 跟踪，或根 AGENTS.md 不符合存量兼容条件（应 git rm --cached；迁移目标：任何 tracked AGENTS.md 均阻断，见 §7.3）："
             echo "$HITS"
             exit 1
           fi
-          echo "OK：无本地治理文档被跟踪（根 AGENTS.md 精简版符合要求）"
+          echo "OK：无本地治理文档被跟踪（存量兼容：根 AGENTS.md 暂放行）"
 
       - name: ② 根目录健康文件应继承自 org ReSerendipity/.github
         # 本仓库正是这些健康文件的提供方，对它套用 ② 会把自身的交付物判为违规。
