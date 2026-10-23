@@ -1,5 +1,7 @@
 # ADR-0006：lifecycle × delivery 两轴分档与 44 仓重定位
 
+> **历史快照（2026-10-22）**：本文的仓数与分布不代表当前状态；当前以 `governance/desired-state.json` 为准。
+
 - 状态：Accepted
 - 日期：2026-10-22
 - 决策者：ReSerendipity（账号所有者）
