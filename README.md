@@ -14,7 +14,7 @@
 | `SUPPORT.md` | 支持渠道说明 |
 | `governance/REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名（Train Case + 短横线）、分支（main + 保护规则 + 合并后自动删除源分支 `delete_branch_on_merge`）、密钥备份模式、现网命名对照、本地目录与远程一致、AGENTS.md 公开精简版（≤50 行，入库）/ 本地扩展版（仅本地）、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、许可证规范（§11）、项目结构规范（§12）、路径规范（§13）、硬编码规范（§14）、治理分档（§15：lifecycle × delivery 两轴派生适用条款）、AGENTS 自进化与拆分（§16）、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18） |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | **治理分档与例外记录**：现行口径、7 个备份仓的整部豁免、命名/发布载体对照，以及 2026-10-18~21 四轮豁免的历史原文（语义已被 ADR-0006 取代，仅留痕） |
-| `governance/desired-state.json` | **声明式期望状态**：44 仓的 lifecycle / delivery / distribution / risk / backup 定位与复用工作流调用点；`audit-drift.py` 与 `check-governance-consistency.sh` 的数据源 |
+| `governance/desired-state.json` | **声明式期望状态**：45 仓的 lifecycle / delivery / distribution / risk / backup 定位与复用工作流调用点；`audit-drift.py` 与 `check-governance-consistency.sh` 的数据源 |
 | `governance/decisions/` | **ADR 决策记录**：ADR-0001 单一事实来源、ADR-0002 旧豁免语义（已取代）、ADR-0003 `enforce_admins=false`、ADR-0004 私有仓保护缺口、ADR-0005 备份策略、ADR-0006 两轴分档、ADR-0007 公开 Agent 契约 |
 | `governance/templates/agent-contract.md` | **Agent 契约模板**：各仓 `docs/agent-contract.md` 的唯一来源；根 `AGENTS.md` 精简版（≤50 行）是新会话 agent 的公开入口 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md` | **发布文档统一模板**（§10 的执行件）：各仓复制为 `docs/release-governance.md` 后只填本仓特有项。配套核验脚本 `.github/scripts/check-release-standard.sh`（审计收敛进度，**非**每 PR 门禁）。计划迁入 `governance/`，因在途 WIP 暂缓 |

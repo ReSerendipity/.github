@@ -60,7 +60,7 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（2026-10-22 更新，37 行）
+## 4. 现网仓库命名对照（2026-10-23 更新，38 行）
 
 ### 例外名（品牌 / 系统保留名 / 已登记命名债务，8 个）
 
@@ -79,7 +79,7 @@
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
 
-### Train Case（29 个）
+### Train Case（30 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
@@ -98,6 +98,7 @@
 | Image-Scrapers | private | tool |
 | Lineart-Painter | public | release |
 | MiniMax-H3-Lite | public | release |
+| MiniMax-H3-Lite-Local | private | tool |
 | Mooncake-Deconstruction | public | service |
 | Multi-Tracker | public | tool |
 | Nekogal-DL | private | tool |
@@ -114,6 +115,8 @@
 | Website-Zenless-Zone-Zero | private | service |
 
 > 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024
+>
+> 2026-10-23 变更：新增 `MiniMax-H3-Lite-Local`（private / tool / maintenance），本表 37 → 38 行，Train Case 29 → 30；总数 44 → 45。
 >
 > 2026-10-22 变更（两轴模型落地，ADR-0006）：本表由 19 行扩为 37 行 = 全部非 `backup` 仓，7 个备份仓退出本表；
 > 例外名独立成表（9 行），不再依赖「豁免清单」隐藏命名问题。此前四轮豁免历史见 `GOVERNANCE-EXCLUSIONS.md`。
@@ -534,10 +537,10 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 44 仓定位
+### 15.6 45 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 37 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 38 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）
