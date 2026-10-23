@@ -147,7 +147,7 @@ echo "仓库注册表对照检查  owner=$OWNER  基准=GitHub API 实际仓名"
 echo "  远程取到 $REMOTE_N 个仓（其中公开 $(echo "$REMOTE_PUBLIC" | grep -c . || true) 个）；§4 表登记 $(printf '%s\n' "$ROWS" | grep -c . || true) 条"
 echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 private 的行无法被该端点证实，故不参与差集 A。"
   echo "  本脚本对备份仓/非台账副本有显式声明（EXCLUDED_FROM_REGISTRY），后者不参与差集 B/C。"
-  echo "  本脚本只排除 7 个备份仓；§10 审计的 35 项排除见 check-release-standard.sh。"
+  echo "  本脚本只排除 7 个备份仓；§10 审计的 36 项排除见 check-release-standard.sh。"
 if [ -n "$DOC_EXEMPT" ]; then
   echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
 fi

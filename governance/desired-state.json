@@ -72,6 +72,7 @@
     { "name": "Unity", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Website-Genshin-Impact", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Website-Honkai-Star-Rail", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Website-Site-Toolchain", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Website-Wuthering-Waves", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Website-Zenless-Zone-Zero", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" }
   ],
