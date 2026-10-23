@@ -96,9 +96,9 @@ cat > CHANGELOG.md <<'EOF'
 EOF
 
 cat > .gitignore <<'EOF'
+# 新仓最小基线；密钥 / 大文件 / 构建产物等规则按 §3 / §9 继续追加
 /local/
 AGENTS.md
-!/AGENTS.md
 EOF
 
 cp "$TEMPLATE" docs/release-governance.md
