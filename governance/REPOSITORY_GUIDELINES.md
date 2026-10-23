@@ -185,7 +185,7 @@
 - 公开可分发入口是 `docs/agent-contract.md`（tracked，逐字节复制模板）与根 `README.md`；fresh clone / CI / 协作者环境中没有 `AGENTS.md` 属预期。
 - 私有仓的备份对象是非 `AGENTS.md` 的本地上下文（`local/agents/**`、`FIX_LOG.md` 等）；是否上传按各仓现有 `.gitignore` 与本节执行。
 - 误入库恢复：`git rm --cached AGENTS.md` + `.gitignore` 写 `AGENTS.md` + commit + push；本地文件保留。
-- **迁移欠账（2026-10-23）**：存量已跟踪的根 `AGENTS.md` 需按上述流程逐仓移除；迁移完成前 `self-purify.yml` 暂不翻转，避免 32 仓同时红。清单由长任务审计输出。
+- **迁移欠账（2026-10-23）**：存量已跟踪的根 `AGENTS.md` 需按上述流程逐仓移除；迁移完成前 `self-purify.yml` 暂不翻转，避免 26 个非归档仓同时红（另有 11 个归档仓也跟踪 `AGENTS.md`，按只读处理，迁移需先 unarchive）。清单由长任务审计输出。
 
 ### 7.2 质量标准
 

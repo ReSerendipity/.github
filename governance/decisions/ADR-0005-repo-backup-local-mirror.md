@@ -1,5 +1,7 @@
 # ADR-0005：仓库备份——接受 GitHub 单远端
 
+> **历史快照（2026-10-22）**：本文的仓数与本地克隆数不代表当前状态；当前以 `governance/desired-state.json` 与现场盘点为准。
+
 - 状态：Accepted
 - 日期：2026-10-22
 - 决策者：ReSerendipity（账号所有者）
