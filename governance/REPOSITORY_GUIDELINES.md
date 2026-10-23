@@ -177,7 +177,7 @@
 ### 7.1 归属与入库
 
 - 每个仓**只有一个** `AGENTS.md`，位于仓库根目录；嵌套/模块级 `AGENTS.md` 一律不建、不入库。
-- `AGENTS.md` **一律不入库**：`.gitignore` 只写 `AGENTS.md`（无斜线模式，匹配任意深度），**不再有 `!/AGENTS.md` 白名单**。
+- `AGENTS.md` **一律不入库**：在仓库**现有** `.gitignore` 中增加 `AGENTS.md`（无斜线模式，匹配任意深度），**不得删除或覆盖**密钥、大文件、构建产物、`local/` 等既有规则；不再有 `!/AGENTS.md` 白名单。
 - 公开仓与私有仓同一口径：`AGENTS.md` 是本地维护者上下文，私有仓也不上传 `AGENTS.md`。
 - 公开可分发入口是 `docs/agent-contract.md`（tracked，逐字节复制模板）与根 `README.md`；fresh clone / CI / 协作者环境中没有 `AGENTS.md` 属预期。
 - 私有仓的备份对象是非 `AGENTS.md` 的本地上下文（`local/agents/**`、`FIX_LOG.md` 等）；是否上传按各仓现有 `.gitignore` 与本节执行。
@@ -199,7 +199,7 @@
 - **入库侧**：`self-purify.yml` 的目标规则是阻断任何被跟踪的 `AGENTS.md`；存量迁移完成后再翻转（见 §7.1 迁移欠账）。
 - **契约一致性**：`audit-drift.py` 比对仓内 `docs/agent-contract.md` 与 `governance/templates/agent-contract.md`，不一致判红。
 - **行数检查**：`.github/scripts/check-agents-md-size.sh` 默认上限 300，检查根 `AGENTS.md` 与 `local/agents/*.md`；非 CI 门禁。
-- **脚手架**：`scaffold-repo.sh` 生成根 `AGENTS.md`（本地文件）并把 `AGENTS.md` 写入 `.gitignore`；不再生成 `!/AGENTS.md` 白名单。
+- **脚手架**：`scaffold-repo.sh` 生成根 `AGENTS.md`（本地文件）并写入新仓最小 `.gitignore`（`/local/` + `AGENTS.md`）；密钥、大文件、构建产物等规则由各仓按 §3/§9 继续追加，不是替换整个 `.gitignore`。
 - **调用**：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；可挂本地 `pre-commit`。
 - **扫描口径**：只算活动文件，排除归档/备份副本、生成目录与嵌套 git 仓；`--include-nested` 显式纳入。
 
@@ -259,6 +259,15 @@
 - 排障：`local/agents/GOTCHAS.md`
 
 禁止新增第二个 `AGENTS.md`。
+
+**参考实践（2026-10-23 调研）**：
+
+- [AGENTS.md 开放格式](https://agents.md/)把它定位为「给 agent 的 README」，根文件保持短小；
+- [OpenAI Codex](https://github.com/openai/codex)支持从根到当前目录逐级读取嵌套 `AGENTS.md`，越深优先级越高，默认合并上限 32 KiB；
+- [Claude Code memory](https://code.claude.com/docs/en/memory)建议单个指令文件 <200 行，超出后用 imports / path-scoped rules 做渐进披露；
+- 社区经验：先合并重复条目，再按「每个任务都要看 / 只在某类任务看」二分；根文件常见控制在 50–150 行。
+
+本账号适配：公开仓不跟踪嵌套 `AGENTS.md`，所以用 `local/agents/<module|task>.md` + 根索引实现同样的分层；**300 行是硬上限，推荐控制在 150 行以内**。
 
 **根文件只做路由器**，保留四块：`开工前`、`硬约束`、`交付前`、`索引`。索引表固定列：`文件 | 来源章节 | 管什么 | 什么时候读 | 最后更新`。
 
