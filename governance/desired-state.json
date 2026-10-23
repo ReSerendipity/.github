@@ -52,6 +52,7 @@
     { "name": "Image-Scrapers", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Lineart-Painter", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "MiniMax-H3-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "MiniMax-H3-Lite-Local", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Mooncake-Deconstruction", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Multi-Tracker", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Nekogal-DL", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
