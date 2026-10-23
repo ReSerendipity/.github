@@ -17,7 +17,7 @@
 **本文件自 2026-10-22 起是「治理分档与例外记录」，不再是「整部规范不适用」的白名单。** 现行规则：
 
 1. **`delivery=backup` 的 7 个仓**（密钥 / 资产备份仓）整部规范不适用，只按 §3 的 `<项目名>-KeyBackup` 结构、`SHA256SUMS.txt` 与轮换更新要求管理；不进 §4 台账，不参与 §1 命名与 §10 审计。
-2. **其余 38 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
+2. **其余 39 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
 3. **命名例外**（品牌 / 系统保留名 / 已登记债务）见 §4「例外名」表；新增例外须先落 ADR。
 4. **`rewq` 的硬约束收窄**：`.gitignore` 必须排除 `ssh-backup/`、`.ssh/` 与 `*.pem` / `*.key` 等私钥；正常提交与推送不受限制（§15.5）。
 
@@ -109,24 +109,24 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **7** | 差集 B/C 只看备份仓；其余 38 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **35** | §10 收敛审计只覆盖 10 个 `release` 仓（45 − 10 = 35） |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **7** | 差集 B/C 只看备份仓；其余 39 仓全部参与 §1 命名校验 |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **36** | §10 收敛审计只覆盖 10 个 `release` 仓（46 − 10 = 36） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
-## 四、账号仓总览（2026-10-23 实测，共 45 个）
+## 四、账号仓总览（2026-10-24 实测，共 46 个）
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
-| **§4 登记（含规范仓）** | 38 | 按 §15 派生适用条款；命名例外见 §4 |
+| **§4 登记（含规范仓）** | 39 | 按 §15 派生适用条款；命名例外见 §4 |
 | **备份仓** | 7 | `delivery=backup`，只按 §3 管理，不进 §4 |
-| 合计 | 45 | `gh repo list ReSerendipity` 实测 45 个，零差额 |
+| 合计 | 46 | `gh repo list ReSerendipity` 实测 46 个，零差额 |
 
-### §4 台账现状（2026-10-23 复核）
+### §4 台账现状（2026-10-24 复核）
 
-- 台账登记 **38 条**（例外名 8 + Train Case 30），覆盖全部非 `backup` 仓。
+- 台账登记 **39 条**（例外名 8 + Train Case 31），覆盖全部非 `backup` 仓。
 - 台账之外的备份仓 **7 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
 - 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 

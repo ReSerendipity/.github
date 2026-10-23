@@ -133,7 +133,7 @@ if [ -n "$ROOT" ]; then
   check_one "$ROOT" "$(basename "$ROOT")"
 else
   # 排除清单（2026-10-22 两轴模型）：§10 只覆盖 delivery=release 的 10 个仓，
-  # 其余 35 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
+  # 其余 36 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
   # 改清单须五处同步（§15、§4、check-repo-registry.sh、本声明、GOVERNANCE-EXCLUSIONS.md）。
   EXCLUDED_FROM_RELEASE_STANDARD=".github
 Agent-Knowledge
@@ -168,6 +168,7 @@ Unfading-Wall
 Unity
 Website-Genshin-Impact
 Website-Honkai-Star-Rail
+Website-Site-Toolchain
 Website-Wuthering-Waves
 Website-Zenless-Zone-Zero"
 
