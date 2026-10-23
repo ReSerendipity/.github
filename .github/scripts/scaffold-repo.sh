@@ -127,7 +127,7 @@ cat <<EOF
   2. governance/desired-state.json 的 repos 加一条（lifecycle 默认 active）
   3. governance/README.md 的计数（登记仓 +1）与根 README 索引（如涉及）
   4. 若为备份仓：governance/GOVERNANCE-EXCLUSIONS.md 加一条
-  5. 治理仓改动走分支 + PR + DCO 签名
+  5. 治理仓改动按 §17.2：作者账号可直推，非作者走分支 + PR + DCO
 EOF
 
 if [ "$CREATE_REMOTE" -eq 0 ]; then

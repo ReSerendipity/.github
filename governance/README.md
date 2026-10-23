@@ -40,7 +40,7 @@ bash .github/scripts/scaffold-repo.sh <Repo-Name> [--private|--public] [--delive
 
 ## 变更流程
 
-- 改动走分支 + PR + DCO 签名，合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`
+- 改动按 §17.2 的推送策略：作者账号可直推，非作者走分支 + PR + DCO；合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`
 - 清单类改动需五处同步：规范正文、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、本文件、`GOVERNANCE-EXCLUSIONS.md`
 - 定位改动同时改 `desired-state.json`；`audit-drift.py` 在周检、手动触发与命中 `desired-state.json` 的 PR 上对账
 - 版本记录写在各文件自身的变更段落，不另建 CHANGELOG
