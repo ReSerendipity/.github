@@ -6,7 +6,7 @@
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（7 项备份仓）
-> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（35 项非 release 仓）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（36 项非 release 仓，46 − 10）
 > 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
@@ -39,9 +39,9 @@
 
 **不变的边界**：
 
-- **已交付产物一律保留**：29 仓（含清单内 12 个点名仓）的 `docs/release-governance.md`、根级 `CHANGELOG.md`、发布链改动、AGENTS.md 上传——**不删除、不回滚**。豁免只表示"不再要求、不再审计"；将来要撤销产物属单独决定。
+- **已交付产物一律保留**：17 个点名仓的 `docs/release-governance.md`、根级 `CHANGELOG.md`、发布链改动、AGENTS.md 上传——**不删除、不回滚**。豁免只表示"不再要求、不再审计"；将来要撤销产物属单独决定。
 - **仓库本体不动**：豁免≠删除；所有仓仍在 GitHub 上，可见性不变。
-- **`rewq` 绝对例外**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；冻结于本地，仅保留本地 git 管理（§7 条款同步记载）。
+- **`rewq` 绝对例外**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；冻结于本地，仅保留本地 git 管理（§7 条款同步记载）。（**已被 ADR-0006 取代**：自 2026-10-22 起 rewq 仅受 `.gitignore` 私钥排除约束，正常提交与推送不受限；见 §零 第 4 条。）
 
 ---
 
@@ -64,7 +64,7 @@
 ### 2. 网站仓（4 个，均私有）
 
 `Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
-这些仓历史 `AGENTS.md` 体积（43634/58432/66226/20462 字节，2026-10-19 复核）；按 §7 目标应迁移为本地不入库文件，列入 §7.1 的 26 仓迁移欠账（归档仓另计），不因本节豁免而跳过。
+这些仓历史 `AGENTS.md` 体积（43634/58432/66226/20462 字节，2026-10-19 复核）；按 §7 目标原应迁移为本地不入库文件，曾列入 §7.1 的 26 仓迁移欠账（归档仓另计），不因本节豁免而跳过。截至 2026-10-24，四仓均已完成迁移，`AGENTS.md` 已不在 GitHub 跟踪；§7.1 当前欠账仅 `GalgameShell`、`Prompt-Library`。
 
 ### 3. 非台账副本（1 个，私有）
 
@@ -172,3 +172,9 @@
 | `SeedVR2-Lite` | `docs/plans/`、`docs/project/` | 部署手册与架构 / 约束 / 模块图 / 上手引导属随仓分发的公开文档，移出会打断仓内引用链 | 本仓 `self-purify.yml` 传 `extra_exempt_regex: '^docs/(plans\|project)/'` | 文档迁出受限目录并更新引用后删除该输入 |
 
 > 与 SpiritPal 的 `docs/execution/` 豁免同机制：例外由调用仓在自身 workflow 声明，家族基线不放宽；新增同类例外须先登记本节。
+
+---
+
+## 七、暂缓项（非豁免，2026-10-24）
+
+- `Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`：§8 README 对外装修与 §14 本地路径清理**暂缓**。这是用户明确的暂缓，不是豁免；四仓仍按 `delivery=service` 参与其余条款。解除条件：用户明确要求，或对外可见性变化。

@@ -12,7 +12,7 @@
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓库自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `governance/REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名与目录（§1，含原 §4/§6 归口；Train Case + 短横线、现网台账、本地与远程一致）、分支（main + 保护规则 + `delete_branch_on_merge`）、密钥备份模式、单一本地 `AGENTS.md`（§7，不入库，≤300 行；自进化 §7.4 / 拆分 §7.5）、README 双版本（根 README 对外 / local/README.internal.md 对内不入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、许可证规范（§11）、结构与路径（§12，含原 §13 归口）、硬编码规范（§14）、治理分档（§15：lifecycle × delivery 两轴派生适用条款；§15.7 暂时归档）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18） |
+| `governance/REPOSITORY_GUIDELINES.md` | **仓库治理规范**：命名与目录（§1，含原 §4/§6 归口；Train Case + 短横线、现网台账、本地与远程一致）、分支（main + 保护规则 + `delete_branch_on_merge`）、密钥备份模式、单一本地 `AGENTS.md`（§7，不入库，≤300 行；自进化 §7.4 / 拆分 §7.5）、README 双版本（根 README 对外；`local/README.internal.md` 对内，公开仓不入库、私有仓应入库）、本地产物排除、发布/分发统一规范（§10：release + package + deployment 合一，远端优先）、许可证规范（§11）、结构与路径（§12，含原 §13 归口）、硬编码规范（§14）、治理分档（§15：lifecycle × delivery 两轴派生适用条款；§15.7 暂时归档）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18） |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | **治理分档与例外记录**：现行口径、7 个备份仓的整部豁免、命名/发布载体对照，以及 2026-10-18~21 四轮豁免的历史原文（语义已被 ADR-0006 取代，仅留痕） |
 | `governance/desired-state.json` | **声明式期望状态**：46 仓的 lifecycle / delivery / distribution / risk / backup 定位与复用工作流调用点；`audit-drift.py` 与 `check-governance-consistency.sh` 的数据源 |
 | `governance/decisions/` | **ADR 决策记录**：ADR-0001 单一事实来源、ADR-0002 旧豁免语义（已取代）、ADR-0003 `enforce_admins=false`、ADR-0004 私有仓保护缺口、ADR-0005 备份策略、ADR-0006 两轴分档、ADR-0007 公开 Agent 契约（已被 ADR-0008 取代）、ADR-0008 单一本地 `AGENTS.md` |

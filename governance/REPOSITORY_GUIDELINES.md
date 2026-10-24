@@ -53,7 +53,7 @@
   - **不得删除的分支**：默认分支 `main`、Pages 部署目标 `gh-pages`、release-please 工作分支 `release-please--branches--main`（合并后由机器人自行重建，删除属正常行为）、以及刻意命名的归档/备份本地分支（`archive/*DO-NOT-PUSH*`、`backup/*`）——这些是**保留对象**，不是"漏删"。
   - **清理判据**：squash 合并会使分支不再是 `main` 的祖先，`git merge-base --is-ancestor` **不可作为判断依据**；应以其**关联 PR 状态为 `MERGED`** 为准。
   - 存量清理：开关开启后，已合并的残留分支需一次性清理（2026-10-20 已执行：13 管辖仓 23 条 + `.github` 12 条）。
-  - 排除清单（`GOVERNANCE-EXCLUSIONS.md` 29 项）不适用本规范，不强制开启；已开启的一律保留。
+  - 不适用本规范的只有 `delivery=backup` 的 7 个仓；其余仓按 §15.3 的 `delivery` 派生要求执行。`active` 公开仓仍须具备 `governance-baseline` + `tag-protection-v`，已配置的一律保留。
 - 本地与远程命名保持一致；远程重命名后需同步本地 remote URL。
 
 ## 3. 密钥与敏感信息备份规范（Secret Backup）
@@ -352,6 +352,8 @@ updated: YYYY-MM-DD
 > **范围声明（2026-10-19 更新）**：**已完成对账号内现存仓库的下发**——共 **29 个仓**在默认分支上持有本地化 `docs/release-governance.md`，全部位于 `main`（`ComfyUI-BatchPromptLoader` 于 2026-10-19 由 `master` 迁移，`master` 分支已删），且均含「远端优先」标记。逐仓差异与剩余欠账见 §10.6。
 >
 > 2026-10-18 补：其中 **6 个仓**（`ComfyUI-BatchPromptLoader` / `Multi-Tracker` / `Bilibili-Follow-Manager` / `Hugging-Face` / `Unfading-Wall` / `Unity`）已由用户点名**豁免 §10**——其已落地的文档与流水线**保留不动**，仅不再纳入 §10 的要求与审计范围（详见下方排除清单）。
+>
+> **历史留痕（2026-10-19 至 2026-10-21）**：以下「29 项整部规范不适用」白名单已于 2026-10-22 被 ADR-0006 废止，不再作为执行依据；现行口径见 §15.3 与 `GOVERNANCE-EXCLUSIONS.md` §零。
 >
 > **2026-10-19 豁免升级（用户裁决）**：下方排除清单由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§14）」——不再要求、不再审计本规范任何章节（含 §1 命名、§2 保护、§4 台账、§7/§8、§10、§12 结构、§13 路径、§14 硬编码）；同日**第二轮点名**再增 6 仓，2026-10-20 **第三轮点名 +1、备份仓补录 +1**，2026-10-21 **第四轮点名 +4**，清单共 **29 项**。台账/命名维度的执行载体见 §4 的 2026-10-19 变更记录与脚本 `EXCLUDED_FROM_REGISTRY`（25 项）。已交付产物（发布文档、CHANGELOG、流水线、AGENTS.md 上传）**一律保留**。
 >
