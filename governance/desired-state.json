@@ -83,15 +83,15 @@
     "pinned_ref": "051227229483b9efe65f57a6a81ddcd10cf950fc",
     "callers": [
       { "repo": "Image-DuoModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
-      { "repo": "Image-DuoModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "Image-DuoModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
       { "repo": "SeedVR2-Lite", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
-      { "repo": "SeedVR2-Lite", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "SeedVR2-Lite", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
       { "repo": "MiniMax-H3-Lite", "file": ".github/workflows/test.yml", "workflow": "python-quality-baseline.yml" },
-      { "repo": "MiniMax-H3-Lite", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
-      { "repo": "SpiritPal", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
-      { "repo": "DraftPeek", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" },
+      { "repo": "MiniMax-H3-Lite", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
+      { "repo": "SpiritPal", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
+      { "repo": "DraftPeek", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
       { "repo": "TTS-MultiModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
-      { "repo": "TTS-MultiModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml" }
+      { "repo": "TTS-MultiModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" }
     ]
   }
 }
