@@ -188,7 +188,7 @@
 - 公开可分发入口是 `docs/agent-contract.md`（tracked，逐字节复制模板）与根 `README.md`；fresh clone / CI / 协作者环境中没有 `AGENTS.md` 属预期。
 - 私有仓的备份对象是非 `AGENTS.md` 的本地上下文（`local/agents/**`、`FIX_LOG.md` 等）；是否上传按各仓现有 `.gitignore` 与本节执行。
 - 误入库恢复：`git rm --cached AGENTS.md` + `.gitignore` 写 `AGENTS.md` + commit + push；本地文件保留。
-- **迁移欠账（2026-10-23）**：存量已跟踪的根 `AGENTS.md` 需按上述流程逐仓移除；迁移完成前 `self-purify.yml` 暂不翻转，避免 26 个非归档仓同时红（另有 11 个归档仓也跟踪 `AGENTS.md`，按只读处理，迁移需先 unarchive）。清单由长任务审计输出。
+- **迁移结果（2026-10-24）**：26 个非归档仓中 24 仓已完成本地化（`git rm --cached`，本地文件保留）；GalgameShell、Prompt-Library 按用户指示暂缓，两仓均未接入 `self-purify`，不构成阻断规则的漏口；11 个归档仓仍跟踪 `AGENTS.md`，按只读处理，迁移需先 unarchive。`self-purify.yml` 已于 2026-10-24 翻转为阻断任何被跟踪的 `AGENTS.md`（默认开启）。
 
 ### 7.2 质量标准
 
@@ -202,7 +202,7 @@
 
 ### 7.3 执行载体
 
-- **入库侧**：`self-purify.yml` 的目标规则是阻断任何被跟踪的 `AGENTS.md`；存量迁移完成后再翻转（见 §7.1 迁移欠账）。
+- **入库侧**：`self-purify.yml` 已于 2026-10-24 翻转为阻断任何被跟踪的 `AGENTS.md`（默认开启；例外仓须先在 `GOVERNANCE-EXCLUSIONS.md` 登记理由与解除条件，再显式传 `enforce_critical_checks: false`）。
 - **契约一致性**：`audit-drift.py` 比对仓内 `docs/agent-contract.md` 与 `governance/templates/agent-contract.md`，不一致判红。
 - **行数检查**：`.github/scripts/check-agents-md-size.sh` 默认上限 300，检查根 `AGENTS.md` 与 `local/agents/*.md`；非 CI 门禁。
 - **脚手架**：`scaffold-repo.sh` 生成根 `AGENTS.md`（本地文件）并写入新仓最小 `.gitignore`（`/local/` + `AGENTS.md`）；密钥、大文件、构建产物等规则由各仓按 §3/§9 继续追加，不是替换整个 `.gitignore`。
