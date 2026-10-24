@@ -27,7 +27,7 @@
 
 ### 1.4 命名台账与本地一致性（原 §4、§6）
 
-- 现网命名台账以 **§4 表**为唯一数据源（39 行：8 个例外名 + 31 个 Train Case）；新增 / 改名先改 §4，再改远程。
+- 现网命名台账以 **§4 表**为唯一数据源（40 行：8 个例外名 + 32 个 Train Case）；新增 / 改名先改 §4，再改远程。
 - 本地克隆目录名必须与远程逐字符一致；远程重命名三步见 **§6**。
 - 命名例外须先落 ADR，再改 §4；§4 表由 `check-repo-registry.sh` 对账。
 - 本节是 §4 与 §6 的归口；两节保留原编号，分别作为数据附表与执行细则。
@@ -67,7 +67,7 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（§1.4 数据附表，2026-10-24 更新，39 行）
+## 4. 现网仓库命名对照（§1.4 数据附表，2026-10-24 更新，40 行）
 
 ### 例外名（品牌 / 系统保留名 / 已登记命名债务，8 个）
 
@@ -86,7 +86,7 @@
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
 
-### Train Case（31 个）
+### Train Case（32 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
@@ -116,6 +116,7 @@
 | SeedVR2-Lite | public | release |
 | TTS-MultiModel | public | release |
 | Unfading-Wall | public | service |
+| VOSR2-Lite | public | release |
 | Website-Genshin-Impact | private | service |
 | Website-Honkai-Star-Rail | private | service |
 | Website-Site-Toolchain | public | tool |
@@ -123,6 +124,8 @@
 | Website-Zenless-Zone-Zero | private | service |
 
 > 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024
+>
+> 2026-10-24 变更：新增 VOSR2-Lite（public / release / active，发布链 PR #1 已合并），本表 39 → 40 行，Train Case 31 → 32；总数 46 → 47。
 >
 > 2026-10-24 变更：新增 `Website-Site-Toolchain`（public / tool / active，2026-10-23 创建的结构签名门禁工具链），本表 38 → 39 行，Train Case 30 → 31；总数 45 → 46。
 >
@@ -649,10 +652,10 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 46 仓定位
+### 15.6 47 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 39 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 40 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）
