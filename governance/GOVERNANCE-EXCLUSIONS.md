@@ -142,7 +142,21 @@
 | 载体 | 强制的条款 | 性质 |
 |---|---|---|
 | `ci.yml` 五项检查（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §10 周检审计 | 硬门禁 + 周检 |
-| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（25 项） | CI + 周检 |
-| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 29 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule） |
+| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（7 项） | CI + 周检 |
+| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 36 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
+
+---
+
+## 六、生成物入库例外（按仓登记，2026-10-24）
+
+§9 默认要求构建产物与运行时快照不入库。下列仓因分发或历史决策需要，**登记为例外**；除表内文件外不得新增同类入库：
+
+| 仓库 | 文件 | 理由 | 依据 |
+|---|---|---|---|
+| `Github-Repo-Scan` | `scan-data.json`、`dashboard.html`、`all_repos_report.txt`、`scan_run*.txt` | 每次扫描的快照随主分支入库以保留可回溯性，接受大 diff | 本仓 `docs/adr/0003-snapshot-committing.md` |
+| `P0-Murder-Mystery` | `index.html`、`P0事故剧本杀.html` | `build.py` 生成的单文件游戏；`index.html` 为 Pages legacy 入口，另一份为分享副本 | 本仓 `README.md`「构建与输出」 |
+| `SpiritPal` | `src-tauri/binaries/spiritpal-mcp-*`（5 个：4 个 Android triple + 1 个 Windows） | Android `externalBin` 所需的预编译 sidecar；当前无 Android 交叉构建步骤，移除会阻断打包。Windows 副本由 CI 每次重建，待清理 | 本仓 `ci.yml` externalBin 注释 |
+
+> 例外仅限上表；新增生成物入库须先修改本节并说明可验证理由。`Image-DuoModel` 的 `release/build_metadata.json` / `release/sbom.json` 已于 2026-10-24 改为不入库。
