@@ -2,7 +2,7 @@
 
 <!-- 本文件不入库，仅本地保留；公开契约见 docs/agent-contract.md -->
 
-> 完整契约：[docs/agent-contract.md](docs/agent-contract.md)
+> 完整契约：`docs/agent-contract.md`
 > 治理规范：[ReSerendipity/.github/governance](https://github.com/ReSerendipity/.github/tree/main/governance)
 > 维护规则：本文件 ≤300 行；超过时按 §7.5 拆分到 `local/agents/`。
 
