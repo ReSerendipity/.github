@@ -32,7 +32,7 @@
 
 ## 复用工作流
 
-`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 默认维持非阻断兼容模式；调用仓完成规则核查后，可设置 `enforce_critical_checks: true`，将“本地治理文档不得被 git 跟踪”作为独立阻断门禁，其余健康检查仍保持告警性质。本仓自身另有六项检查：工作流 lint、DCO 签名、复用工作流冒烟、§4 仓库对照表、§10 发布规范审计、治理漂移审计。其中 §4 对照在每次 PR/推送与 `schedule` 周检上运行；§10 审计仅在 `schedule` 周检上运行；漂移审计在周检、手动触发与命中 `governance/desired-state.json` 的 PR 上运行，用于捕捉账号内新建/改名/删除仓库造成的台账与平台状态漂移。
+`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 自 2026-10-24 起默认阻断：“本地治理文档不得被 git 跟踪”作为独立阻断门禁（任何 tracked `AGENTS.md` 判红），其余健康检查仍保持告警性质；已登记的例外仓可显式传 `enforce_critical_checks: false`。本仓自身另有六项检查：工作流 lint、DCO 签名、复用工作流冒烟、§4 仓库对照表、§10 发布规范审计、治理漂移审计。其中 §4 对照在每次 PR/推送与 `schedule` 周检上运行；§10 审计仅在 `schedule` 周检上运行；漂移审计在周检、手动触发与命中 `governance/desired-state.json` 的 PR 上运行，用于捕捉账号内新建/改名/删除仓库造成的台账与平台状态漂移。
 
 ## 维护原则
 

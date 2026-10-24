@@ -2,7 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-23（两轴模型落地 + MiniMax-H3-Lite-Local 登记；四轮豁免转为历史记录）
+> **最后更新**：2026-10-24（self-purify 翻转 + SeedVR2-Lite 本地治理目录公开例外登记）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（7 项备份仓）
@@ -160,3 +160,15 @@
 | `SpiritPal` | `src-tauri/binaries/spiritpal-mcp-*`（5 个：4 个 Android triple + 1 个 Windows） | Android `externalBin` 所需的预编译 sidecar；当前无 Android 交叉构建步骤，移除会阻断打包。Windows 副本由 CI 每次重建，待清理 | 本仓 `ci.yml` externalBin 注释 |
 
 > 例外仅限上表；新增生成物入库须先修改本节并说明可验证理由。`Image-DuoModel` 的 `release/build_metadata.json` / `release/sbom.json` 已于 2026-10-24 改为不入库。
+
+---
+
+## 七、本地治理目录公开例外（按仓登记，2026-10-24）
+
+§7.1 默认要求 `docs/plans|project|_devarchive|agents|execution` 为本地治理目录、不入库。下列仓已将其中部分目录作为**公开文档层**随仓分发（`docs/DOD.md` 等要求新增模块在模块图登记），经裁决登记为例外：
+
+| 仓库 | 例外路径 | 理由 | 载体 | 解除条件 |
+|---|---|---|---|---|
+| `SeedVR2-Lite` | `docs/plans/`、`docs/project/` | 部署手册与架构 / 约束 / 模块图 / 上手引导属随仓分发的公开文档，移出会打断仓内引用链 | 本仓 `self-purify.yml` 传 `extra_exempt_regex: '^docs/(plans\|project)/'` | 文档迁出受限目录并更新引用后删除该输入 |
+
+> 与 SpiritPal 的 `docs/execution/` 豁免同机制：例外由调用仓在自身 workflow 声明，家族基线不放宽；新增同类例外须先登记本节。
