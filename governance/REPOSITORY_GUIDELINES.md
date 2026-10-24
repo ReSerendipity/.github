@@ -224,7 +224,7 @@
 | 内容 | 位置 |
 |---|---|
 | 根入口、硬约束、交付前、索引 | 根 `AGENTS.md`（≤300 行，本地） |
-| 模块 / 任务细节 | `local/agents/<module|task>.md`（本地） |
+| 模块 / 任务细节 | `local/agents/<module\|task>.md`（本地） |
 | 踩坑台账 / 失败签名 | `local/agents/GOTCHAS.md`（本地） |
 | 公开安全的最小契约 | `docs/agent-contract.md`（tracked，逐字节模板） |
 | 一次性日志、调试过程、机器绝对路径 | 不入库，留在 `local/` 或删除 |
@@ -797,7 +797,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 |---|---|---|
 | 入链 | 每个 tracked Markdown 至少有一个 tracked 入口链接（根 README、docs 索引、治理索引之一）；本地 `AGENTS.md` 可作本地入口，但不计入 tracked 入链 | 无入链的孤儿文档 |
 | 路径 | 相对链接可解析；大小写与实际文件名一致 | 死链、迁移后旧路径、未标注的 `local/` 链接 |
-| 命名 | 每个仓只有一个根 `AGENTS.md`（本地、不入库）；拆分文件统一 `local/agents/<module|task>.md`；公开契约统一 `docs/agent-contract.md` | 同一内容两个名字，或与 §7.5 冲突 |
+| 命名 | 每个仓只有一个根 `AGENTS.md`（本地、不入库）；拆分文件统一 `local/agents/<module\|task>.md`；公开契约统一 `docs/agent-contract.md` | 同一内容两个名字，或与 §7.5 冲突 |
 | 快照 | 历史文档中的计数、版本、状态必须带「截至 YYYY-MM-DD」，或改为指向 `desired-state.json` 等单一来源 | 无日期且与现状不符的计数 |
 | 状态 | `archived` / WIP / 迁移中 / 已取代 必须与平台、`desired-state.json`、ADR 状态联动 | 归档恢复后声明未移除、WIP 无期限、旧 ADR 未标 Superseded |
 | 执行件 | 规范变更时同步更新脚本注释、错误提示、模板与检查逻辑中的旧路径 / 旧条款 / 旧计数 | 规范与脚本提示冲突 |
