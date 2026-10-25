@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" font-family="'Noto Sans CJK SC','Noto Sans',-apple-system,'Segoe UI',sans-serif">
+  <title>治理架构：政策源 → 执行层 → 47 仓</title>
+  <desc>ReSerendipity/.github 治理架构：governance/ 政策单一事实来源，经 .github/workflows 与 scripts 执行，覆盖账号下 47 个仓库；周检漂移审计回填台账。</desc>
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#57606a"/>
+    </marker>
+    <marker id="arr-dash" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#bf3989"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1200" height="700" fill="#ffffff"/>
+
+  <!-- 标题 -->
+  <text x="40" y="42" font-size="27" font-weight="700" fill="#1f2328">治理架构 · Governance Architecture</text>
+  <text x="40" y="66" font-size="14" fill="#57606a">ReSerendipity/.github — 政策单一事实来源 → 执行层 → 47 个仓库（截至 2026-10-25；数据源 governance/desired-state.json）</text>
+
+  <!-- ═══ 层 A：政策源 ═══ -->
+  <rect x="40" y="90" width="1120" height="195" rx="12" fill="#fbf7ff" stroke="#d8c9f5" stroke-width="1.5"/>
+  <rect x="40" y="90" width="230" height="30" rx="8" fill="#6e40c9"/>
+  <text x="155" y="110" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">政策源 · Policy Source</text>
+  <text x="64" y="172" font-size="16" font-weight="700" fill="#6e40c9">governance/ — 规范正文、期望状态、ADR、模板、例外记录</text>
+  <text x="64" y="192" font-size="12" fill="#57606a">单一事实来源：以本目录为唯一权威口径，各仓 docs/ 与 README 不复制正文、只引用（governance/README.md 引用方式）</text>
+
+  <!-- 5 张政策卡片 -->
+  <g font-size="12" fill="#24292f">
+    <rect x="64" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
+    <text x="74" y="232" font-size="13" font-weight="700">REPOSITORY_GUIDELINES.md</text>
+    <text x="74" y="249" font-size="11.5" fill="#57606a">治理规范 §1–§18：命名 / 分支 / 密钥备份 /</text>
+    <text x="74" y="264" font-size="11.5" fill="#57606a">两轴分档 / 发布分发 / 路径 / 文档健康</text>
+    <rect x="286" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
+    <text x="296" y="232" font-size="13" font-weight="700">desired-state.json</text>
+    <text x="296" y="249" font-size="11.5" fill="#57606a">47 仓期望状态：lifecycle × delivery ×</text>
+    <text x="296" y="264" font-size="11.5" fill="#57606a">distribution × risk × backup；漂移审计源</text>
+    <rect x="508" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
+    <text x="518" y="232" font-size="13" font-weight="700">decisions/ · ADR-0001~0008</text>
+    <text x="518" y="249" font-size="11.5" fill="#57606a">决策记录：为什么这样定；ADR-0007 已被</text>
+    <text x="518" y="264" font-size="11.5" fill="#57606a">ADR-0008（单一本地 AGENTS.md）取代</text>
+    <rect x="730" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
+    <text x="740" y="232" font-size="13" font-weight="700">templates/</text>
+    <text x="740" y="249" font-size="11.5" fill="#57606a">agent-contract.md（逐字节复制）与</text>
+    <text x="740" y="264" font-size="11.5" fill="#57606a">AGENTS.slim.md（本地 ≤300 行）唯一模板</text>
+    <rect x="952" y="212" width="196" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
+    <text x="962" y="232" font-size="13" font-weight="700">GOVERNANCE-EXCLUSIONS.md</text>
+    <text x="962" y="249" font-size="11.5" fill="#57606a">例外与豁免登记：7 备份仓、命名例外、</text>
+    <text x="962" y="264" font-size="11.5" fill="#57606a">README 展示图例外等（五处同步）</text>
+  </g>
+
+  <!-- 层 A → 层 B -->
+  <path d="M600,285 L600,328" stroke="#57606a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+  <text x="614" y="312" font-size="12" fill="#57606a">审计对账（只读 GET）：audit-drift.py · check-governance-consistency.sh · check-repo-registry.sh</text>
+
+  <!-- ═══ 层 B：执行层 ═══ -->
+  <rect x="40" y="340" width="1120" height="200" rx="12" fill="#f7faff" stroke="#b6d4fe" stroke-width="1.5"/>
+  <rect x="40" y="340" width="200" height="30" rx="8" fill="#0969da"/>
+  <text x="140" y="360" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">执行层 · Execution</text>
+  <text x="64" y="398" font-size="16" font-weight="700" fill="#0969da">.github/ — 工作流、校验脚本、社区健康文件与模板</text>
+
+  <g font-size="12" fill="#24292f">
+    <rect x="64" y="412" width="264" height="116" rx="8" fill="#ffffff" stroke="#b6d4fe"/>
+    <text x="74" y="432" font-size="13" font-weight="700">workflows/ · ci.yml（6 个 CI 作业）</text>
+    <text x="74" y="450" fill="#57606a">Workflow lint（actionlint+YAML）</text>
+    <text x="74" y="466" fill="#57606a">DCO sign-off · self-purify 冒烟</text>
+    <text x="74" y="482" fill="#57606a">§4 台账对照 · 门禁反例测试</text>
+    <text x="74" y="498" fill="#57606a">§10 发布标准审计（仅 schedule 周检）</text>
+    <text x="74" y="514" fill="#0969da">另：drift-audit.yml · scorecard.yml</text>
+    <rect x="338" y="412" width="264" height="116" rx="8" fill="#ffffff" stroke="#b6d4fe"/>
+    <text x="348" y="432" font-size="13" font-weight="700">家族复用工作流（workflow_call）</text>
+    <text x="348" y="450" fill="#57606a">self-purify.yml：本地治理文档不得被</text>
+    <text x="348" y="466" fill="#57606a">git 跟踪（2026-10-24 起默认阻断）</text>
+    <text x="348" y="482" fill="#57606a">python-quality-baseline.yml：覆盖率 +</text>
+    <text x="348" y="498" fill="#57606a">mypy ratchet 质量底线（4 仓试点）</text>
+    <text x="348" y="514" fill="#0969da">调用方锁定已审阅提交 SHA，不漂移</text>
+    <rect x="612" y="412" width="264" height="116" rx="8" fill="#ffffff" stroke="#b6d4fe"/>
+    <text x="622" y="432" font-size="13" font-weight="700">scripts/ · 校验与脚手架（只读）</text>
+    <text x="622" y="450" fill="#57606a">check-repo-registry.sh（§4 台账）</text>
+    <text x="622" y="466" fill="#57606a">check-governance-consistency.sh</text>
+    <text x="622" y="482" fill="#57606a">check-release-standard.sh（§10 审计）</text>
+    <text x="622" y="498" fill="#57606a">check-signoff.sh · check-agents-md-size.sh</text>
+    <text x="622" y="514" fill="#57606a">scaffold-repo.sh · templates/pre-push</text>
+    <rect x="886" y="412" width="262" height="116" rx="8" fill="#ffffff" stroke="#b6d4fe"/>
+    <text x="896" y="432" font-size="13" font-weight="700">社区健康文件（默认回退）</text>
+    <text x="896" y="450" fill="#57606a">CODE_OF_CONDUCT.md（Contributor</text>
+    <text x="896" y="466" fill="#57606a">Covenant 2.1）· CONTRIBUTING.md</text>
+    <text x="896" y="482" fill="#57606a">（Conventional Commits + DCO）</text>
+    <text x="896" y="498" fill="#57606a">SECURITY.md · SUPPORT.md</text>
+    <text x="896" y="514" fill="#57606a">ISSUE_TEMPLATE/ · PULL_REQUEST_TEMPLATE.md</text>
+  </g>
+
+  <!-- 层 B → 层 C -->
+  <path d="M600,540 L600,583" stroke="#57606a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+  <text x="614" y="568" font-size="12" fill="#57606a">workflow_call 复用（固定 SHA）· 各仓根 README 一行引用治理规范（governance/README.md）</text>
+
+  <!-- ═══ 层 C：47 仓 ═══ -->
+  <rect x="40" y="590" width="1120" height="100" rx="12" fill="#f3f9f4" stroke="#a6d5b5" stroke-width="1.5"/>
+  <rect x="40" y="590" width="210" height="30" rx="8" fill="#1a7f37"/>
+  <text x="145" y="610" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">47 个仓库 · 47 Repos</text>
+  <text x="64" y="646" font-size="13" font-weight="700" fill="#1a7f37">40 台账登记仓（例外名 8 + Train Case 32，§4）</text>
+  <text x="64" y="664" fill="#57606a" font-size="12">按 §15 delivery × lifecycle 派生适用条款；active 公开仓须具备 governance-baseline + tag-protection-v</text>
+  <text x="380" y="646" font-size="13" font-weight="700" fill="#1a7f37">7 备份仓（delivery=backup，§3）</text>
+  <text x="380" y="664" fill="#57606a" font-size="12">密钥 / 资产备份仓仅按 §3 结构管理（&lt;项目名&gt;-KeyBackup + SHA256SUMS），不进 §4 台账</text>
+  <text x="700" y="646" font-size="13" font-weight="700" fill="#1a7f37">引用与契约</text>
+  <text x="700" y="664" fill="#57606a" font-size="12">各仓根 README 一行：&gt; 治理规范：[ReSerendipity/.github/governance]；docs/agent-contract.md 逐字节复制模板</text>
+
+  <!-- 反馈回路：层 C → 层 A（右侧） -->
+  <path d="M1175,640 L1175,302 L1164,302" stroke="#bf3989" stroke-width="1.6" stroke-dasharray="6,5" fill="none" marker-end="url(#arr-dash)"/>
+  <text x="60" y="712" font-size="12.5" fill="#bf3989">周检漂移审计（drift-audit.yml · 周一 04:00 UTC）：新建 / 改名 / 删除仓库 → 台账与平台状态对账回填政策源（右侧虚线回路）</text>
+</svg>
