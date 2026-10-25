@@ -17,6 +17,7 @@
 | `governance/desired-state.json` | **声明式期望状态**：47 仓的 lifecycle / delivery / distribution / risk / backup 定位与复用工作流调用点；`audit-drift.py` 与 `check-governance-consistency.sh` 的数据源 |
 | `governance/decisions/` | **ADR 决策记录**：ADR-0001 单一事实来源、ADR-0002 旧豁免语义（已取代）、ADR-0003 `enforce_admins=false`、ADR-0004 私有仓保护缺口、ADR-0005 备份策略、ADR-0006 两轴分档、ADR-0007 公开 Agent 契约（已被 ADR-0008 取代）、ADR-0008 单一本地 `AGENTS.md` |
 | `governance/templates/agent-contract.md` | **Agent 契约模板**：各仓 `docs/agent-contract.md` 的唯一来源；根 `AGENTS.md` 为单一本地文件（不入库，≤300 行），公开入口是 `docs/agent-contract.md` 与根 `README.md` |
+| `governance/templates/AGENTS.slim.md` | **本地 `AGENTS.md` 模板**：各仓根 `AGENTS.md` 的本地样板（不入库，≤300 行），含四块结构与索引表 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md` | **发布文档统一模板**（§10 的执行件）：各仓复制为 `docs/release-governance.md` 后只填本仓特有项。配套核验脚本 `.github/scripts/check-release-standard.sh`（审计收敛进度，**非**每 PR 门禁）。计划迁入 `governance/`，因在途 WIP 暂缓（截至 2026-10-23） |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓库自带定制表单优先） |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 通用 Pull Request 检查清单 |
@@ -32,7 +33,7 @@
 
 ## 复用工作流
 
-`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 自 2026-10-24 起默认阻断：“本地治理文档不得被 git 跟踪”作为独立阻断门禁（任何 tracked `AGENTS.md` 判红），其余健康检查仍保持告警性质；已登记的例外仓可显式传 `enforce_critical_checks: false`。本仓自身另有六项检查：工作流 lint、DCO 签名、复用工作流冒烟、§4 仓库对照表、§10 发布规范审计、治理漂移审计。其中 §4 对照在每次 PR/推送与 `schedule` 周检上运行；§10 审计仅在 `schedule` 周检上运行；漂移审计在周检、手动触发与命中 `governance/desired-state.json` 的 PR 上运行，用于捕捉账号内新建/改名/删除仓库造成的台账与平台状态漂移。
+`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入。调用方应引用已审阅的提交 SHA，而不是会漂移的 `@main`。`self-purify.yml` 自 2026-10-24 起默认阻断：“本地治理文档不得被 git 跟踪”作为独立阻断门禁（任何 tracked `AGENTS.md` 判红），其余健康检查仍保持告警性质；已登记的例外仓可显式传 `enforce_critical_checks: false`。本仓自身另有六个 CI 作业：工作流 lint、DCO 签名、复用工作流冒烟、§4 仓库对照表、门禁反例测试、§10 发布规范审计；治理漂移审计另由独立工作流承担。其中 §4 对照与门禁反例测试在每次 PR/推送时运行（§4 另挂 `schedule` 周检）；§10 审计仅在 `schedule` 周检上运行；漂移审计在周检、手动触发与命中 `governance/desired-state.json` 的 PR 上运行，用于捕捉账号内新建/改名/删除仓库造成的台账与平台状态漂移。
 
 ## 维护原则
 
