@@ -33,26 +33,6 @@
 - **README 双版本与本地 AGENTS.md 制度**：根 `README.md` 对外（§8），`local/README.internal.md` 对内且不入库；根 `AGENTS.md` 单一本地文件（不入库、≤300 行，§7），公开契约入口是 `docs/agent-contract.md`。
 - **发布/分发统一规范**：§10 覆盖 release / package / deployment，远端优先、tag 驱动、资产附 `SHA256SUMS.txt`，镜像扫描 Trivy 默认阻断。
 
-### 展示
-
-**① 治理架构：政策源 → 执行层 → 47 仓**
-
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1.svg" alt="治理架构：政策源 → 执行层 → 47 仓" width="880">
-
-三层关系：`governance/` 是政策单一事实来源；`.github/workflows` 与 `.github/scripts` 是执行层（CI 门禁、周检审计、只读校验脚本、默认健康文件）；账号下 47 个仓库按 `delivery × lifecycle` 派生适用条款，通过一行治理引用与 `docs/agent-contract.md` 接入。右侧虚线回路表示周检漂移审计把平台状态（新建/改名/删除仓库）对账回填政策源。
-
-**② 变更门禁流程：开工四查 → 分支/PR → CI → 合并 → 周检**
-
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-2.svg" alt="变更门禁流程：开工四查 → 分支/PR → CI → 合并 → 周检" width="880">
-
-依据 `REPOSITORY_GUIDELINES.md` §17：每个任务开工前先做四查（fetch/status/log/rev-list、worktree、会话锁、dirty 文件活跃度）；提交按 §17.2 分批、显式路径、`git commit -s`（DCO）；CI 门禁五查 + 漂移审计；合并后 `delete_branch_on_merge` 自动清理；周一 03:00/04:00/05:00 UTC 三班周检。CI 失败按 §17.3 闭环修复，禁止 `--no-verify` 绕过。
-
-**③ 47 仓治理分档矩阵：lifecycle × delivery**
-
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3.svg" alt="47 仓治理分档矩阵：lifecycle × delivery" width="880">
-
-lifecycle（active 12 / maintenance 22 / archived 13）决定变更许可与审计频率；delivery（policy 1 / release 11 / library 1 / service 11 / tool 13 / content 3 / backup 7）决定适用条款。逐仓定位以 `governance/desired-state.json` 为唯一事实来源。
-
 ### 快速开始（使用与校验）
 
 > 本仓库是治理枢纽说明，不是可安装的项目主页——没有安装步骤，只有**接入方式**与**校验命令**。
@@ -182,26 +162,6 @@ This repository hosts no project code. The account is a personal account, so `pr
 - **Family reusable workflows**: `self-purify.yml` has, since 2026-10-24, made "local governance documents must not be git-tracked" a default blocking rule; `python-quality-baseline.yml` unifies coverage and mypy ratchet baselines (piloted in Image-DuoModel, TTS-MultiModel, SeedVR2-Lite, MiniMax-H3-Lite).
 - **Dual README + local-only `AGENTS.md`**: root `README.md` is the public-facing version (§8); `local/README.internal.md` is maintainer-only and never committed. A single root `AGENTS.md` stays local (≤300 lines, §7); the public entry point is `docs/agent-contract.md`.
 - **Unified release/distribution policy**: §10 covers release/package/deployment — remote-first builds, tag-driven releases, `SHA256SUMS.txt` assets, and Trivy image scanning that blocks by default.
-
-### Showcase
-
-**① Governance architecture: policy source → execution layer → 47 repos**
-
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1.svg" alt="Governance architecture: policy source → execution layer → 47 repos" width="880">
-
-`governance/` is the policy source of truth; `.github/workflows` and `.github/scripts` are the execution layer (CI gates, weekly audits, read-only checks, default health files); the 47 account repositories derive applicable clauses from `delivery × lifecycle` and connect through a one-line governance reference and `docs/agent-contract.md`. The dashed loop on the right shows the weekly drift audit feeding platform changes (repo created/renamed/deleted) back into the ledger.
-
-**② Change gate flow: pre-work checks → branch/PR → CI → merge → weekly audit**
-
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-2.svg" alt="Change gate flow: pre-work checks → branch/PR → CI → merge → weekly audit" width="880">
-
-Per `REPOSITORY_GUIDELINES.md` §17: four pre-work checks before any task (fetch/status/log/rev-list, worktree list, session lock, dirty-file activity); batched commits with explicit paths and `git commit -s` (DCO, §17.2); CI gates plus drift audit; auto branch cleanup via `delete_branch_on_merge`; three weekly audits on Monday 03:00/04:00/05:00 UTC. CI failures follow the §17.3 loop — reproduce locally, fix minimally, recommit, re-push; `--no-verify` bypass is forbidden.
-
-**③ 47-repo tiering matrix: lifecycle × delivery**
-
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3.svg" alt="47-repo tiering matrix: lifecycle × delivery" width="880">
-
-Lifecycle (active 12 / maintenance 22 / archived 13) decides change permission and audit cadence; delivery (policy 1 / release 11 / library 1 / service 11 / tool 13 / content 3 / backup 7) decides which clauses apply. Per-repo positioning is authoritative only in `governance/desired-state.json`.
 
 ### Quick Start (usage & verification)
 
