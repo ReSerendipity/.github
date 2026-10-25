@@ -7,7 +7,7 @@
 #   3. check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY：名字都在 desired-state 内，
 #      项数 == 文档声明 == desired-state 的 backup 仓数（7）
 #   4. check-release-standard.sh 的 EXCLUDED_FROM_RELEASE_STANDARD：同上，项数应为非 release 仓
-#   5. governance/README.md 的「39 个登记仓」+「7 个备份仓」== desired-state 总数 46
+#   5. governance/README.md 的「40 个登记仓」+「7 个备份仓」== desired-state 总数 47
 #
 # 只读：仅向 GitHub 发 GET，不产生任何远端写入。
 # 用法：bash .github/scripts/check-governance-consistency.sh

@@ -18,7 +18,7 @@
       "tool": { "sections": ["1", "2", "7", "8", "9", "11", "12", "13", "14"] },
       "content": { "sections": ["1", "2", "7", "8", "9", "12", "13"] },
       "backup": { "sections": ["3"] },
-      "policy": { "sections": ["1-14"] }
+      "policy": { "sections": ["1-18"] }
     },
     "distribution": {
       "github-release": { "checks": ["sha256", "release-notes", "rollback"] },

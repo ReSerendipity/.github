@@ -141,7 +141,7 @@
 
 | 载体 | 强制的条款 | 性质 |
 |---|---|---|
-| `ci.yml` 五项检查（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §10 周检审计 | 硬门禁 + 周检 |
+| `ci.yml` 六个 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry` / `Governance gates negative tests` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §10 周检审计 | 硬门禁 + 周检 |
 | `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（7 项） | CI + 周检 |
 | `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 36 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
@@ -175,7 +175,7 @@
 
 ---
 
-## 七、暂缓项（非豁免，2026-10-24）
+## 八、暂缓项（非豁免，2026-10-24）
 
 - `Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`：§8 README 对外装修与 §14 本地路径清理**暂缓**。这是用户明确的暂缓，不是豁免；四仓仍按 `delivery=service` 参与其余条款。解除条件：用户明确要求，或对外可见性变化。
 - `Unity`（private / tool / maintenance）：游戏类项目，位于另一台设备，用户 2026-10-24 明确暂缓；`local/README.internal.md` 未补，其余条款保留约束。解除条件：设备可用且用户明确要求。

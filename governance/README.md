@@ -9,6 +9,7 @@
 | `desired-state.json` | 声明式期望状态：47 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
 | `decisions/` | ADR 决策记录（ADR-0001~ADR-0008）：为什么这样定；ADR-0007 已被 ADR-0008 取代 | 全账号 |
 | `templates/agent-contract.md` | Agent 契约模板（v1）：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验；根 `AGENTS.md` 为单一本地文件（不入库，≤300 行） | 各仓 |
+| `templates/AGENTS.slim.md` | 本地 `AGENTS.md` 模板：各仓根 `AGENTS.md` 的本地样板（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md`（暂留根目录） | §10 发布文档统一模板；因在途 WIP 暂缓迁入（截至 2026-10-23） | 发布型仓 |
 
 ## 权威顺序
