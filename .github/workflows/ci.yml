@@ -110,10 +110,10 @@ jobs:
         run: bash .github/scripts/check-repo-registry.sh
 
   # §10 收敛核验脚本此前同样只有本地命令载体。与 repo-registry 不同的是：
-  # 它需要逐仓检出文件树（--repos-dir 批量浅克隆 29 仓），放进每次 PR 会显著拖慢 CI，
+  # 它需要逐仓检出文件树（按 `gh repo list` 批量浅克隆账号内全部 47 仓），放进每次 PR 会显著拖慢 CI，
   # 且定位是"审计 + 进度对账"而非门禁（§10.7），故只在 schedule 周检上跑。
   # 退出码口径沿用脚本：1=存在与 §10 已裁决口径冲突的 FAIL 项，2=入参不可用；
-  # FAIL 判红。豁免仓（§10 排除清单 17 项）由脚本内 EXCLUDED_FROM_RELEASE_STANDARD 声明，
+  # FAIL 判红。豁免仓（§10 排除清单 36 项 = 47 − 11 个 release 仓）由脚本内 EXCLUDED_FROM_RELEASE_STANDARD 声明，
   # 与 REPOSITORY_GUIDELINES.md §10 保持同源。
   # 门禁自身也需要被测试：正例必须绿、负例必须红，防止「把断言改松」这种静默退化。
   # 覆盖 registry / release / agents / signoff 四类载体；不加入必需检查。
