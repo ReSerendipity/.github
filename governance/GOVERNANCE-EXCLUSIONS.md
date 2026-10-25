@@ -2,7 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-24（self-purify 翻转 + SeedVR2-Lite 本地治理目录公开例外登记）
+> **最后更新**：2026-10-25（新增 README 展示图例外；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（7 项备份仓）
@@ -179,3 +179,16 @@
 
 - `Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`：§8 README 对外装修与 §14 本地路径清理**暂缓**。这是用户明确的暂缓，不是豁免；四仓仍按 `delivery=service` 参与其余条款。解除条件：用户明确要求，或对外可见性变化。
 - `Unity`（private / tool / maintenance）：游戏类项目，位于另一台设备，用户 2026-10-24 明确暂缓；`local/README.internal.md` 未补，其余条款保留约束。解除条件：设备可用且用户明确要求。
+
+---
+
+## 九、README 展示图例外（按仓登记，2026-10-25）
+
+§8 要求公开仓根 README 至少 1 张展示图。下列仓无 UI、无可视产物，架构图只会重复正文，经裁决**本轮 README 改造整仓跳过**（不补图，也不改双语 / 徽章），登记以防被视为漏项：
+
+| 仓库 | 豁免范围 | 理由 | 解除条件 |
+|---|---|---|---|
+| `Website-Site-Toolchain` | 根 README 全部改造项 | 纯 CLI 结构签名门禁工具链，无界面、无产物截图；架构图与正文重复，不产生展示价值 | 出现可视化产物，或用户明确要求改造时 |
+
+> 其余 17 个公开非归档仓仍按 §8 执行（中英双语、展示图、徽章、Topics）。
+
