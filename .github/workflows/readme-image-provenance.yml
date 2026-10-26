@@ -37,6 +37,9 @@ jobs:
           if [ -n "${{ github.event.inputs.only }}" ]; then
             args+=(--only "${{ github.event.inputs.only }}")
           fi
-          args+=(--fail-on-reuse)
+          # PR / 手工触发只报告存量问题；定时任务才作为门禁报红
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            args+=(--fail-on-reuse)
+          fi
           python3 .github/scripts/check-readme-image-provenance.py "${args[@]}" \
             | tee -a "$GITHUB_STEP_SUMMARY"
