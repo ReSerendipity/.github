@@ -358,6 +358,7 @@ updated: YYYY-MM-DD
 - **禁止复用仓内截图归档**：README 展示图必须在本次 PR / 本轮任务中新拍，不得从仓内已跟踪的 `screenshots/`、`docs/screenshots/`、`captures/` 等截图归档复制；验收以 Git blob SHA 比对，README 图与截图归档不得同源。
 - **来源清单**：PR 必须附截图来源清单：云会话 chat id、云 OS / hostname、启动命令、端口、GPU / 模型加载状态、截图工具；无法提供即视为未证。
 - **暂存目录不入库**：截图暂存目录默认 `.gitignore`（`screenshots/`、`docs/screenshots/`、`captures/`、`shots/`、`test-results/` 等）；README 展示图统一放 `docs/assets/readme-*`，已跟踪的归档需 `git rm -r --cached` 取消跟踪（保留本地文件）。
+- **禁止同名覆盖**：替换展示图必须使用新文件名（`<原名>-YYYYMMDD.<ext>`），不得原地覆盖同名文件。jsDelivr gcore 边缘缓存 `s-maxage=43200`、浏览器 `max-age=604800`，同名覆盖会让读者长期看到旧图，`purge.jsdelivr.net` 只清 CF / Fastly，清不到 gcore；换新文件名是唯一可靠做法，旧文件在同一 PR 删除或由 `git mv` 记录重命名。
 
 ## 9. 本地产物与依赖不进库（2026-10-13 新增）
 
