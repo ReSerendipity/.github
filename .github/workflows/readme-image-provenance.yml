@@ -1,0 +1,45 @@
+# README 图片来源审计：按 §8.1 检查 README 图是否复用了仓内截图归档。
+# 只读审计，默认月度跑；发现问题只报红，不自动修。
+name: README image provenance audit
+
+on:
+  schedule:
+    # 每月 1 日 04:00 UTC（12:00 Asia/Shanghai）
+    - cron: '0 4 1 * *'
+  workflow_dispatch:
+    inputs:
+      only:
+        description: '只审计指定仓库（逗号分隔，留空=全部公开仓）'
+        required: false
+        default: ''
+  pull_request:
+    paths:
+      - 'governance/REPOSITORY_GUIDELINES.md'
+      - '.github/scripts/check-readme-image-provenance.py'
+      - '.github/workflows/readme-image-provenance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  provenance:
+    name: README image provenance
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Audit README image provenance
+        shell: bash
+        run: |
+          set -o pipefail
+          args=()
+          if [ -n "${{ github.event.inputs.only }}" ]; then
+            args+=(--only "${{ github.event.inputs.only }}")
+          fi
+          # PR / 手工触发只报告存量问题；定时任务才作为门禁报红
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            args+=(--fail-on-reuse)
+          fi
+          python3 .github/scripts/check-readme-image-provenance.py "${args[@]}" \
+            | tee -a "$GITHUB_STEP_SUMMARY"
