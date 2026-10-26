@@ -355,6 +355,9 @@ updated: YYYY-MM-DD
 - **图片托管**：优先仓内相对路径；GitHub 渲染需要稳定外链时统一用 `https://gcore.jsdelivr.net/gh/<owner>/<repo>@main/<path>`（`raw.githubusercontent.com` 在部分网络不可达），禁止本地绝对路径与临时图床。
 - **页面来源核验**：截图不得出现能识别出维护者本机设备的元素（本机桌面 / 任务栏 / 用户名 / 本地盘符 / 本机专属硬件信息）；云电脑截图应使用云桌面全屏或应用窗口。
 - **复核**：按 §18 README 专项复核链接、图片、badge；新增 / 替换展示图须在 PR 说明图源与真实性，验收方逐张放大检查设备来源、引导完成度与画面完整性。
+- **禁止复用仓内截图归档**：README 展示图必须在本次 PR / 本轮任务中新拍，不得从仓内已跟踪的 `screenshots/`、`docs/screenshots/`、`captures/` 等截图归档复制；验收以 Git blob SHA 比对，README 图与截图归档不得同源。
+- **来源清单**：PR 必须附截图来源清单：云会话 chat id、云 OS / hostname、启动命令、端口、GPU / 模型加载状态、截图工具；无法提供即视为未证。
+- **暂存目录不入库**：截图暂存目录默认 `.gitignore`（`screenshots/`、`docs/screenshots/`、`captures/`、`shots/`、`test-results/` 等）；README 展示图统一放 `docs/assets/readme-*`，已跟踪的归档需 `git rm -r --cached` 取消跟踪（保留本地文件）。
 
 ## 9. 本地产物与依赖不进库（2026-10-13 新增）
 
