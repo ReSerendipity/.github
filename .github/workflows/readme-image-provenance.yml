@@ -29,6 +29,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Install Pillow (near-blank heuristic)
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: python3 -m pip install --quiet --disable-pip-version-check pillow
       - name: Audit README image provenance
         shell: bash
         run: |
@@ -37,9 +41,11 @@ jobs:
           if [ -n "${{ github.event.inputs.only }}" ]; then
             args+=(--only "${{ github.event.inputs.only }}")
           fi
-          # PR / 手工触发只报告存量问题；定时任务才作为门禁报红
+          # PR 只查来源、不下载图片；定时任务才做近空白检测并作为门禁报红
           if [ "${{ github.event_name }}" != "pull_request" ]; then
             args+=(--fail-on-reuse)
+          else
+            args+=(--skip-blank)
           fi
           python3 .github/scripts/check-readme-image-provenance.py "${args[@]}" \
             | tee -a "$GITHUB_STEP_SUMMARY"
