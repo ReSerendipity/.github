@@ -7,9 +7,9 @@
 | `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§18：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本与展示图真实性（§8 / §8.1）、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18） | 40 个登记仓；7 个备份仓按 §3 单独管理 |
 | `GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外记录：现行口径、7 个备份仓与命名/发布载体对照，以及四轮豁免历史原文 | 全账号 |
 | `desired-state.json` | 声明式期望状态：47 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
-| `decisions/` | ADR 决策记录（ADR-0001~ADR-0008）：为什么这样定；ADR-0007 已被 ADR-0008 取代 | 全账号 |
-| `templates/agent-contract.md` | Agent 契约模板（v1）：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验；根 `AGENTS.md` 为单一本地文件（不入库，≤300 行） | 各仓 |
-| `templates/AGENTS.slim.md` | 本地 `AGENTS.md` 模板：各仓根 `AGENTS.md` 的本地样板（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
+| [`decisions/`](decisions/README.md) | ADR 决策记录（ADR-0001~ADR-0008）：为什么这样定；ADR-0007 已被 ADR-0008 取代 | 全账号 |
+| [`templates/agent-contract.md`](templates/agent-contract.md) | Agent 契约模板（v1）：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验；根 `AGENTS.md` 为单一本地文件（不入库，≤300 行） | 各仓 |
+| [`templates/AGENTS.slim.md`](templates/AGENTS.slim.md) | 本地 `AGENTS.md` 模板：各仓根 `AGENTS.md` 的本地样板（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md`（暂留根目录） | §10 发布文档统一模板；因在途 WIP 暂缓迁入（截至 2026-10-23） | 发布型仓 |
 
 ## 权威顺序
