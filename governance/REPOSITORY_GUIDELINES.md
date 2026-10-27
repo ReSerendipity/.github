@@ -859,3 +859,30 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 - 与现有执行件分工：`self-purify.yml` 查本地治理文档是否误入库，`audit-drift.py` 查期望状态与平台漂移，§18 查文档自身是否可用。
 - `AGENTS.md` 相关审查：按 §7 检查“是否只有一个本地根文件、是否被误跟踪、拆分文件标注是否完整”，不把本地文件缺失判为违规。
 - **README 专项**：根 README 的站内 / 站外链接、图片 / GIF / 视频、badges、Topics、Release 与许可证状态，按 §8 的对外更新触发复核；死链、失效 badge、过时版本或状态判红。
+
+## 19. Dependabot 与依赖升级处置（2026-10-27 新增）
+
+**目标**：把依赖升级从「逐条等 owner 点头」改为**查证型自动通道**——机器能证伪的让 CI 与闸门证伪，人只裁决机器证伪不了的。本节条款由 2026-10-27 的 30 个堆积 PR 清债实战提炼，owner 指示：减少人工等待。
+
+### 19.1 处置矩阵
+
+| PR 类型 | 处置 | 依据 / 例外 |
+|---|---|---|
+| patch / minor（含 dev 依赖） | **自动通道**：owner approve + native auto-merge，不必请示 | 必检兜底；单 PR revert 即整回滚 |
+| GitHub Actions SHA / 版本 bump | **自动通道**：同上 | CI 真实验证 action 行为 |
+| major 跳版且无互锁 | **查证型自动通道**：approve + 挂 auto-merge，必检绿即合；查证项 = 锁集自洽 + 必检 + 回滚代价 + 告警关联，台账记录 | 2026-10-27 owner 裁决批量放行（先例：TTS #226/#233、SeedVR2 #176 等 12 PR）；必检红则 auto-merge 自然不触发 |
+| 锁集互锁（pin-cross gate 红） | **人工整组迁移 PR**：把互锁包组一次性抬到互相兼容的组合，dependabot 分拆 PR 关闭留痕 | 先例：TTS AI 栈（transformers↔hub↔tokenizers、omegaconf↔antlr4↔hydra-core）三 PR 互斥，#234 整组合入 |
+| 被锁内他包钉住（上游约束型） | **不合不等**：PR 保持开放或由 dependabot 关闭重开，等上游出新版连带升级 | 先例：Image-DuoModel filelock/virtualenv 被 diffusers/huggingface_hub 等钉住，Lock Solvability 拦截是真实信号 |
+| 归档仓的 PR | 剔除欠账，不处置 | 归档仓只读，PR 无法关闭 / 合并 / 评论（先例 RTX-VSR-Lite #11） |
+
+### 19.2 机制实证（避坑）
+
+- **ruleset 的 Dependabot 旁路不豁免** `require_extra_approval_for_unattributed_changes`——owner approve 仍是 native auto-merge 的必要环节；approve 即触发合并（其余条件满足时）。
+- 新仓 `allow_auto_merge` 必须 `true`（2026-10-27 补开 GalgameShell；新建仓由 `scaffold-repo.sh` 落实，未覆盖时手动设置）。
+- `gh run rerun` 重跑同一 SHA，**不重算 PR merge base**——旧 base 的红要用 `@dependabot rebase` 拿新 base 的新信号。
+- TTS 的必检清单在 classic 分支保护而非 ruleset（两套并存时以并集为准）；排查卡点先看 `required_status_checks` 再看分支保护。
+- 钉版抬升时 **grep workflows 里的旧同图约束**：CI 安装步骤的 `pip install "huggingface-hub<1.0" ...` 这类时代产物会与主锁冲突，pip check 红在安装步（先例 TTS ci.yml 随 5.20.2 迁移改 `<2.0`）。
+
+### 19.3 运行时引擎大版的冒烟门禁
+
+跨大版升级运行时引擎依赖（transformers / torch / onnx 等推理路径核心）合并后，**发版前必须完成真机冒烟**：CI 单测不覆盖 GPU 真推理，导入级测试通过不等于推理可用。PR 正文标注硬性 TODO，冒烟记录按 §10 证据口径回填（先例：TTS transformers 5.20.2 迁移 #234）。
