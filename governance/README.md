@@ -4,7 +4,7 @@
 
 | 文件 | 作用 | 适用范围 |
 |---|---|---|
-| `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§18：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18） | 40 个登记仓；7 个备份仓按 §3 单独管理 |
+| `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§18：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本与展示图真实性（§8 / §8.1）、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18） | 40 个登记仓；7 个备份仓按 §3 单独管理 |
 | `GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外记录：现行口径、7 个备份仓与命名/发布载体对照，以及四轮豁免历史原文 | 全账号 |
 | `desired-state.json` | 声明式期望状态：47 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
 | `decisions/` | ADR 决策记录（ADR-0001~ADR-0008）：为什么这样定；ADR-0007 已被 ADR-0008 取代 | 全账号 |
@@ -29,6 +29,24 @@
 
 **不复制正文**，避免多副本漂移。
 
+**适用范围（2026-10-27 明确）**：
+
+| 仓类别 | 是否要求引用行 | 依据 |
+|---|---|---|
+| 公开仓，`lifecycle` 为 `active` / `maintenance`，`delivery` 非 `backup` | **必须** | §8 公开仓适用范围 |
+| 公开仓，`archived` | 不追溯；既有变体链接（如指向 `blob/main/governance/REPOSITORY_GUIDELINES.md`）视为有效 | §8 装修不追溯（2026-10-23） |
+| 私有仓 | 建议放置，不作闸（私有仓不强制双版本分流） | §8 私有仓例外 |
+| `backup` 仓 | 不要求 | §15.3：`backup` 仅适用 §3 |
+
+指向具体文件的变体（`REPOSITORY_GUIDELINES.md` / `CONTRIBUTING.md`）**不判为死链**，只在上述「必须」类仓要求补齐标准 `tree/main/governance` 引用行。
+
+**允许形态（2026-10-27 明确，按现网 16 仓实测收敛为两种）**：只要指向的 URL 是 `https://github.com/ReSerendipity/.github/tree/main/governance`，以下任一形态均合规，不强制统一——
+
+1. **引用行**（默认）：上面那行 blockquote；
+2. **Governance 徽章**：`[![Governance](https://img.shields.io/badge/governance-ReSerendipity%2F.github-blue)](https://github.com/ReSerendipity/.github/tree/main/governance)`，适合已有 badge 带的仓，与 §8「带 badges」要求同处一行更协调。
+
+徽章颜色、`alt` 文案与中英措辞（`治理规范` / `Governance` / `治理规范 / Governance`）自由；判据只有两条：**URL 指向 governance 目录**、**不复制政策正文**。
+
 ## 新建仓库
 
 先跑脚手架，再改治理文档：
@@ -44,4 +62,4 @@ bash .github/scripts/scaffold-repo.sh <Repo-Name> [--private|--public] [--delive
 - 改动按 §17.2 的推送策略：作者账号可直推，非作者走分支 + PR + DCO；合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`
 - 清单类改动需五处同步：规范正文、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、本文件、`GOVERNANCE-EXCLUSIONS.md`
 - 定位改动同时改 `desired-state.json`；`audit-drift.py` 在周检、手动触发与命中 `desired-state.json` 的 PR 上对账
-- 版本记录写在各文件自身的变更段落，不另建 CHANGELOG
+- 版本记录以**条款级日期标注**写在正文本身：节标题或引用块内标「（YYYY-MM-DD 新增 / 定稿 / 修订 / 扩充）」，不另建 CHANGELOG，也不建独立的变更段落。新增小节须带落地日期；既有条款被扩充或改口径时，在标题追加日期或在该节内加留痕引用块，**不改写历史日期**（§18.1 快照）
