@@ -63,7 +63,8 @@
   - 加密包 `*.enc.7z`（7-Zip AES-256，`-mhe=on` 加密文件头）
   - `README.md`（说明用途与恢复步骤）
   - `SHA256SUMS.txt`（校验清单）
-- 口令**不放入仓库**，另行安全保管。
+  - `backup-passwords.txt`（仅限已登记的**口令入库例外**；默认不建）
+- 口令**原则上不放入仓库**，另行安全保管。若 owner 明确要求远程找回并接受“账号失守=加密失效”的风险，须在 `GOVERNANCE-EXCLUSIONS.md` 登记为**口令入库例外**，并在该仓 README 写明安全模型。当前登记：`Android-IconAutoArrange-Assets-Backup`、`MiniMax-H3-Lite-KeyBackup`。
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 

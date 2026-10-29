@@ -2,7 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-29（新增 `MiniMax-H3-Lite-KeyBackup` 与 §十 私有资产备份仓的本地上下文例外；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **最后更新**：2026-10-29（新增 `MiniMax-H3-Lite-KeyBackup`、口令入库例外与 §十 私有资产备份仓的本地上下文例外；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（8 项备份仓）
@@ -58,9 +58,11 @@
 | `SeedVR2-Lite-KeyBackup` | ✅ | 同结构 |
 | `TTS-MultiModel-KeyBackup` | ✅ | 同结构 |
 | `Android-IconAutoArrange-KeyBackup` | ✅ | 2026-10-18 补录（此前误记为"4 个 `*-KeyBackup`"） |
-| `Android-IconAutoArrange-Assets-Backup` | ✅ | 内含加密签名密钥的**口令台账** + PoC 运行时 APK |
+| `Android-IconAutoArrange-Assets-Backup` | ✅ | 内含加密签名密钥的**口令台账** + PoC 运行时 APK（口令入库例外，风险见下） |
 | `SpiritPal-KeyBackup` | ✅ | 2026-10-20 补录（按 §3 模式新建于 2026-10-20，此前遗漏未入清单） |
-| `MiniMax-H3-Lite-KeyBackup` | ✅ | 2026-10-29 新建；old/new 两组 Ed25519 清单签名密钥，7z AES-256 + `-mhe=on` |
+| `MiniMax-H3-Lite-KeyBackup` | ✅ | 2026-10-29 新建；old/new 两组 Ed25519 清单签名密钥，7z AES-256 + `-mhe=on`；含 `backup-passwords.txt`（口令入库例外，风险见下） |
+
+> **口令入库例外（2026-10-29）**：`Android-IconAutoArrange-Assets-Backup` 与 `MiniMax-H3-Lite-KeyBackup` 按 owner 决定在私有仓保存 `backup-passwords.txt`。这放弃了“加密包被单独泄漏”以外的全部防护：账号失守时加密等同失效；两仓 README 均写明该风险。
 
 ### 2. 网站仓（4 个，均私有）
 
