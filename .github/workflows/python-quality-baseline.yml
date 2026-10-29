@@ -151,12 +151,18 @@ jobs:
           TEST_PATHS: ${{ inputs.test_paths }}
           COVERAGE_MIN: ${{ inputs.coverage_min }}
           PYTEST_EXTRA_ARGS: ${{ inputs.pytest_extra_args }}
-        run: >
-          pytest $TEST_PATHS
-          --cov=$PACKAGE --cov-branch
-          --cov-report=term-missing --cov-report=xml:coverage.xml
-          --cov-fail-under=$COVERAGE_MIN
-          $PYTEST_EXTRA_ARGS
+        run: |
+          TEST_ARGS=()
+          if [ -n "$TEST_PATHS" ]; then
+            read -ra TEST_ARGS <<< "$TEST_PATHS"
+          fi
+          EXTRA_ARGS=()
+          if [ -n "$PYTEST_EXTRA_ARGS" ]; then
+            read -ra EXTRA_ARGS <<< "$PYTEST_EXTRA_ARGS"
+          fi
+          pytest "${TEST_ARGS[@]}" --cov="$PACKAGE" --cov-branch \
+            --cov-report=term-missing --cov-report=xml:coverage.xml \
+            --cov-fail-under="$COVERAGE_MIN" "${EXTRA_ARGS[@]}"
 
   # ── 类型门禁（mypy ratchet）──────────────────────────────────
   # 阻断的是「债务上升」，不是「债务为零」。存量错误不要求一次性清零，
@@ -188,7 +194,8 @@ jobs:
         run: |
           pip install "mypy==$MYPY_VERSION"
           if [ -n "$TYPECHECK_EXTRA_PIP" ]; then
-            pip install $TYPECHECK_EXTRA_PIP
+            read -ra EXTRA_PIP <<< "$TYPECHECK_EXTRA_PIP"
+            pip install "${EXTRA_PIP[@]}"
           fi
 
       - name: Run mypy and enforce ratchet
