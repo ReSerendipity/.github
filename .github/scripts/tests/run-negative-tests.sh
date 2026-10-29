@@ -2,7 +2,8 @@
 # 门禁反例测试：每个门禁都要有「正例必须绿、负例必须红」的成对断言，
 # 否则把断言改松/改错时不会被发现。
 #
-# 覆盖：registry（§4 对照）、release（§10 收敛）、agents（§7 行数）、signoff（DCO）。
+# 覆盖：registry（§4 对照）、release（§10 收敛 / delivery 分档）、agents（§7 行数）、
+# signoff（DCO）、consistency / audit-drift（失败关闭）、self-purify（两处规则同步）。
 # 用法：bash .github/scripts/tests/run-negative-tests.sh
 # 退出码：0=全部符合预期；1=有用例不符合；2=环境不可用。
 set -uo pipefail
@@ -77,6 +78,10 @@ rm -rf "$TMP/release-missing/docs"
 
 run_case "release 正例" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$FIXTURES/release-ok"
 run_case "release 缺发布文档" 1 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/release-missing"
+mkdir -p "$TMP/GalgameShell" "$TMP/SeedVR2-Lite" "$TMP/Android-IconAutoArrange"
+run_case "release 非 release 仓跳过" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/GalgameShell"
+run_case "release 归档 release 仓跳过" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/Android-IconAutoArrange"
+run_case "release release 仓仍检查" 1 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/SeedVR2-Lite"
 
 # ── agents：正例 / 超行数 ───────────────────────────────────────
 # 夹具以 AGENTS.md.fixture 入库：本仓自我净化规则禁止跟踪任何 AGENTS.md，

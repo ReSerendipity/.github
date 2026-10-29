@@ -11,7 +11,7 @@
 # 挂上去只会常红，而"常红的门禁等于没有门禁"。定位是**审计 + 收敛进度对账**；
 # 收敛完成后才谈是否挂远端、以什么范围挂。
 #
-# 只读：不发网络请求，不写任何文件。
+# 只读：不发网络请求；仅在临时目录生成 desired-state 解析缓存。
 #
 # 用法：
 #   bash .github/scripts/check-release-standard.sh --root <单仓目录>
@@ -29,6 +29,37 @@ ROOT=''
 REPOS_DIR=''
 SKIPS=()
 INCLUDE_ARCHIVED=0
+REPO_META=''
+
+# desired-state 逐仓元数据缓存（name / delivery / lifecycle）。
+# 用 Python 解析 JSON，避免依赖单行格式；缺少文件或没有 Python 时退化为“无元数据”。
+if [ -f "$DESIRED_STATE" ]; then
+  if command -v python3 >/dev/null 2>&1; then
+    PY=python3
+  elif command -v python >/dev/null 2>&1; then
+    PY=python
+  else
+    PY=''
+  fi
+  if [ -n "$PY" ]; then
+    REPO_META=$(mktemp)
+    trap 'rm -f "$REPO_META"' EXIT
+    "$PY" - "$DESIRED_STATE" > "$REPO_META" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8-sig") as handle:
+    data = json.load(handle)
+for repo in data.get("repos") or []:
+    print("{}\t{}\t{}".format(repo.get("name", ""), repo.get("delivery", ""), repo.get("lifecycle", "")))
+PY
+  fi
+fi
+
+repo_meta() {  # $1=仓库名 $2=字段号（2=delivery，3=lifecycle）
+  [ -n "$REPO_META" ] || return 1
+  awk -F'\t' -v n="$1" -v f="$2" '$1==n{print $f; exit}' "$REPO_META"
+}
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -52,11 +83,12 @@ fi
 if [ -n "$ROOT" ] && [ ! -d "$ROOT" ]; then echo "ERROR: 目录不存在：$ROOT" >&2; exit 2; fi
 if [ -n "$REPOS_DIR" ] && [ ! -d "$REPOS_DIR" ]; then echo "ERROR: 目录不存在：$REPOS_DIR" >&2; exit 2; fi
 
-# 从 desired-state.json 读取 lifecycle；每仓一行，缺失文件时按非归档处理。
+# 从 desired-state.json 读取 lifecycle / delivery；缺少元数据时按“非归档、release”处理。
 is_archived() {
-  local name="$1"
-  [ -f "$DESIRED_STATE" ] || return 1
-  grep -F "\"name\": \"$name\"" "$DESIRED_STATE" | grep -q '"lifecycle": "archived"'
+  [ "$(repo_meta "$1" 3)" = "archived" ]
+}
+delivery_of() {
+  repo_meta "$1" 2
 }
 
 TOTAL_FAIL=0
@@ -142,7 +174,23 @@ check_one() {
 }
 
 if [ -n "$ROOT" ]; then
-  check_one "$ROOT" "$(basename "$ROOT")"
+  ROOT_NAME=$(basename "$ROOT")
+  ROOT_DELIVERY=$(delivery_of "$ROOT_NAME" || true)
+  if [ -n "$ROOT_DELIVERY" ] && [ "$ROOT_DELIVERY" != "release" ]; then
+    echo "跳过：$ROOT_NAME delivery=$ROOT_DELIVERY，§10 发布规范不适用（单仓模式按 desired-state 判定）"
+    echo ""
+    echo "=== 汇总：FAIL=0  WARN=0 ==="
+    echo "clean：无 FAIL 项"
+    exit 0
+  fi
+  if [ "$INCLUDE_ARCHIVED" -eq 0 ] && is_archived "$ROOT_NAME"; then
+    echo "跳过：$ROOT_NAME lifecycle=archived（§15.2 跳过常规审计；--include-archived 可强制）"
+    echo ""
+    echo "=== 汇总：FAIL=0  WARN=0 ==="
+    echo "clean：无 FAIL 项"
+    exit 0
+  fi
+  check_one "$ROOT" "$ROOT_NAME"
 else
   # 排除清单（2026-10-22 两轴模型）：§10 只覆盖 delivery=release 的 11 个仓，
   # 其中归档仓按 §15.2 跳过常规审计（Android-IconAutoArrange），实扫 10 个；
