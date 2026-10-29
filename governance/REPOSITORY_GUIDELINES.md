@@ -53,7 +53,7 @@
   - **不得删除的分支**：默认分支 `main`、Pages 部署目标 `gh-pages`、release-please 工作分支 `release-please--branches--main`（合并后由机器人自行重建，删除属正常行为）、以及刻意命名的归档/备份本地分支（`archive/*DO-NOT-PUSH*`、`backup/*`）——这些是**保留对象**，不是"漏删"。
   - **清理判据**：squash 合并会使分支不再是 `main` 的祖先，`git merge-base --is-ancestor` **不可作为判断依据**；应以其**关联 PR 状态为 `MERGED`** 为准。
   - 存量清理：开关开启后，已合并的残留分支需一次性清理（2026-10-20 已执行：13 管辖仓 23 条 + `.github` 12 条）。
-  - 不适用本规范的只有 `delivery=backup` 的 7 个仓；其余仓按 §15.3 的 `delivery` 派生要求执行。`active` 公开仓仍须具备 `governance-baseline` + `tag-protection-v`，已配置的一律保留。
+  - 不适用本规范的只有 `delivery=backup` 的 8 个仓；其余仓按 §15.3 的 `delivery` 派生要求执行。`active` 公开仓仍须具备 `governance-baseline` + `tag-protection-v`，已配置的一律保留。
 - 本地与远程命名保持一致；远程重命名后需同步本地 remote URL。
 
 ## 3. 密钥与敏感信息备份规范（Secret Backup）
@@ -695,7 +695,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 ### 15.6 48 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 40 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 40 行是其中**非备份仓**的命名台账，8 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）

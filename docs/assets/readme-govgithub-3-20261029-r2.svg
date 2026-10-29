@@ -15,7 +15,7 @@
     <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 12 仓</text>
     <rect x="576" y="118" width="300" height="52" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
     <text x="726" y="140" font-size="15" font-weight="700" fill="#9a6700" text-anchor="middle">maintenance（维护）</text>
-    <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 23 仓</text>
+    <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 24 仓</text>
     <rect x="884" y="118" width="300" height="52" rx="6" fill="#eaeef2" stroke="#afbac4"/>
     <text x="1034" y="140" font-size="15" font-weight="700" fill="#57606a" text-anchor="middle">archived（归档）</text>
     <text x="1034" y="158" font-size="12" fill="#6e7781" text-anchor="middle">平台只读 · 不检 · 12 仓</text>

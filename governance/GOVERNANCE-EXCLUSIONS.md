@@ -67,7 +67,7 @@
 ### 2. 网站仓（4 个，均私有）
 
 `Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
-这些仓历史 `AGENTS.md` 体积（43634/58432/66226/20462 字节，2026-10-19 复核）；按 §7 目标原应迁移为本地不入库文件，曾列入 §7.1 的 26 仓迁移欠账（归档仓另计），不因本节豁免而跳过。截至 2026-10-24，四仓均已完成迁移，`AGENTS.md` 已不在 GitHub 跟踪；§7.1 当前欠账仅 `GalgameShell`、`Prompt-Library`。
+这些仓历史 `AGENTS.md` 体积（43634/58432/66226/20462 字节，2026-10-19 复核）；按 §7 目标原应迁移为本地不入库文件，曾列入 §7.1 的 26 仓迁移欠账（归档仓另计），不因本节豁免而跳过。截至 2026-10-29 复核，四仓均已完成迁移，`AGENTS.md` 已不在 GitHub 跟踪；§7.1 的非归档仓迁移欠账已清零（`GalgameShell`、`Prompt-Library` 经现场核对已取消跟踪）。
 
 ### 3. 非台账副本（1 个，私有）
 

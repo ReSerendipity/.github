@@ -5,7 +5,7 @@
 ![CI](https://github.com/ReSerendipity/.github/actions/workflows/ci.yml/badge.svg)
 ![Last commit](https://img.shields.io/github/last-commit/ReSerendipity/.github)
 ![PRs welcome](https://img.shields.io/badge/PRs%20welcome-brightgreen)
-![Governance](https://img.shields.io/badge/governance-REPOSITORY_GUIDELINES_%C2%A71%E2%80%93%C2%A718-6e40c9)
+![Governance](https://img.shields.io/badge/governance-REPOSITORY_GUIDELINES_%C2%A71%E2%80%93%C2%A719-6e40c9)
 ![Governed repos](https://img.shields.io/badge/governed%20repos-48-1a7f37)
 
 [中文](#中文) | [English](#english)
@@ -79,7 +79,7 @@ lifecycle（active 12 / maintenance 24 / archived 12）决定变更许可与审�
 
 - 本仓 CI 运行于 `ubuntu-24.04` runner；工作流与脚本均按 Linux 路径编写。
 - 校验脚本只依赖 Bash / Python 3 标准库 + `gh` CLI；全部只发 GitHub `GET` 请求。
-- 本地 `pre-push` 钩子模板（`.github/scripts/templates/pre-push`）为 bash 实现，可挂入任意 git 仓库；提供 `SKIP_GOVERNANCE_HOOKS=1` 逃生阀。
+- 本地 `pre-push` 钩子模板（`.github/scripts/templates/pre-push`）为 POSIX sh 实现，可挂入任意 git 仓库；提供 `SKIP_GOVERNANCE_HOOKS=1` 逃生阀。
 - 文档与脚本统一 LF、UTF-8；中文与英文并存，无 BOM。
 
 ### 使用示例
@@ -229,7 +229,7 @@ Lifecycle (active 12 / maintenance 24 / archived 12) decides change permission a
 
 - CI runs on `ubuntu-24.04` runners; workflows and scripts follow Linux paths.
 - Gate scripts depend only on Bash / Python 3 stdlib + `gh` CLI and issue GitHub `GET` requests only.
-- The local `pre-push` hook template (`.github/scripts/templates/pre-push`) is a bash implementation for any git repo, with a `SKIP_GOVERNANCE_HOOKS=1` escape hatch.
+- The local `pre-push` hook template (`.github/scripts/templates/pre-push`) is a POSIX sh implementation for any git repo, with a `SKIP_GOVERNANCE_HOOKS=1` escape hatch.
 - Documents and scripts use LF, UTF-8, no BOM; Chinese and English coexist.
 
 ### Usage Examples
@@ -263,7 +263,7 @@ When a downstream repository does not ship its own file of the same name, GitHub
 | `SECURITY.md` | Security disclosure policy (default; repo-local version wins) |
 | `SUPPORT.md` | Support channels |
 | `governance/REPOSITORY_GUIDELINES.md` | Repository governance §1–§19 (naming/branching/secret backup/tiering/release/layout/archive/docs health/dependency upgrades) |
-| `governance/GOVERNANCE-EXCLUSIONS.md` | Tiering & exception registry (7 backup-repo exemptions, naming exceptions, etc.) |
+| `governance/GOVERNANCE-EXCLUSIONS.md` | Tiering & exception registry (8 backup-repo exemptions, naming exceptions, etc.) |
 | `governance/desired-state.json` | Declarative desired state for 48 repos; data source for drift audit and consistency checks |
 | `governance/decisions/` | ADR-0001~0008 decision records |
 | `governance/templates/` | Sole templates for `agent-contract.md` and `AGENTS.slim.md` |
