@@ -105,6 +105,12 @@ UNSIGNED=$(git rev-parse HEAD)
 
 run_case "signoff 正例" 0 bash "$SCRIPTS/check-signoff.sh" "$BASE" "$SIGNED"
 run_case "signoff 缺尾注" 1 bash "$SCRIPTS/check-signoff.sh" "$SIGNED" "$UNSIGNED"
+
+# ── 门禁自身：参数失败关闭 / self-purify 两处规则同步 ─────────────
+run_case "consistency 未知参数退 2" 2 bash "$SCRIPTS/check-governance-consistency.sh" --bogus
+run_case "audit-drift 未知仓退 2" 2 python3 "$SCRIPTS/audit-drift.py" --only Not-A-Repo
+run_case "self-purify 两处规则同步" 0 python3 "$SCRIPTS/tests/check-self-purify-sync.py"
+
 # ── readme 图路径：相对路径 / jsDelivr / GitHub blob/raw / SVG ──
 run_case "readme 图路径解析" 0 python3 "$SCRIPTS/tests/check-readme-image-paths.py"
 
