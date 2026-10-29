@@ -15,16 +15,20 @@
 #
 # 用法：
 #   bash .github/scripts/check-release-standard.sh --root <单仓目录>
-#   bash .github/scripts/check-release-standard.sh --repos-dir <父目录> [--skip <名字>]...
+#   bash .github/scripts/check-release-standard.sh --repos-dir <父目录> [--skip <名字>]... [--include-archived]
 # 退出码：
 #   0 = clean（无 FAIL；WARN 不影响退出码）
 #   1 = 存在 FAIL
 #   2 = 入参不可用（目录不存在 / 参数冲突 / 未知参数）
 set -uo pipefail
 
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+CENTRAL_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
+DESIRED_STATE="$CENTRAL_ROOT/governance/desired-state.json"
 ROOT=''
 REPOS_DIR=''
 SKIPS=()
+INCLUDE_ARCHIVED=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -34,6 +38,7 @@ while [ $# -gt 0 ]; do
     --repos-dir=*) REPOS_DIR=${1#*=}; shift ;;
     --skip)        SKIPS+=("${2:-}"); shift 2 ;;
     --skip=*)      SKIPS+=("${1#*=}"); shift ;;
+    --include-archived) INCLUDE_ARCHIVED=1; shift ;;
     *) echo "ERROR: 未知参数 '$1'" >&2; exit 2 ;;
   esac
 done
@@ -46,6 +51,13 @@ if [ -z "$ROOT" ] && [ -z "$REPOS_DIR" ]; then
 fi
 if [ -n "$ROOT" ] && [ ! -d "$ROOT" ]; then echo "ERROR: 目录不存在：$ROOT" >&2; exit 2; fi
 if [ -n "$REPOS_DIR" ] && [ ! -d "$REPOS_DIR" ]; then echo "ERROR: 目录不存在：$REPOS_DIR" >&2; exit 2; fi
+
+# 从 desired-state.json 读取 lifecycle；每仓一行，缺失文件时按非归档处理。
+is_archived() {
+  local name="$1"
+  [ -f "$DESIRED_STATE" ] || return 1
+  grep -F "\"name\": \"$name\"" "$DESIRED_STATE" | grep -q '"lifecycle": "archived"'
+}
 
 TOTAL_FAIL=0
 TOTAL_WARN=0
@@ -74,10 +86,10 @@ check_one() {
   if [ ! -f "$d/docs/release-governance.md" ]; then
     echo "   FAIL 缺 docs/release-governance.md（§10.5 路径约定）"
     fails=$((fails+1))
-  elif grep -q '远端优先' "$d/docs/release-governance.md"; then
-    echo "   ok   docs/release-governance.md（含「远端优先」标记）"
+  elif grep -qE '远端优先|Remote-first|remote-first' "$d/docs/release-governance.md"; then
+    echo "   ok   docs/release-governance.md（含「远端优先」或英文等价「Remote-first」标记）"
   else
-    echo "   WARN docs/release-governance.md 未见「远端优先」标记，可能未按模板收敛"
+    echo "   WARN docs/release-governance.md 未见「远端优先」/「Remote-first」标记，可能未按模板收敛"
     warns=$((warns+1))
   fi
 
@@ -132,7 +144,8 @@ check_one() {
 if [ -n "$ROOT" ]; then
   check_one "$ROOT" "$(basename "$ROOT")"
 else
-  # 排除清单（2026-10-22 两轴模型）：§10 只覆盖 delivery=release 的 10 个仓，
+  # 排除清单（2026-10-22 两轴模型）：§10 只覆盖 delivery=release 的 11 个仓，
+  # 其中归档仓按 §15.2 跳过常规审计（Android-IconAutoArrange），实扫 10 个；
   # 其余 36 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
   # 改清单须五处同步（§15、§4、check-repo-registry.sh、本声明、GOVERNANCE-EXCLUSIONS.md）。
   EXCLUDED_FROM_RELEASE_STANDARD=".github
@@ -189,6 +202,9 @@ Website-Zenless-Zone-Zero"
     if [ "$skip" -eq 1 ]; then SKIPPED+=("$name（--skip 指定）"); continue; fi
     if printf '%s\n' "$EXCLUDED_FROM_RELEASE_STANDARD" | grep -qx "$name"; then
       SKIPPED+=("$name（§10 排除清单，不适用发布规范审计）"); continue
+    fi
+    if [ "$INCLUDE_ARCHIVED" -eq 0 ] && is_archived "$name"; then
+      SKIPPED+=("$name（lifecycle=archived，按 §15.2 跳过；--include-archived 可强制）"); continue
     fi
     SCANNED=$((SCANNED+1))
     check_one "$d" "$name"

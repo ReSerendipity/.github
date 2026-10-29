@@ -94,6 +94,9 @@ jobs:
   # §4 现网仓库对照表此前只有本地命令 `bash .github/scripts/check-repo-registry.sh`
   # 一个载体，跑不跑取决于人记不记得，属"本机算力 + 记性"两重依赖的手工检查。
   # 挪到远端后，任何 PR 与本仓推送都会自动对账文档与 GitHub 现网，本机不再需要跑它。
+  # 同一作业同时跑 check-governance-consistency.sh 的 --public-only 模式：
+  # desired-state / §4 / 文档计数的一致性也在每次 PR 与推送时校验；完整 47 仓
+  # （含 20 个私有仓）仍需本地 owner 凭据运行同一脚本的无参模式。
   # 退出码口径沿用脚本：1=文档与现网有差集，2=取数无法判定（网络/凭据/限流）；
   # 两者都判红，与本仓"失败关闭、不把空集合当通过"的口径一致。
   repo-registry:
@@ -108,9 +111,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REGISTRY_OWNER: ReSerendipity
         run: bash .github/scripts/check-repo-registry.sh
+      - name: 期望状态与文档计数一致（公开子集）
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOVERNANCE_OWNER: ReSerendipity
+        run: bash .github/scripts/check-governance-consistency.sh --public-only
 
   # §10 收敛核验脚本此前同样只有本地命令载体。与 repo-registry 不同的是：
-  # 它需要逐仓检出文件树（按 `gh repo list` 批量浅克隆账号内全部 47 仓），放进每次 PR 会显著拖慢 CI，
+  # 它需要逐仓检出文件树（按 `gh repo list` 批量浅克隆全部公开仓；私有仓对
+  # GITHUB_TOKEN 不可见，但 11 个 release 仓均为公开仓），放进每次 PR 会显著拖慢 CI，
   # 且定位是"审计 + 进度对账"而非门禁（§10.7），故只在 schedule 周检上跑。
   # 退出码口径沿用脚本：1=存在与 §10 已裁决口径冲突的 FAIL 项，2=入参不可用；
   # FAIL 判红。豁免仓（§10 排除清单 36 项 = 47 − 11 个 release 仓）由脚本内 EXCLUDED_FROM_RELEASE_STANDARD 声明，
@@ -139,7 +148,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p _repos
-          # 认证态 gh repo list 可见私有仓；浅克隆 depth 1 即满足脚本只读文件树的需要。
+          # gh repo list 取公开仓；浅克隆 depth 1 即满足脚本只读文件树的需要。
           # clone 失败判致命（与 repo-registry 的"取不到数也判红"口径一致），
           # 静默跳过会让缺检的仓假绿。
           for r in $(gh repo list ReSerendipity --limit 200 --json name --jq '.[].name'); do

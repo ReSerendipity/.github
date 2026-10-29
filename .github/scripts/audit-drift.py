@@ -11,6 +11,12 @@
   但非必需，不判红。
 - 必需文件：全部仓库需 README.md；delivery=release 另需 CHANGELOG.md 与
   docs/release-governance.md。
+- 契约一致性：公开非归档仓必须有 docs/agent-contract.md，且与
+  governance/templates/agent-contract.md 逐字节一致（§7.3）；私有仓有则比对、无则跳过。
+- 本地治理文档：非归档仓不得跟踪任何 AGENTS.md（§7.1）；可按仓登记
+  `tracked_agents_allow` 前缀例外（私有资产备份仓）。
+- 归档状态：archived 仓 README 必须含「状态：暂时归档」声明；非归档仓不得保留该声明
+  （§15.7 / §18.1）。
 - 复用工作流 SHA 固定：pinned_ref 为空时跳过（阶段 4 前）；非空时逐个调用点断言。
 - exceptions（rewq）：只校验 `.gitignore` 仍排除声明的 scope，不限制正常提交。
 """
@@ -32,6 +38,22 @@ DESIRED_PATH = os.path.join(ROOT, "governance", "desired-state.json")
 BASE_FILES = ("README.md",)
 RELEASE_FILES = ("CHANGELOG.md", "docs/release-governance.md")
 RULESET_REQUIRED = ("governance-baseline", "tag-protection-v")
+CONTRACT_PATH = "docs/agent-contract.md"
+CONTRACT_TEMPLATE = os.path.join(ROOT, "governance", "templates", "agent-contract.md")
+ARCHIVE_MARKER = "状态：暂时归档"
+
+
+def normalize_text(text):
+    """统一换行并去掉尾部空行，用于逐字节契约比对。"""
+    return text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n")
+
+
+def load_contract_template():
+    try:
+        with open(CONTRACT_TEMPLATE, encoding="utf-8-sig") as handle:
+            return normalize_text(handle.read()), None
+    except OSError as exc:
+        return None, f"读取契约模板失败：{exc}"
 
 
 def gh_api(path):
@@ -70,7 +92,7 @@ def not_found(err):
     return "HTTP 404" in err or "Not Found" in err
 
 
-def check_repo(owner, spec):
+def check_repo(owner, spec, template_text):
     name = spec["name"]
     out = {
         "name": name,
@@ -156,6 +178,44 @@ def check_repo(owner, spec):
         for item in required:
             if item not in paths:
                 out["drift"].append(f"缺少必需文件 {item}")
+
+        # §7.1 非归档仓不得跟踪 AGENTS.md；私有资产备份仓可按 tracked_agents_allow 放行。
+        if not want_archived:
+            allow = tuple(str(item) for item in (spec.get("tracked_agents_allow") or ()) if str(item))
+            tracked_agents = [
+                path
+                for path in paths
+                if path.rsplit("/", 1)[-1] == "AGENTS.md"
+                and not any(path.startswith(prefix) for prefix in allow)
+            ]
+            if tracked_agents:
+                out["drift"].append(
+                    "跟踪了 AGENTS.md（§7.1 应仅本地保留）：" + "、".join(sorted(tracked_agents)[:5])
+                )
+
+        # §7.3 公开契约逐字节一致：公开非归档仓必须存在；私有仓有则比对、无则跳过。
+        if not want_archived and CONTRACT_PATH in paths:
+            contract, cerr = gh_file(owner, name, CONTRACT_PATH)
+            if contract is None:
+                out["unverified"].append(f"读取 {CONTRACT_PATH} 失败：{cerr}")
+            elif template_text is not None and normalize_text(contract) != template_text:
+                out["drift"].append(
+                    f"{CONTRACT_PATH} 与 governance/templates/agent-contract.md 不一致（§7.3）"
+                )
+        elif not want_archived and spec["visibility"] == "public":
+            out["drift"].append(f"缺少 {CONTRACT_PATH}（§7.3 公开契约）")
+
+        # §15.7 / §18.1 归档声明：归档仓必须有；非归档仓不得残留。
+        if "README.md" in paths:
+            readme, rerr = gh_file(owner, name, "README.md")
+            if readme is None:
+                out["unverified"].append(f"读取 README.md 失败：{rerr}")
+            else:
+                has_marker = ARCHIVE_MARKER in readme
+                if want_archived and not has_marker:
+                    out["drift"].append("归档仓 README 缺少「状态：暂时归档」声明（§15.7）")
+                elif not want_archived and has_marker:
+                    out["drift"].append("非归档仓 README 仍保留「状态：暂时归档」声明（§18.1 状态）")
 
     return out
 
@@ -265,6 +325,11 @@ def main(argv):
         print("ERROR: 期望状态缺少 owner", file=sys.stderr)
         return 2
 
+    template_text, terr = load_contract_template()
+    if template_text is None:
+        print(f"ERROR: {terr}", file=sys.stderr)
+        return 2
+
     repos = desired.get("repos") or []
     only = {item.strip() for item in args.only.split(",") if item.strip()}
     deliveries = {item.strip() for item in args.delivery.split(",") if item.strip()}
@@ -288,7 +353,7 @@ def main(argv):
         return 2
 
     with ThreadPoolExecutor(max_workers=8) as pool:
-        results = list(pool.map(lambda spec: check_repo(owner, spec), selected))
+        results = list(pool.map(lambda spec: check_repo(owner, spec, template_text), selected))
 
     for name, spec in (desired.get("exceptions") or {}).items():
         target = next((item for item in results if item["name"] == name), None)

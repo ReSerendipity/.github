@@ -10,7 +10,9 @@
 #   5. governance/README.md 的「40 个登记仓」+「7 个备份仓」== desired-state 总数 47
 #
 # 只读：仅向 GitHub 发 GET，不产生任何远端写入。
-# 用法：bash .github/scripts/check-governance-consistency.sh
+# 用法：bash .github/scripts/check-governance-consistency.sh [--public-only]
+#   --public-only：只校验与公开仓有关的差集；Actions 默认 GITHUB_TOKEN 看不到
+#   其他私有仓，CI 用此模式；完整 47 仓校验需本地 owner 凭据。
 # 退出码：0=clean；1=gap；2=无法判定（依赖/取数/文档结构失败）。
 set -uo pipefail
 
@@ -23,6 +25,14 @@ RELEASE_SCRIPT="$REPO_ROOT/.github/scripts/check-release-standard.sh"
 OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
 err() { echo "ERROR: $*" >&2; }
+
+PUBLIC_ONLY=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --public-only) PUBLIC_ONLY=1; shift ;;
+    *) err "未知参数：$1"; exit 2 ;;
+  esac
+done
 
 for f in "$DESIRED" "$EXCL" "$GREAD" "$REGISTRY_SCRIPT" "$RELEASE_SCRIPT"; do
   [ -f "$f" ] || { err "找不到 $f"; exit 2; }
@@ -69,6 +79,7 @@ for repo in data.get("repos") or []:
         errors.append("存在缺少 name 的条目")
         continue
     names.append(name)
+    print(f"VIS\t{name}\t{repo.get('visibility', '')}")
     if repo.get("lifecycle") not in lifecycles:
         errors.append(f"{name}: lifecycle={repo.get('lifecycle')!r} 无对应规则")
     if repo.get("delivery") not in deliveries:
@@ -104,6 +115,9 @@ fi
 DESIRED_OWNER=$(awk -F'\t' '$1=="OWNER"{print $2}' "$TMP_DIR/desired.tsv")
 DESIRED_TOTAL=$(awk -F'\t' '$1=="TOTAL"{print $2}' "$TMP_DIR/desired.tsv")
 awk -F'\t' '$1=="NAME"{print $2}' "$TMP_DIR/desired.tsv" | sort > "$TMP_DIR/desired.names"
+awk -F'\t' '$1=="VIS" && $3=="public"{print $2}' "$TMP_DIR/desired.tsv" | sort > "$TMP_DIR/desired.public.names"
+awk -F'\t' '$1=="VIS" && $3=="private"{print $2}' "$TMP_DIR/desired.tsv" | sort > "$TMP_DIR/desired.private.names"
+PRIVATE_TOTAL=$(grep -c . "$TMP_DIR/desired.private.names" || true)
 
 if [ "$DESIRED_OWNER" != "$OWNER" ]; then
   err "desired-state.owner=$DESIRED_OWNER 与检查目标 owner=$OWNER 不一致"
@@ -111,7 +125,14 @@ if [ "$DESIRED_OWNER" != "$OWNER" ]; then
 fi
 
 # ---- 远程仓清单 -------------------------------------------------------------
-if ! gh repo list "$OWNER" --limit 200 --json name --jq '.[].name' > "$TMP_DIR/remote.names" 2>"$TMP_DIR/gh.err"; then
+if [ "$PUBLIC_ONLY" -eq 1 ]; then
+  REMOTE_JSON='name,isPrivate'
+  REMOTE_JQ='.[] | select(.isPrivate==false) | .name'
+else
+  REMOTE_JSON='name'
+  REMOTE_JQ='.[].name'
+fi
+if ! gh repo list "$OWNER" --limit 200 --json "$REMOTE_JSON" --jq "$REMOTE_JQ" > "$TMP_DIR/remote.names" 2>"$TMP_DIR/gh.err"; then
   err "gh repo list $OWNER 取数失败：$(cat "$TMP_DIR/gh.err")"
   exit 2
 fi
@@ -164,8 +185,13 @@ fi
 # ---- 断言 -------------------------------------------------------------------
 GAPS=""
 
-MISSING_ON_REMOTE=$(comm -23 "$TMP_DIR/desired.names" "$TMP_DIR/remote.names")
-UNLISTED=$(comm -13 "$TMP_DIR/desired.names" "$TMP_DIR/remote.names")
+if [ "$PUBLIC_ONLY" -eq 1 ]; then
+  COMPARE_DESIRED="$TMP_DIR/desired.public.names"
+else
+  COMPARE_DESIRED="$TMP_DIR/desired.names"
+fi
+MISSING_ON_REMOTE=$(comm -23 "$COMPARE_DESIRED" "$TMP_DIR/remote.names")
+UNLISTED=$(comm -13 "$COMPARE_DESIRED" "$TMP_DIR/remote.names")
 if [ -n "$MISSING_ON_REMOTE" ]; then
   GAPS="${GAPS}desired-state 有、远程无：\n$(echo "$MISSING_ON_REMOTE" | sed 's/^/  - /')\n"
 fi
@@ -193,6 +219,11 @@ ARITHMETIC=$((README_REGISTERED + README_BACKUP))
 [ "$ARITHMETIC" = "$DESIRED_TOTAL" ] || GAPS="${GAPS}  - README 分组计数 $README_REGISTERED + $README_BACKUP = $ARITHMETIC，desired-state 共 $DESIRED_TOTAL 个仓\n"
 
 echo "治理单一事实来源一致性检查  owner=$OWNER"
+if [ "$PUBLIC_ONLY" -eq 1 ]; then
+  echo "  模式：public-only（远程仅公开仓；私有 $PRIVATE_TOTAL 仓需 owner 凭据本地跑）"
+else
+  echo "  模式：full（远程 $REMOTE_TOTAL 仓）"
+fi
 echo "  desired-state：$DESIRED_TOTAL 仓（release $RELEASE_TOTAL / backup $BACKUP_TOTAL）；远程：$REMOTE_TOTAL 仓"
 echo "  排除数组：EXCLUDED_FROM_REGISTRY=$REGISTRY_N（文档 $DOC_REGISTRY）；EXCLUDED_FROM_RELEASE_STANDARD=$RELEASE_N（文档 $DOC_RELEASE）"
 echo "  README 分组：登记 $README_REGISTERED + 备份 $README_BACKUP = $ARITHMETIC"
