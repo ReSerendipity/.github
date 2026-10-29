@@ -7,3 +7,7 @@ AGENTS.md
 
 # §13.1：仅本地容器
 /local/
+
+# Python 运行缓存：反例测试会 import 脚本，产生 __pycache__（§9 本地产物不进库）
+__pycache__/
+*.pyc
