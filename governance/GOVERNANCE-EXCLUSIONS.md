@@ -2,11 +2,11 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-29（新增 §十 私有资产备份仓的本地上下文例外；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **最后更新**：2026-10-29（新增 `MiniMax-H3-Lite-KeyBackup` 与 §十 私有资产备份仓的本地上下文例外；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
-> 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（7 项备份仓）
-> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（36 项非 release 仓，47 − 11）
+> 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（8 项备份仓）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（37 项非 release 仓，48 − 11）
 > 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
@@ -16,7 +16,7 @@
 
 **本文件自 2026-10-22 起是「治理分档与例外记录」，不再是「整部规范不适用」的白名单。** 现行规则：
 
-1. **`delivery=backup` 的 7 个仓**（密钥 / 资产备份仓）整部规范不适用，只按 §3 的 `<项目名>-KeyBackup` 结构、`SHA256SUMS.txt` 与轮换更新要求管理；不进 §4 台账，不参与 §1 命名与 §10 审计。
+1. **`delivery=backup` 的 8 个仓**（密钥 / 资产备份仓）整部规范不适用，只按 §3 的 `<项目名>-KeyBackup` 结构、`SHA256SUMS.txt` 与轮换更新要求管理；不进 §4 台账，不参与 §1 命名与 §10 审计。
 2. **其余 40 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
 3. **命名例外**（品牌 / 系统保留名 / 已登记债务）见 §4「例外名」表；新增例外须先落 ADR。
 4. **`rewq` 的硬约束收窄**：`.gitignore` 必须排除 `ssh-backup/`、`.ssh/` 与 `*.pem` / `*.key` 等私钥；正常提交与推送不受限制（§15.5）。
@@ -47,7 +47,7 @@
 
 ## 二、豁免清单（29 项）
 
-### 1. 密钥 / 资产备份仓（7 个）
+### 1. 密钥 / 资产备份仓（8 个）
 
 按 §3 属备份仓，无发布链、无版本位；**均不在 §4 台账内**。此类仓**按性质即须豁免**（2026-10-20 用户裁决：密钥/资产备份仓不需要按规范管理），不逐仓审批。
 
@@ -60,6 +60,7 @@
 | `Android-IconAutoArrange-KeyBackup` | ✅ | 2026-10-18 补录（此前误记为"4 个 `*-KeyBackup`"） |
 | `Android-IconAutoArrange-Assets-Backup` | ✅ | 内含加密签名密钥的**口令台账** + PoC 运行时 APK |
 | `SpiritPal-KeyBackup` | ✅ | 2026-10-20 补录（按 §3 模式新建于 2026-10-20，此前遗漏未入清单） |
+| `MiniMax-H3-Lite-KeyBackup` | ✅ | 2026-10-29 新建；old/new 两组 Ed25519 清单签名密钥，7z AES-256 + `-mhe=on` |
 
 ### 2. 网站仓（4 个，均私有）
 
@@ -109,25 +110,25 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **7** | 差集 B/C 只看备份仓；其余 40 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **36** | §10 收敛审计只覆盖 11 个 `release` 仓（47 − 11 = 36） |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **8** | 差集 B/C 只看备份仓；其余 40 仓全部参与 §1 命名校验 |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **37** | §10 收敛审计只覆盖 11 个 `release` 仓（48 − 11 = 37） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
-## 四、账号仓总览（2026-10-24 实测，共 47 个）
+## 四、账号仓总览（2026-10-29 复核，共 48 个）
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
 | **§4 登记（含规范仓）** | 40 | 按 §15 派生适用条款；命名例外见 §4 |
-| **备份仓** | 7 | `delivery=backup`，只按 §3 管理，不进 §4 |
-| 合计 | 47 | `gh repo list ReSerendipity` 实测 47 个，零差额 |
+| **备份仓** | 8 | `delivery=backup`，只按 §3 管理，不进 §4 |
+| 合计 | 48 | `gh repo list ReSerendipity` 实测 48 个，零差额 |
 
 ### §4 台账现状（2026-10-24 复核）
 
 - 台账登记 **40 条**（例外名 8 + Train Case 32），覆盖全部非 `backup` 仓。
-- 台账之外的备份仓 **7 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
+- 台账之外的备份仓 **8 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
 - 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 
 ### 分支保护实测（2026-10-19，41 仓全量，零无法判定）
@@ -142,8 +143,8 @@
 | 载体 | 强制的条款 | 性质 |
 |---|---|---|
 | `ci.yml` 六个 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 | 硬门禁 + 周检 |
-| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（7 项） | CI + 周检 |
-| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 36 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule） |
+| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（8 项） | CI + 周检 |
+| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 37 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
 

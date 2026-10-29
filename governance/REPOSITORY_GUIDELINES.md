@@ -686,12 +686,12 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 
 ### 15.5 风险标签与例外
 
-- `signing-key`：签名私钥不得入库；备份按 §3。当前登记：`DraftPeek`、`Image-DuoModel`、`SeedVR2-Lite`、`TTS-MultiModel`、`SpiritPal`、`Android-IconAutoArrange`、`MiniMax-H3-Lite`、`MiniMax-H3-Lite-Local`（后两者共用 `MiniMax-H3-Lite-Local/overlay/data/.manifest_signing_key`，待按 §3 移入加密 KeyBackup）。
+- `signing-key`：签名私钥不得入库；备份按 §3。当前登记：`DraftPeek`、`Image-DuoModel`、`SeedVR2-Lite`、`TTS-MultiModel`、`SpiritPal`、`Android-IconAutoArrange`、`MiniMax-H3-Lite`；`MiniMax-H3-Lite` 的清单签名私钥已于 2026-10-29 轮换，old/new 两组密钥加密备份在 `MiniMax-H3-Lite-KeyBackup`（7z AES-256），`MiniMax-H3-Lite-Local` 不再保存明文私钥。
 - `credentials`：仓库内含服务器/账号凭据相关内容（当前仅 `rewq`）；硬约束是 `.gitignore`
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 47 仓定位
+### 15.6 48 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
 为唯一事实来源；§4 的 40 行是其中**非备份仓**的命名台账，7 个 `backup` 仓不登记。
