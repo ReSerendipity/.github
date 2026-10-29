@@ -20,6 +20,7 @@ import os
 import re
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 
 try:  # 近空白检测依赖 Pillow；CI 里按需安装，缺失时自动跳过
@@ -29,10 +30,19 @@ except ImportError:  # pragma: no cover
 
 OWNER = "ReSerendipity"
 API = "https://api.github.com"
-SHOT_RE = re.compile(r"(?i)(^|/)(screenshots?|shots|captures?|snapshots?|test-results)/")
-IMG_RE = re.compile(r"https?://[^\s\)\]\"']+\.(?:png|jpg|jpeg|gif|webp)", re.I)
+SHOT_RE = re.compile(r"(?i)(^|/)(screenshots?|shots|captures?|snapshots?|test-results|post-assets)/")
+MARKDOWN_IMG_RE = re.compile(
+    r"!\[[^\]]*\]\(\s*(?:<)?([^)\s>]+)(?:>)?(?:\s+['\"][^'\"]*['\"])?\s*\)"
+)
+HTML_IMG_RE = re.compile(r"<img\b[^>]*\bsrc\s*=\s*['\"]([^'\"]+)['\"]", re.I)
 JSDELIVR_RE = re.compile(
-    r"https?://(?:gcore\.)?jsdelivr\.net/gh/[^@/]+/[^@]+@[^/]+/([^\s\)\]\"']+)", re.I
+    r"https?://(?:gcore\.)?jsdelivr\.net/gh/([^@/]+)/([^@]+)@([^/]+)/([^\s\)\]\"'?#]+)", re.I
+)
+GITHUB_RE = re.compile(
+    r"https?://github\.com/([^/]+)/([^/]+)/(?:blob|raw)/([^/]+)/([^\s\)\]\"'?#]+)", re.I
+)
+RAW_GITHUB_RE = re.compile(
+    r"https?://raw\.githubusercontent\.com/([^/]+)/([^/]+)/([^/]+)/([^\s\)\]\"'?#]+)", re.I
 )
 
 RASTER_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".webp")
@@ -71,7 +81,8 @@ def load_repos(only: set[str] | None) -> list[str]:
     desired = json.loads(open("governance/desired-state.json", encoding="utf-8-sig").read())
     repos = []
     for repo in desired.get("repos", []):
-        if repo.get("visibility") != "public":
+        # §8 / §8.1：只审计公开仓的展示图；archived 与 backup 不追溯。
+        if repo.get("visibility") != "public" or repo.get("lifecycle") == "archived":
             continue
         name = repo["name"]
         if only and name not in only:
@@ -80,16 +91,43 @@ def load_repos(only: set[str] | None) -> list[str]:
     return repos
 
 
-def extract_paths(text: str) -> set[str]:
+def _clean_path(path: str) -> str:
+    path = urllib.parse.unquote(path).replace("\\", "/")
+    path = path.split("?")[0].split("#")[0].lstrip("/")
+    while path.startswith("./"):
+        path = path[2:]
+    return path
+
+
+def extract_paths(text: str, repo: str) -> set[str]:
+    """从 Markdown / HTML 图片引用中提取仓内相对路径。
+
+    支持 jsDelivr、GitHub blob/raw、raw.githubusercontent 绝对 URL 与相对路径；
+    仅保留指向本仓（OWNER/repo）的路径，外部图床与 data: URI 跳过。
+    """
+    urls = MARKDOWN_IMG_RE.findall(text) + HTML_IMG_RE.findall(text)
     paths: set[str] = set()
-    for url in IMG_RE.findall(text):
-        m = JSDELIVR_RE.search(url)
-        if m:
-            paths.add(m.group(1))
-        elif url.startswith(f"https://github.com/{OWNER}/"):
-            parts = url.split("/", 7)
-            if len(parts) == 8 and parts[5] in {"main", "master"}:
-                paths.add(parts[7])
+    for raw in urls:
+        raw = raw.strip()
+        if not raw or raw.startswith("data:"):
+            continue
+        if raw.startswith("//"):
+            raw = "https:" + raw
+        if raw.startswith(("http://", "https://")):
+            for regex in (JSDELIVR_RE, GITHUB_RE, RAW_GITHUB_RE):
+                match = regex.match(raw)
+                if not match:
+                    continue
+                owner, name, _ref, path = match.groups()
+                if owner.lower() == OWNER.lower() and name.lower() == repo.lower():
+                    cleaned = _clean_path(path)
+                    if cleaned:
+                        paths.add(cleaned)
+                break
+            continue
+        cleaned = _clean_path(raw)
+        if cleaned and not cleaned.startswith("../"):
+            paths.add(cleaned)
     return paths
 
 
@@ -157,7 +195,7 @@ def is_near_blank(m: dict[str, float]) -> bool:
 def audit(repo: str, blank: bool) -> tuple[list[str], list[str]]:
     default_branch = read_json(f"/repos/{OWNER}/{repo}")["default_branch"]
     readme = read_text(f"/repos/{OWNER}/{repo}/readme")
-    readme_paths = extract_paths(readme)
+    readme_paths = extract_paths(readme, repo)
     if not readme_paths:
         return [], []
 
@@ -182,7 +220,7 @@ def audit(repo: str, blank: bool) -> tuple[list[str], list[str]]:
         if others:
             findings.append(f"{repo} | REUSE | {path} <- {', '.join(sorted(others))}")
 
-        if blank and path.lower().endswith(RASTER_EXTS):
+        if blank and path.lower().endswith(RASTER_EXTS):  # SVG 无法做像素近空白检测
             data = fetch_image(repo, default_branch, path)
             if data:
                 metrics = blank_metrics(data)

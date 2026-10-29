@@ -105,6 +105,9 @@ UNSIGNED=$(git rev-parse HEAD)
 
 run_case "signoff 正例" 0 bash "$SCRIPTS/check-signoff.sh" "$BASE" "$SIGNED"
 run_case "signoff 缺尾注" 1 bash "$SCRIPTS/check-signoff.sh" "$SIGNED" "$UNSIGNED"
+# ── readme 图路径：相对路径 / jsDelivr / GitHub blob/raw / SVG ──
+run_case "readme 图路径解析" 0 python3 "$SCRIPTS/tests/check-readme-image-paths.py"
+
 cd "$REPO_ROOT" || exit 2
 
 echo ""

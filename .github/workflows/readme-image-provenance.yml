@@ -17,6 +17,8 @@ on:
       - 'governance/REPOSITORY_GUIDELINES.md'
       - '.github/scripts/check-readme-image-provenance.py'
       - '.github/workflows/readme-image-provenance.yml'
+      - 'README.md'
+      - 'docs/assets/**'
 
 permissions:
   contents: read
@@ -35,16 +37,16 @@ jobs:
         run: python3 -m pip install --quiet --disable-pip-version-check pillow
       - name: Audit README image provenance
         shell: bash
+        env:
+          ONLY: ${{ github.event.inputs.only }}
         run: |
           set -o pipefail
-          args=()
-          if [ -n "${{ github.event.inputs.only }}" ]; then
-            args+=(--only "${{ github.event.inputs.only }}")
+          args=(--fail-on-reuse)
+          if [ -n "$ONLY" ]; then
+            args+=(--only "$ONLY")
           fi
-          # PR 只查来源、不下载图片；定时任务才做近空白检测并作为门禁报红
-          if [ "${{ github.event_name }}" != "pull_request" ]; then
-            args+=(--fail-on-reuse)
-          else
+          # PR 查来源并阻断复用，跳过近空白（不下载图片）；定时任务再加近空白告警
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
             args+=(--skip-blank)
           fi
           python3 .github/scripts/check-readme-image-provenance.py "${args[@]}" \
