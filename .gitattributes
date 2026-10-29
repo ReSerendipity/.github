@@ -1,3 +1,4 @@
-# 仓库内 shell 脚本必须以 LF 落地：本机 core.autocrlf=true 会把检出文件转成 CRLF，
-# 而带 CR 的脚本在 bash 下会连行尾比较一起失效。
+# 所有文本文件统一 LF 落地（§18.2）：本机 core.autocrlf=true 会把检出文件转成 CRLF，
+# 既造成全文件 diff，也会让带 CR 的脚本在 bash 下连行尾比较一起失效。
+* text=auto eol=lf
 *.sh text eol=lf
