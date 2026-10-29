@@ -44,7 +44,7 @@
     { "name": "DraftPeek-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "Free-Model-Probe", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "GalgameShell", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
-    { "name": "Github-Repo-Scan", "visibility": "public", "delivery": "tool", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Github-Repo-Scan", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Health-Info-Card", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Hugging-Face", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Image-DuoModel", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only" },
@@ -93,7 +93,10 @@
       { "repo": "SpiritPal", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
       { "repo": "DraftPeek", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
       { "repo": "TTS-MultiModel", "file": ".github/workflows/ci.yml", "workflow": "python-quality-baseline.yml" },
-      { "repo": "TTS-MultiModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" }
+      { "repo": "TTS-MultiModel", "file": ".github/workflows/self-purify.yml", "workflow": "self-purify.yml", "ref": "14c77b5417fe8093612fba40926f772d60a48b6c" },
+      { "repo": "Agent-Knowledge", "file": ".github/workflows/dco-signoff.yml", "workflow": "dco-signoff.yml", "ref": "7fcf6089ceec3385285fb18cb915db35a6424474" },
+      { "repo": "Prompt-Library", "file": ".github/workflows/dco-signoff.yml", "workflow": "dco-signoff.yml", "ref": "7fcf6089ceec3385285fb18cb915db35a6424474" },
+      { "repo": "ReSerendipity", "file": ".github/workflows/dco-signoff.yml", "workflow": "dco-signoff.yml", "ref": "7fcf6089ceec3385285fb18cb915db35a6424474" }
     ]
   }
 }
