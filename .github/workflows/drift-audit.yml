@@ -32,10 +32,12 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - name: Run drift audit
         shell: bash
+        env:
+          ONLY: ${{ github.event.inputs.only }}
         run: |
           set -o pipefail
           args=()
-          if [ -n "${{ github.event.inputs.only }}" ]; then
-            args+=(--only "${{ github.event.inputs.only }}")
+          if [ -n "$ONLY" ]; then
+            args+=(--only "$ONLY")
           fi
           python3 .github/scripts/audit-drift.py "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
