@@ -1,0 +1,63 @@
+# DCO 签名检查（可复用工作流）
+#
+# 2026-10-29：把治理仓已有的 .github/scripts/check-signoff.sh 暴露成 workflow_call，
+# 让各仓可以接入同一条检查，而不必各写一份 git 区间逻辑。
+#
+# 调用方形态（已接入、未启用）见各仓的 .github/workflows/dco-signoff.yml：
+#   on: workflow_dispatch          # 未启用：不配置自动触发
+#   jobs.dco.uses: <本文件>@<reviewed-sha>
+#
+# 启用自动检查只需在调用方 on: 下增加 pull_request（以及可选的 push）；
+# 本文件会从事件上下文取区间：PR 用 base/head，push 用 before/sha。
+# 手动触发时由调用方把两个 SHA 作为 inputs 传入（留空则回落事件上下文）。
+#
+# 区间语义与 check-signoff.sh 一致：base..head，排除 merge 提交；取不到区间时
+# 脚本退 2（失败关闭），不会因为拿不到基线而静默放行。
+name: DCO sign-off (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      base_sha:
+        description: '区间起点（不含）；留空则使用事件上下文'
+        required: false
+        type: string
+        default: ''
+      head_sha:
+        description: '区间终点（含）；留空则使用事件上下文'
+        required: false
+        type: string
+        default: ''
+      governance_ref:
+        description: '治理仓 ref（取 check-signoff.sh）；默认 main，调用方可传同一个 reviewed SHA'
+        required: false
+        type: string
+        default: 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  signoff:
+    name: DCO sign-off (Signed-off-by)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: 检出调用方仓库
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: 检出治理仓（取 check-signoff.sh）
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: ReSerendipity/.github
+          ref: ${{ inputs.governance_ref }}
+          path: .governance
+          persist-credentials: false
+
+      - name: Check every new commit carries Signed-off-by
+        env:
+          BASE_SHA: ${{ inputs.base_sha || github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}
+        run: bash .governance/.github/scripts/check-signoff.sh "$BASE_SHA" "$HEAD_SHA"
