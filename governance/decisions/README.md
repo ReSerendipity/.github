@@ -20,6 +20,7 @@
 | [ADR-0006](ADR-0006-two-axis-profiling.md) | lifecycle × delivery 两轴分档与 44 仓重定位 | Accepted |
 | [ADR-0007](ADR-0007-public-agent-contract.md) | 公开仓根 `AGENTS.md` 精简版与 `docs/agent-contract.md` | Superseded by ADR-0008 |
 | [ADR-0008](ADR-0008-single-local-agents-md.md) | 单一本地 `AGENTS.md`，不入库，300 行上限 | Accepted |
+| [ADR-0009](ADR-0009-agent-contract-v2.md) | Agent 契约 v2：例外统一引用登记表 | Accepted |
 
 ## 与规范的关系
 
