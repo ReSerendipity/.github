@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # 本地 pre-push：保护 main 的两种不可逆动作（删除、非快进）。
 # 服务器侧 ruleset 对私有仓不可用（Free 计划，ADR-0004），本钩子是替代控制。
 # 逃生阀：SKIP_GOVERNANCE_HOOKS=1 git push ...
-set -uo pipefail
+set -eu
 
 if [ "${SKIP_GOVERNANCE_HOOKS:-0}" = "1" ]; then
   echo "pre-push: SKIP_GOVERNANCE_HOOKS=1，跳过治理检查" >&2
