@@ -166,15 +166,27 @@
 
 ---
 
-## 七、本地治理目录公开例外（按仓登记，2026-10-24）
+## 七、本地治理目录公开例外（按仓登记，2026-10-24；2026-10-29 补登 SpiritPal 与家族基线白名单）
 
 §7.1 默认要求 `docs/plans|project|_devarchive|agents|execution` 为本地治理目录、不入库。下列仓已将其中部分目录作为**公开文档层**随仓分发（`docs/DOD.md` 等要求新增模块在模块图登记），经裁决登记为例外：
 
 | 仓库 | 例外路径 | 理由 | 载体 | 解除条件 |
 |---|---|---|---|---|
 | `SeedVR2-Lite` | `docs/plans/`、`docs/project/` | 部署手册与架构 / 约束 / 模块图 / 上手引导属随仓分发的公开文档，移出会打断仓内引用链 | 本仓 `self-purify.yml` 传 `extra_exempt_regex: '^docs/(plans\|project)/'` | 文档迁出受限目录并更新引用后删除该输入 |
+| `SpiritPal` | `docs/execution/` | 执行记录与证据截图按本仓 LOCAL_RULES 定为公开层归档，随仓分发以保留可回溯证据 | 本仓 `self-purify.yml` 传 `extra_exempt_regex: '^docs/execution/'` | 执行记录迁出受限目录并更新引用后删除该输入 |
 
-> 与 SpiritPal 的 `docs/execution/` 豁免同机制：例外由调用仓在自身 workflow 声明，家族基线不放宽；新增同类例外须先登记本节。
+> 例外由调用仓在自身 workflow 声明，家族基线不放宽；新增同类例外须先登记本节。
+
+### 7.1 家族基线白名单（不按仓登记，2026-10-29）
+
+`self-purify.yml` 的基线正则固定放行以下已审定文件，属全家族例外，不在按仓表中逐仓重复登记：
+
+- `docs/execution/RELEASE_VERIFICATION.md`（§10.5 发布验证产物）
+- `docs/execution/执行对照表-桌面分发与安全加固-20260910.md`、`docs/execution/落地执行总结-桌面分发与安全加固-20260910.md`、`docs/execution/依赖与安全跟踪机制-20260911.md`
+- `docs/project/KNOWN_GOTCHAS.md`、`docs/project/AI_DEV_SOPS.md`
+- `docs/reports/执行对照表-桌面分发与安全加固-20260910.md`、`docs/reports/落地执行总结-桌面分发与安全加固-20260910.md`（当前不在受限目录正则内，保留以防正则扩展）
+
+> 本清单与 `self-purify.yml` 的白名单正则必须同步修改；改一处即视为改全家族门禁。
 
 ---
 

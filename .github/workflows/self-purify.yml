@@ -5,11 +5,12 @@ name: Family Self-Purify Check
 # 覆盖三类此前无人值守、只能靠人工审计的规则：
 #   ① 本地治理文档（docs/plans|project|_devarchive|agents|execution、LOCAL_RULES、FIX_LOG、
 #      任意深度 AGENTS.md）被 git 跟踪
-#      注：docs/reports 与 docs/repo-analysis 中经人工审定发布的文档白名单放行（如分发执行总结）
+#      注：家族基线白名单（不按仓登记）见 governance/GOVERNANCE-EXCLUSIONS.md §七 7.1，
+#      放行 docs/execution 的发布验证与历史执行记录、docs/project 的两份 SOP。
 #      仓级豁免（2026-10-20 补）：调用仓可通过 extra_exempt_regex 声明自身已明文裁决的公开归档
 #      目录——例 SpiritPal 的 LOCAL_RULES.md 第 4 条（2026-10-17 更正）把 docs/execution/ 定为
 #      公开层归档处。豁免由调用仓自己声明，家族基线不放宽。
-#      私有仓若接入本检查须先按 §7 私有仓例外调整：私有仓 AGENTS.md 应上传作备份，不属本项违规。
+#      私有仓同一口径：AGENTS.md 也不上传；唯一例外是已登记的私有资产备份仓（§十），不属本项违规。
 #   ② 根目录残留 CONTRIBUTING/CODE_OF_CONDUCT/SUPPORT（应继承 org 级 ReSerendipity/.github）
 #   ③ README 未引用 org 级仓库（组织级健康文档链接缺失）
 #      ②③ 对 ReSerendipity/.github 本身跳过：该仓就是这些文件与引用的来源。
@@ -19,7 +20,7 @@ name: Family Self-Purify Check
 #       它仍是本地命令而非门禁：本仓没有 AGENTS.md，在此装 pre-commit 钩子永远不会触发，
 #       所以只由各仓自行决定是否把该脚本挂进自己的 .git/hooks。不要把它当成已强制自检。
 # 2026-10-24 起默认阻断：本地治理文档不得被 git 跟踪为核心门禁，任何被跟踪的
-# AGENTS.md 均判红（§7.3 / ADR-0008），不再有「≤50 行 + 契约标记」存量兼容。
+# AGENTS.md 均判红（§7.1 / ADR-0008），不再有「≤50 行 + 契约标记」存量兼容。
 # 仅已登记的例外仓可显式传 false 回退为非阻断，且须在
 # governance/GOVERNANCE-EXCLUSIONS.md 登记理由与解除条件。
 
@@ -49,6 +50,8 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
+      # 本步骤与 self-purify job 内的同名步骤必须逐字节一致；
+      # tests/run-negative-tests.sh 会校验两处同步，防止单边修改。
       - name: 本地治理文档不得被 git 跟踪
         env:
           EXTRA_EXEMPT_REGEX: ${{ inputs.extra_exempt_regex }}
@@ -63,7 +66,7 @@ jobs:
             HITS=$(printf '%s\n' "$HITS" | grep -vE -- "$EXTRA_EXEMPT_REGEX" || true)
           fi
           if [ -n "$HITS" ]; then
-            echo "::error::以下本地治理文档被 git 跟踪（应 git rm --cached；规则见 §7.3 / ADR-0008）："
+            echo "::error::以下本地治理文档被 git 跟踪（应 git rm --cached；规则见 §7.1 / ADR-0008）："
             echo "$HITS"
             exit 1
           fi
@@ -78,6 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
+      # 与 critical-governance job 的同名步骤逐字节一致（tests 校验同步）。
       - name: ① 本地治理文档不得被 git 跟踪
         if: ${{ !inputs.enforce_critical_checks }}
         env:
@@ -93,7 +97,7 @@ jobs:
             HITS=$(printf '%s\n' "$HITS" | grep -vE -- "$EXTRA_EXEMPT_REGEX" || true)
           fi
           if [ -n "$HITS" ]; then
-            echo "::error::以下本地治理文档被 git 跟踪（应 git rm --cached；规则见 §7.3 / ADR-0008）："
+            echo "::error::以下本地治理文档被 git 跟踪（应 git rm --cached；规则见 §7.1 / ADR-0008）："
             echo "$HITS"
             exit 1
           fi
