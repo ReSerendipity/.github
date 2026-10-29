@@ -34,7 +34,8 @@ jobs:
       - name: Install Pillow (near-blank heuristic)
         if: github.event_name != 'pull_request'
         shell: bash
-        run: python3 -m pip install --quiet --disable-pip-version-check pillow
+        # 钉版：升级 Pillow 等于换近空白启发式的测量口径，须重跑一次全量审计。
+        run: python3 -m pip install --quiet --disable-pip-version-check pillow==12.3.0
       - name: Audit README image provenance
         shell: bash
         env:
@@ -45,9 +46,9 @@ jobs:
           if [ -n "$ONLY" ]; then
             args+=(--only "$ONLY")
           fi
-          # PR 查来源并阻断复用，跳过近空白（不下载图片）；定时任务再加近空白告警
+          # PR 只改动了本仓，全账号扫描没有意义；仅审计 .github 并跳过近空白（不下载图片）
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            args+=(--skip-blank)
+            args+=(--only .github --skip-blank)
           fi
           python3 .github/scripts/check-readme-image-provenance.py "${args[@]}" \
             | tee -a "$GITHUB_STEP_SUMMARY"

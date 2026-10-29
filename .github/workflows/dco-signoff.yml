@@ -29,10 +29,9 @@ on:
         type: string
         default: ''
       governance_ref:
-        description: '治理仓 ref（取 check-signoff.sh）；默认 main，调用方可传同一个 reviewed SHA'
-        required: false
+        description: '治理仓 ref（取 check-signoff.sh）；必填，传已审阅的提交 SHA，禁止会漂移的 main'
+        required: true
         type: string
-        default: 'main'
 
 permissions:
   contents: read
