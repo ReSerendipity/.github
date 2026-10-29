@@ -499,16 +499,17 @@ updated: YYYY-MM-DD
 | 项 | 实测现状 | 待办 |
 |---|---|---|
 | 私有仓 Actions 账单/额度 | Prompt-Library / Image-Scrapers / Nekogal-DL 的作业因账号级账单注解无法启动（annotation 原文已取证） | **账号级问题、非仓库代码问题**；由账号所有者处理 Billing 后自动恢复（用户已指示本轮跳过） |
+
 **非欠账说明（列出仅为留痕，不构成待办）**
 **明确不补链的仓**：`Offer-Landing-Kit`（静态单文件站：无构建步骤、无打包脚本、无版本位，对外分发即 Pages 线上站点，已满足 §10.4 远端部署）、`Hugging-Face`（无 `.github/`、无构建产物）、`Unity`（Unity 工程需 Unity 授权，托管 runner 无法构建）——不补空链；待这些仓真正产生需版本化分发的产物时再立项。
 **TTS 镜像 attestation 机制**：TTS 因「先构建不推送 → 扫描 → 再推送」结构，无法用 buildx 内联 `provenance: true`（docker exporter 不承载 attestation），已改用官方 attest-action 绑定已推送 digest；属机制等价替代，非欠账。
 
 ### 10.7 本节的执行件
 
-  | 执行件 | 用途 |
-  |---|---|
-  | `RELEASE_GOVERNANCE_TEMPLATE.md`（本仓根目录） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
-  | `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红；2026-10-19 起已挂入本仓 `ci.yml` 的 `schedule` 周检（`release-standard-audit` 作业，批量浅克隆后跑 `--repos-dir`），排除清单在脚本内 `EXCLUDED_FROM_RELEASE_STANDARD` 声明，与本节范围声明同源 |
+| 执行件 | 用途 |
+|---|---|
+| `RELEASE_GOVERNANCE_TEMPLATE.md`（本仓根目录） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
+| `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红；2026-10-19 起已挂入本仓 `ci.yml` 的 `schedule` 周检（`release-standard-audit` 作业，批量浅克隆后跑 `--repos-dir`），排除清单在脚本内 `EXCLUDED_FROM_RELEASE_STANDARD` 声明，与本节范围声明同源 |
 
 ---
 
