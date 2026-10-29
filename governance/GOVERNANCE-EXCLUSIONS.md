@@ -2,7 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-25（新增 README 展示图例外；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **最后更新**：2026-10-29（新增 §十 私有资产备份仓的本地上下文例外；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（7 项备份仓）
@@ -133,7 +133,7 @@
 ### 分支保护实测（2026-10-19，41 仓全量，零无法判定）
 
 - `protected=true`（11）：`.github`、ComfyUI-Experiment-Toolbox、DraftPeek、GalgameShell、Github-Repo-Scan、Image-DuoModel、MiniMax-H3-Lite、ReSerendipity、SeedVR2-Lite、SpiritPal、TTS-MultiModel。
-- `protected=false`（30）：其中 23 仓属本豁免清单（2026-10-19 实测口径；清单现为 29 项，无需考量）；**待立项候选 7 仓**：Agent-Knowledge、Card-Studio、Health-Info-Card、Image-Scrapers、Lineart-Painter、Nekogal-DL、Prompt-Library。（2026-10-21 第四轮豁免后，Card-Studio / Health-Info-Card / Lineart-Painter 已豁免，**待立项候选实为 4 仓**：Agent-Knowledge、Image-Scrapers、Nekogal-DL、Prompt-Library。）
+- `protected=false`（30）：其中 23 仓属本豁免清单（2026-10-19 实测口径；清单现为 29 项，无需考量）；**候选 7 仓**：Agent-Knowledge、Card-Studio、Health-Info-Card、Image-Scrapers、Lineart-Painter、Nekogal-DL、Prompt-Library。（2026-10-21 第四轮豁免后，Card-Studio / Health-Info-Card / Lineart-Painter 已豁免，**候选 4 仓**：Agent-Knowledge、Image-Scrapers、Nekogal-DL、Prompt-Library。**2026-10-29 复核：这 4 仓均为私有仓，按 ADR-0004 属平台能力缺口，待立项项关闭，不再作为保护欠账。**）
 
 ---
 
@@ -141,7 +141,7 @@
 
 | 载体 | 强制的条款 | 性质 |
 |---|---|---|
-| `ci.yml` 六个 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry` / `Governance gates negative tests` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §10 周检审计 | 硬门禁 + 周检 |
+| `ci.yml` 六个 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 | 硬门禁 + 周检 |
 | `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（7 项） | CI + 周检 |
 | `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 36 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
@@ -191,4 +191,16 @@
 | `Website-Site-Toolchain` | 根 README 全部改造项 | 纯 CLI 结构签名门禁工具链，无界面、无产物截图；架构图与正文重复，不产生展示价值 | 出现可视化产物，或用户明确要求改造时 |
 
 > 其余 17 个公开非归档仓仍按 §8 执行（中英双语、展示图、徽章、Topics）。
+
+---
+
+## 十、私有资产备份仓的本地上下文例外（2026-10-29）
+
+§7.1 默认要求 `AGENTS.md` 不入库。`MiniMax-H3-Lite-Local` 是公开仓 `MiniMax-H3-Lite` 的私有资产备份仓，`overlay/local/` 即其备份对象；删除会丢失本地上下文。经复核登记例外：
+
+| 仓库 | 例外路径 | 理由 | 载体 | 解除条件 |
+|---|---|---|---|---|
+| `MiniMax-H3-Lite-Local` | `overlay/local/`（含 `AGENTS.md`、`agents/**`） | 私有资产备份仓的本职即备份公开仓不入库的本地上下文 | `desired-state.json` 的 `tracked_agents_allow: ["overlay/local/"]`；`audit-drift.py` 按前缀放行 | 该仓不再承担备份职责，或本地上下文迁出 `overlay/local/` |
+
+> 该例外不放宽其他私有仓：未登记 `tracked_agents_allow` 的仓仍按 §7.1 判红。
 

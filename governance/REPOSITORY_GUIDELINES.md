@@ -40,7 +40,7 @@
   - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述四项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
   - **账号本人（Doro / ReSerendipity）可直接推送**，跳过 PR 流程；
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
-  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 23 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**待立项候选实为 7 仓**：`Agent-Knowledge`、`Card-Studio`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Nekogal-DL`、`Prompt-Library`（2026-10-21 第四轮豁免后，`Card-Studio` / `Health-Info-Card` / `Lineart-Painter` 已入排除清单，**待立项候选实为 4 仓**：`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）。是否批量配置保护（同 `enforce_admins=false` 口径）属**待立项决定**，未配置前 GitHub 侧不会拦截直推 `main`。
+  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 23 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**候选 7 仓**：`Agent-Knowledge`、`Card-Studio`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Nekogal-DL`、`Prompt-Library`（2026-10-21 第四轮豁免后，`Card-Studio` / `Health-Info-Card` / `Lineart-Painter` 已入排除清单，**候选 4 仓**：`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）。**2026-10-29 复核：上述 4 仓均为私有仓**，按本节私有仓条款与 ADR-0004，Free 计划下服务器侧保护不可用，属平台能力缺口；**待立项项关闭**，升级 Pro 后再按同一 JSON 补发，未配置前 GitHub 侧不会拦截直推 `main`。
   - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。本轮用 `GET /repos/<owner>/<repo>/branches/<default>` 的 `protected` 字段（认证态），41 仓全部返回明确布尔值，零 403。
 - **Ruleset 基线（2026-10-21 新增，按可见性分流）**：
   - **公开仓**统一启用两个 ruleset：`governance-baseline`（branch：`deletion` + `non_fast_forward` + `pull_request` + `required_status_checks`，检查名只填实测近 60 天成功过的项）与 `tag-protection-v`（tag：`v*` 的 `deletion` + `non_fast_forward` + `update`）。
@@ -187,11 +187,12 @@
 
 - 每个仓**只有一个** `AGENTS.md`，位于仓库根目录；嵌套/模块级 `AGENTS.md` 一律不建、不入库。
 - `AGENTS.md` **一律不入库**：在仓库**现有** `.gitignore` 中增加 `AGENTS.md`（无斜线模式，匹配任意深度），**不得删除或覆盖**密钥、大文件、构建产物、`local/` 等既有规则；不再有 `!/AGENTS.md` 白名单。
-- 公开仓与私有仓同一口径：`AGENTS.md` 是本地维护者上下文，私有仓也不上传 `AGENTS.md`。
+- 公开仓与私有仓同一口径：`AGENTS.md` 是本地维护者上下文，私有仓也不上传 `AGENTS.md`；唯一例外是已登记的私有资产备份仓（见本节迁移结果与 `GOVERNANCE-EXCLUSIONS.md` §十）。
 - 公开可分发入口是 `docs/agent-contract.md`（tracked，逐字节复制模板）与根 `README.md`；fresh clone / CI / 协作者环境中没有 `AGENTS.md` 属预期。
 - 私有仓的备份对象是非 `AGENTS.md` 的本地上下文（`local/agents/**`、`FIX_LOG.md` 等）；是否上传按各仓现有 `.gitignore` 与本节执行。
 - 误入库恢复：`git rm --cached AGENTS.md` + `.gitignore` 写 `AGENTS.md` + commit + push；本地文件保留。
-- **迁移结果（2026-10-24）**：26 个非归档仓中 24 仓已完成本地化（`git rm --cached`，本地文件保留）；GalgameShell、Prompt-Library 按用户指示暂缓，两仓均未接入 `self-purify`，不构成阻断规则的漏口；11 个归档仓仍跟踪 `AGENTS.md`，按只读处理，迁移需先 unarchive。`self-purify.yml` 已于 2026-10-24 翻转为阻断任何被跟踪的 `AGENTS.md`（默认开启）。
+- **迁移结果（2026-10-29 复核）**：非归档仓已无跟踪的根 `AGENTS.md`（`ComfyUI-BatchPromptLoader`、`VOSR2-Lite` 已于 2026-10-29 取消跟踪）；10 个归档仓仍跟踪，按只读处理，迁移需先 unarchive。`self-purify.yml` 自 2026-10-24 默认阻断，已在 6 个下游仓接入（DraftPeek / Image-DuoModel / MiniMax-H3-Lite / SeedVR2-Lite / SpiritPal / TTS-MultiModel，调用清单以 `desired-state.json` 的 `reusable_workflows.callers` 为准）；其余非归档公开仓尚未接入，依赖本地 `.githooks/pre-push` 与 `check-agents-md-size.sh`，`audit-drift.py` 对公开仓与可见私有仓兜底检查误跟踪。
+- **私有资产备份例外**：`MiniMax-H3-Lite-Local` 的 `overlay/local/` 是公开仓本地资产的备份对象，允许按 `GOVERNANCE-EXCLUSIONS.md` §十 登记例外入库；该例外由 `desired-state.json` 的 `tracked_agents_allow` 声明，不构成其他私有仓上传 `AGENTS.md` 的依据。
 
 ### 7.2 质量标准
 
@@ -477,7 +478,7 @@ updated: YYYY-MM-DD
 
 | 项 | 结果 | 落地证据 |
 |---|---|---|
-| 标准下发 | 29 仓默认分支均有本地化 `docs/release-governance.md`，全部含「远端优先」标记 | 见 §10 范围声明；逐仓开分支 + PR 合并，排除 10 项已逐条留痕 |
+| 标准下发 | 29 仓默认分支均有本地化 `docs/release-governance.md`；2026-10-29 复核：全部含「远端优先」或其英文等价「Remote-first」标记（`Health-Info-Card` 为英文版） | 见 §10 范围声明；逐仓开分支 + PR 合并，排除 10 项已逐条留痕 |
 | 发布总纲统一 | 各仓文档以 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款 | DraftPeek 原 `docs/VERSIONING.md` 已收敛为指向 `release-governance.md` 的迁移指针（184 行 → 3 行） |
 | 镜像 tag | **账号内已无仓启用 floating `latest`** | TTS-MultiModel `docker-publish.yml` 的 `type=raw,value=latest` 行已删（PR #190） |
 | 镜像扫描 | TTS 与 SeedVR2 的 `docker-publish.yml` 均转阻断（`exit-code: '1'`） | SeedVR2-Lite PR #164；转阻断前实测该镜像零发现，故未建豁免条目 |
@@ -669,7 +670,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 | `tool` | §1、§2、§7、§8、§9、§11、§12（含原 §13）、§14 | §3、§10 |
 | `content` | §1、§2、§7、§8、§9、§12（含原 §13） | §3、§10、§11、§14 |
 | `backup` | §3（KeyBackup 结构、允许轮换更新） | 其余全部 |
-| `policy` | §1–§18 自身维护 | §10 发布链 |
+| `policy` | §1–§19 自身维护 | §10 发布链 |
 
 > **跨 delivery 通用条款（2026-10-23）**：§17、§18 不参与本表裁剪，对全部 `delivery` 类型生效；§16 已并入 §7，按 §7 的适用范围执行；`backup` 仓仅在其 §3 允许的维护动作中适用 §7 / §17 / §18。
 
@@ -685,7 +686,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 
 ### 15.5 风险标签与例外
 
-- `signing-key`：签名私钥不得入库；备份按 §3。
+- `signing-key`：签名私钥不得入库；备份按 §3。当前登记：`DraftPeek`、`Image-DuoModel`、`SeedVR2-Lite`、`TTS-MultiModel`、`SpiritPal`、`Android-IconAutoArrange`、`MiniMax-H3-Lite`、`MiniMax-H3-Lite-Local`（后两者共用 `MiniMax-H3-Lite-Local/overlay/data/.manifest_signing_key`，待按 §3 移入加密 KeyBackup）。
 - `credentials`：仓库内含服务器/账号凭据相关内容（当前仅 `rewq`）；硬约束是 `.gitignore`
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
@@ -844,6 +845,8 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 | 快照 | 历史文档中的计数、版本、状态必须带「截至 YYYY-MM-DD」，或改为指向 `desired-state.json` 等单一来源 | 无日期且与现状不符的计数 |
 | 状态 | `archived` / WIP / 迁移中 / 已取代 必须与平台、`desired-state.json`、ADR 状态联动 | 归档恢复后声明未移除、WIP 无期限、旧 ADR 未标 Superseded |
 | 执行件 | 规范变更时同步更新脚本注释、错误提示、模板与检查逻辑中的旧路径 / 旧条款 / 旧计数 | 规范与脚本提示冲突 |
+
+> 测试夹具（`.github/scripts/tests/fixtures/**`）与 CI 模板不是文档实体，不纳入入链检查。
 
 ### 18.2 编码与渲染
 

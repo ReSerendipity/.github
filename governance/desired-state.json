@@ -1,4 +1,4 @@
-﻿{
+{
   "version": 2,
   "owner": "ReSerendipity",
   "defaults": {
@@ -18,7 +18,7 @@
       "tool": { "sections": ["1", "2", "7", "8", "9", "11", "12", "13", "14"] },
       "content": { "sections": ["1", "2", "7", "8", "9", "12", "13"] },
       "backup": { "sections": ["3"] },
-      "policy": { "sections": ["1-18"] }
+      "policy": { "sections": ["1-19"] }
     },
     "distribution": {
       "github-release": { "checks": ["sha256", "release-notes", "rollback"] },
@@ -31,7 +31,7 @@
   "repos": [
     { "name": ".github", "visibility": "public", "delivery": "policy", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Agent-Knowledge", "visibility": "private", "delivery": "content", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
-    { "name": "Android-IconAutoArrange", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
+    { "name": "Android-IconAutoArrange", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "archived", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "Android-IconAutoArrange-Assets-Backup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "key-only" },
     { "name": "Android-IconAutoArrange-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "key-only" },
     { "name": "Bilibili-Follow-Manager", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
@@ -40,19 +40,19 @@
     { "name": "Code-Time-Machine-1024", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "ComfyUI-BatchPromptLoader", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "ComfyUI-Experiment-Toolbox", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
-    { "name": "DraftPeek", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "DraftPeek", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "DraftPeek-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "Free-Model-Probe", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "GalgameShell", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Github-Repo-Scan", "visibility": "public", "delivery": "tool", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Health-Info-Card", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Hugging-Face", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
-    { "name": "Image-DuoModel", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Image-DuoModel", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "Image-DuoModel-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "Image-Scrapers", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Lineart-Painter", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
-    { "name": "MiniMax-H3-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
-    { "name": "MiniMax-H3-Lite-Local", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "MiniMax-H3-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only" },
+    { "name": "MiniMax-H3-Lite-Local", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only", "tracked_agents_allow": ["overlay/local/"] },
     { "name": "Mooncake-Deconstruction", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Multi-Tracker", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Nekogal-DL", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
@@ -62,11 +62,11 @@
     { "name": "ReSerendipity", "visibility": "public", "delivery": "content", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "rewq", "visibility": "private", "delivery": "service", "distribution": ["direct-ssh"], "lifecycle": "active", "risk": ["credentials"], "backup": "github-only" },
     { "name": "RTX-VSR-Lite", "visibility": "public", "delivery": "library", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
-    { "name": "SeedVR2-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "SeedVR2-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "active", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "SeedVR2-Lite-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
-    { "name": "SpiritPal", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "SpiritPal", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "SpiritPal-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
-    { "name": "TTS-MultiModel", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "TTS-MultiModel", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "active", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "TTS-MultiModel-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "Unfading-Wall", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Unity", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
