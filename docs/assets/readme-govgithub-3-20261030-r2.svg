@@ -127,6 +127,6 @@
     <text x="40" y="680" font-weight="700" fill="#1f2328">校验：</text>
     <text x="96" y="680">check-governance-consistency.sh 校验 JSON 仓集合 == GitHub 实际集合、JSON 内部取值合法、脚本豁免项数与文档声明一致、governance/README.md 的「40 + 8」== 总数 48</text>
     <text x="40" y="704" font-weight="700" fill="#1f2328">修改定位：</text>
-    <text x="136" y="704">同时改 REPOSITORY_GUIDELINES.md 与 desired-state.json；audit-drift.py 在手动 / 命中 JSON 的 PR 上对账，漂移判红（2026-10-30 起周检 schedule 取消）</text>
+    <text x="136" y="704">同时改 REPOSITORY_GUIDELINES.md 与 desired-state.json；audit-drift.py 在周检 / 手动 / 命中 JSON 的 PR 上对账，漂移判红（2026-10-30 定稿：远程优先、本地最少化）</text>
   </g>
 </svg>

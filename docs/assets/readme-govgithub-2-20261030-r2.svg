@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" font-family="'Noto Sans CJK SC','Noto Sans',-apple-system,'Segoe UI',sans-serif">
-  <title>变更门禁流程：开工四查 → 分支/PR → CI → 合并 → 按需审计</title>
-  <desc>ReSerendipity/.github 治理变更流程（REPOSITORY_GUIDELINES §17）：开工前四查、分支与 PR 约定、CI 门禁、合并规则、按需审计（workflow_dispatch），以及 CI 失败闭环。</desc>
+  <title>变更门禁流程：开工四查 → 分支/PR → CI → 合并 → 周检</title>
+  <desc>ReSerendipity/.github 治理变更流程（REPOSITORY_GUIDELINES §17）：开工前四查、分支与 PR 约定、CI 门禁、合并规则、每周审计（schedule，亦可手动派发），以及 CI 失败闭环。</desc>
   <defs>
     <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#57606a"/>
@@ -34,7 +34,7 @@
   <text x="92" y="358" font-size="16" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
   <text x="128" y="336" font-size="16" font-weight="700" fill="#1f2328">CI 门禁 · CI gates（ci.yml + drift-audit.yml）</text>
   <text x="128" y="360" fill="#57606a" font-size="12.5">Workflow lint（actionlint + YAML）｜DCO sign-off｜Reusable workflow smoke（self-purify 核心规则，阻断）｜Repository registry（§4 vs GitHub）｜Governance gates negative tests</text>
-  <text x="128" y="380" fill="#57606a" font-size="12.5">命中 governance/desired-state.json 的 PR 另触发治理漂移审计；§10 发布标准审计只在手动作业上运行（非每 PR 门禁）</text>
+  <text x="128" y="380" fill="#57606a" font-size="12.5">命中 governance/desired-state.json 的 PR 另触发治理漂移审计；§10 发布标准审计在 schedule 周检与手动派发上运行（非每 PR 门禁）</text>
 
   <!-- 步骤 ④ 合并 -->
   <rect x="60" y="414" width="1080" height="92" rx="12" fill="#f6f8fa" stroke="#d0d7de"/>
@@ -44,13 +44,13 @@
   <text x="128" y="468" fill="#57606a" font-size="12.5">作者账号可直推 main（enforce_admins=false 是有意为之：保护不约束账号本人，代价须写明白）；非管理员协作者一律走 PR</text>
   <text x="128" y="488" fill="#57606a" font-size="12.5">delete_branch_on_merge=true：合并后 GitHub 自动删除源分支；禁止 force push（仅 --force-with-lease 且需授权）；不得删除默认分支 / gh-pages / release-please 工作分支</text>
 
-  <!-- 步骤 ⑤ 按需审计 -->
+  <!-- 步骤 ⑤ 周检 -->
   <rect x="60" y="522" width="1080" height="92" rx="12" fill="#f6f8fa" stroke="#d0d7de"/>
   <circle cx="92" cy="568" r="21" fill="#0969da"/>
   <text x="92" y="574" font-size="16" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
-  <text x="128" y="552" font-size="16" font-weight="700" fill="#1f2328">按需审计 · On-demand audits（workflow_dispatch / PR）</text>
-  <text x="128" y="576" fill="#57606a" font-size="12.5">§4 台账 + 一致性随每次 PR / 推送自动跑｜漂移审计：手动或命中 desired-state.json 的 PR｜OSSF Scorecard：手动（11 仓矩阵）</text>
-  <text x="128" y="596" fill="#57606a" font-size="12.5">§10 发布标准审计是 ci.yml 的手动作业；2026-10-30 owner 裁决取消全部 schedule cron，对账频度由维护者手动触发保证</text>
+  <text x="128" y="552" font-size="16" font-weight="700" fill="#1f2328">周检 · Weekly audits（schedule + 手动，UTC）</text>
+  <text x="128" y="576" fill="#57606a" font-size="12.5">周一 03:00 §4 台账周检（repo-registry）｜04:00 治理漂移审计（drift-audit）｜05:00 OSSF Scorecard（11 仓矩阵）</text>
+  <text x="128" y="596" fill="#57606a" font-size="12.5">§10 发布标准审计随 ci.yml schedule 运行、亦可手动派发；漂移由仓外动作（新建 / 改名 / 删除 / 改默认分支）引起，故须定期触发而非只在改动时触发（2026-10-30 定稿：远程免费额度优先、本地最少化）</text>
 
   <!-- 步骤间箭头 -->
   <path d="M600,182 L600,196" stroke="#57606a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
