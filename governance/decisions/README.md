@@ -19,9 +19,10 @@
 | [ADR-0005](ADR-0005-repo-backup-local-mirror.md) | 仓库备份：接受 GitHub 单远端，本地镜像暂缓 | Accepted |
 | [ADR-0006](ADR-0006-two-axis-profiling.md) | lifecycle × delivery 两轴分档与 44 仓重定位 | Accepted |
 | [ADR-0007](ADR-0007-public-agent-contract.md) | 公开仓根 `AGENTS.md` 精简版与 `docs/agent-contract.md` | Superseded by ADR-0008 |
-| [ADR-0008](ADR-0008-single-local-agents-md.md) | 单一本地 `AGENTS.md`，不入库，300 行上限 | Accepted |
+| [ADR-0008](ADR-0008-single-local-agents-md.md) | 单一本地 `AGENTS.md`，不入库，300 行上限 | Accepted（§7.5 路由条款由 ADR-0011 修订） |
 | [ADR-0009](ADR-0009-agent-contract-v2.md) | Agent 契约 v2：例外统一引用登记表 | Accepted |
 | [ADR-0010](ADR-0010-ci-remote-first.md) | CI 远程化与本地最小化：检查必须有远端载体，私有仓盲区可选 PAT 补齐 | Accepted |
+| [ADR-0011](ADR-0011-inline-full-agents-md.md) | 根 AGENTS.md 内联完整契约并取消 docs/local 副本 | Accepted |
 
 ## 与规范的关系
 

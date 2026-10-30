@@ -15,7 +15,7 @@ REPO_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 DEFAULT_REPOS_ROOT=$(cd "$REPO_ROOT/.." && pwd)
 TEMPLATE="$REPO_ROOT/governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md"
 CONTRACT_TEMPLATE="$REPO_ROOT/governance/templates/agent-contract.md"
-AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS.slim.md"
+AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS.template.md"
 HOOK_TEMPLATE="$SCRIPT_DIR/templates/pre-push"
 OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
@@ -48,7 +48,7 @@ case "$DELIVERY" in release|service|tool|content) ;; *) err "--delivery 只支�
 [ -d "$REPOS_ROOT" ] || { err "repos-root 不存在：$REPOS_ROOT"; exit 2; }
 [ -f "$TEMPLATE" ] || { err "找不到发布文档模板：$TEMPLATE"; exit 2; }
 [ -f "$CONTRACT_TEMPLATE" ] || { err "找不到 agent 契约模板：$CONTRACT_TEMPLATE"; exit 2; }
-[ -f "$AGENTS_TEMPLATE" ] || { err "找不到 AGENTS 精简版模板：$AGENTS_TEMPLATE"; exit 2; }
+[ -f "$AGENTS_TEMPLATE" ] || { err "找不到 AGENTS 模板：$AGENTS_TEMPLATE"; exit 2; }
 [ -f "$HOOK_TEMPLATE" ] || { err "找不到 pre-push 模板：$HOOK_TEMPLATE"; exit 2; }
 
 # §1 命名：字母/数字/短横线，分段首字母大写，禁止下划线、空段与连续短横线。

@@ -186,18 +186,19 @@
 - 已知历史偏差（2026-10-13 已全部对齐）：`image-scrapers`→`Image-Scrapers`、`MiniMax-H3-lite`→`MiniMax-H3-Lite`、`SeedVR2-lite`→`SeedVR2-Lite`（仅本地）；`prompt-library`→`Prompt-Library`、`agent-knowledge`→`Agent-Knowledge`（远程 + 本地）。
 - 2026-10-17 追加对齐：远程 `Image-MultiModel` 经 `Image-duoModel` 两次改名后定为 `Image-DuoModel`；本机克隆目录与 remote URL 已按本节三步同步为 `Image-DuoModel`。
 
-## 7. AGENTS.md 治理（单一本地文件 / 自进化 / 拆分）
+## 7. AGENTS.md 治理（单一本地文件 / 内联完整契约 / 阅读频率拆分；2026-10-30 修订）
 
-**定位**：每个仓库只有一个根 `AGENTS.md`，只在本机保留、不入库；需要沉淀的细节拆到 `local/agents/**`，不产生第二个 `AGENTS.md`。
+**定位**：每个仓库只有一个根 `AGENTS.md`，只在本机保留、不入库。根文件是**本地唯一完整版**：内联契约 v2 的全部硬约束与本仓每次开工必读的细则；不再保留 `docs/AGENTS.md` 与 `local/AGENTS.md` 第二份副本。只有特定模块/任务才读的细节按阅读频率下沉到 `local/agents/**`。
 
 ### 7.1 归属与入库
 
-- 每个仓**只有一个** `AGENTS.md`，位于仓库根目录；嵌套/模块级 `AGENTS.md` 一律不建、不入库。
+- 每个仓**只有一个** `AGENTS.md`，位于仓库根目录；`docs/AGENTS.md`、`local/AGENTS.md`、嵌套/模块级 `AGENTS.md` 一律不建、不入库。
 - `AGENTS.md` **一律不入库**：在仓库**现有** `.gitignore` 中增加 `AGENTS.md`（无斜线模式，匹配任意深度），**不得删除或覆盖**密钥、大文件、构建产物、`local/` 等既有规则；不再有 `!/AGENTS.md` 白名单。
 - 公开仓与私有仓同一口径：`AGENTS.md` 是本地维护者上下文，私有仓也不上传 `AGENTS.md`；唯一例外是已登记的私有资产备份仓（见本节迁移结果与 `GOVERNANCE-EXCLUSIONS.md` §十）。
 - 公开可分发入口是 `docs/agent-contract.md`（tracked，逐字节复制模板）与根 `README.md`；fresh clone / CI / 协作者环境中没有 `AGENTS.md` 属预期。
 - 私有仓的备份对象是非 `AGENTS.md` 的本地上下文（`local/agents/**`、`FIX_LOG.md` 等）；是否上传按各仓现有 `.gitignore` 与本节执行。
 - 误入库恢复：`git rm --cached AGENTS.md` + `.gitignore` 写 `AGENTS.md` + commit + push；本地文件保留。
+- **存量副本处置（2026-10-30 定稿，ADR-0011）**：`docs/AGENTS.md` 与 `local/AGENTS.md` 不再是第二份完整版，内容逐条并入根 `AGENTS.md` 后删除。清单：`local/AGENTS.md` 9 份（Agent-Knowledge、ComfyUI-Experiment-Toolbox、DraftPeek、GalgameShell、Github-Repo-Scan、Image-DuoModel、SeedVR2-Lite、SpiritPal、TTS-MultiModel）；`docs/AGENTS.md` 5 份（Agent-Knowledge、Image-Scrapers、Nekogal-DL、Prompt-Library、ReSerendipity）。删除前必须 `git ls-files <path>` 为空；被跟踪则停止并上报。清偿进度以 ADR-0011 的执行台账为准。
 - **迁移结果（2026-10-29 复核）**：非归档仓已无跟踪的根 `AGENTS.md`（`ComfyUI-BatchPromptLoader`、`VOSR2-Lite` 已于 2026-10-29 取消跟踪）；10 个归档仓仍跟踪，按只读处理，迁移需先 unarchive。`self-purify.yml` 自 2026-10-24 默认阻断，已在 6 个下游仓接入（DraftPeek / Image-DuoModel / MiniMax-H3-Lite / SeedVR2-Lite / SpiritPal / TTS-MultiModel，调用清单以 `desired-state.json` 的 `reusable_workflows.callers` 为准）；其余非归档公开仓尚未接入，依赖本地 `.githooks/pre-push` 与 `check-agents-md-size.sh`，`audit-drift.py` 对公开仓与可见私有仓兜底检查误跟踪。
 - **归档仓清偿（2026-10-30，owner 指令）**：上条遗留的 10 个归档仓已按 §15.7「已归档仓补动作」流程批量处理——unarchive → API 删除跟踪的根 `AGENTS.md`（提交仅含取消跟踪，历史保留，DCO + noreply）→ 即时重新 archive，全程 `lifecycle` 保持 `archived`、`desired-state.json` 无改动。10 仓 commit：Android-IconAutoArrange `92b7db43`、Bilibili-Follow-Manager `85d419ec`、ChatGPT-Timezone-Fix `3ae57bed`、Free-Model-Probe `6ddb86d7`、Hugging-Face `a0333e57`、Mooncake-Deconstruction `bee81f6a`、Multi-Tracker `4d735b69`、Offer-Landing-Kit `eae4ce74`、RTX-VSR-Lite `33871015`、Unfading-Wall `c44abc5c`。至此**全账号跟踪树中的 `AGENTS.md` 清零**（§七 7.1 白名单路径与本条例外不受影响）。
 - **私有资产备份例外**：`MiniMax-H3-Lite-Local` 的 `overlay/local/` 是公开仓本地资产的备份对象，允许按 `GOVERNANCE-EXCLUSIONS.md` §十 登记例外入库；该例外由 `desired-state.json` 的 `tracked_agents_allow` 声明，不构成其他私有仓上传 `AGENTS.md` 的依据。
@@ -205,10 +206,11 @@
 
 ### 7.2 质量标准
 
-- **行数上限**：根 `AGENTS.md` ≤**300 行**（唯一硬阈值）；拆分后的 `local/agents/<module|task>.md` 单文件建议 ≤300 行，超过继续按主题拆分。
-- **最小结构**：至少含「开工前」「硬约束」「交付前」「索引」四块；可在此基础上增加快速命令、禁区、已知坑、架构地图等章节。
+- **行数上限**：根 `AGENTS.md` ≤**300 行**（推荐 ≤150 行，唯一硬阈值）；拆分后的 `local/agents/<module|task>.md` 单文件建议 ≤300 行，超过继续按主题拆分。
+- **最小结构**：本仓定位 / 开工前 / 硬约束（契约 v2 内联）/ 本仓专属红线 / 常用命令与验证 / 结构与发布 CI / 交付前 / 索引 / 维护；其中「开工前 / 硬约束 / 交付前 / 索引」四块不可删。
+- **契约内联**：第 2 节必须逐字包含契约 v2 的五组条款——禁止入库清单与例外、DCO/noreply、平台设置、WIP 保护、发布链；跨仓逐字一致，由本地验收脚本比对块哈希。
 - **单一职责**：全仓规则只写根文件；拆分文件只写本模块/任务内容，不复制全仓规则。
-- **时效性**：文首维护「最后更新 / 对应版本」；目录结构或发布版本变化后同步更新。
+- **时效性**：文首维护「最后更新 / 契约版本」；目录结构或发布版本变化后同步更新。
 - **引用可解析**：文中出现的仓内路径必须真实存在；引用 `local/` 文档时标注「本地文档，未随仓库发布」。
 - **本地安全**：虽然不入库，仍不得把密钥、token、口令写进 `AGENTS.md`；需要记录位置时只写指路。
 - **vendored / 上游子目录**：自带嵌套 `.git` 的第三方目录不纳入本节；其 `AGENTS.md` 归上游。
@@ -218,9 +220,10 @@
 - **入库侧**：`self-purify.yml` 已于 2026-10-24 翻转为阻断任何被跟踪的 `AGENTS.md`（默认开启；例外仓须先在 `GOVERNANCE-EXCLUSIONS.md` 登记理由与解除条件，再显式传 `enforce_critical_checks: false`）。
 - **契约一致性**：`audit-drift.py` 比对仓内 `docs/agent-contract.md` 与 `governance/templates/agent-contract.md`，不一致判红。
 - **行数检查**：`.github/scripts/check-agents-md-size.sh` 默认上限 300，检查根 `AGENTS.md` 与 `local/agents/*.md`；非 CI 门禁。
-- **脚手架**：`scaffold-repo.sh` 生成根 `AGENTS.md`（本地文件）并写入新仓最小 `.gitignore`（`/local/` + `AGENTS.md`）；密钥、大文件、构建产物等规则由各仓按 §3/§9 继续追加，不是替换整个 `.gitignore`。
+- **脚手架**：`scaffold-repo.sh` 复制 `governance/templates/AGENTS.template.md` 生成根 `AGENTS.md`（本地文件），并写入新仓最小 `.gitignore`（`/local/` + `AGENTS.md`）；密钥、大文件、构建产物等规则由各仓按 §3/§9 继续追加，不是替换整个 `.gitignore`。
 - **调用**：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；可挂本地 `pre-commit`。
 - **扫描口径**：只算活动文件，排除归档/备份副本、生成目录与嵌套 git 仓；`--include-nested` 显式纳入。
+- **内联契约一致性**：根 `AGENTS.md` 不入库，无法进 CI；由会话自检 + 本地验收脚本（比对第 2 节块哈希与必含章节）承担，验收记录随任务台账留存。
 
 ### 7.4 自进化协议
 
@@ -236,7 +239,7 @@
 
 | 内容 | 位置 |
 |---|---|
-| 根入口、硬约束、交付前、索引 | 根 `AGENTS.md`（≤300 行，本地） |
+| 根入口、契约内联、硬约束、交付前、索引 | 根 `AGENTS.md`（≤300 行，本地） |
 | 模块 / 任务细节 | `local/agents/<module\|task>.md`（本地） |
 | 踩坑台账 / 失败签名 | `local/agents/GOTCHAS.md`（本地） |
 | 公开安全的最小契约 | `docs/agent-contract.md`（tracked，逐字节模板） |
@@ -263,11 +266,13 @@
 
 **个性化边界**：各仓可增加架构地图、常用命令、领域术语、模块边界、已知坑；不得删减根文件四块；不得复制别仓路径 / 账号 / 端口 / 模型名。
 
-**参考实现**：DraftPeek 的本地 `AGENTS.md`（自进化协议 v1.2）+ `local/agents/GOTCHAS.md` + `FIX_LOG.md`（失败签名 → 假设 → 动作 → 结果）。
+**参考实现**：DraftPeek 的根 `AGENTS.md`（合并后的完整版）+ `local/agents/GOTCHAS.md` + `FIX_LOG.md`（失败签名 → 假设 → 动作 → 结果）。
 
 **定期收敛**：每个 Release 或至少每月复核，删除失效条目、合并重复签名、上提稳定结论、清理一次性内容。
 
 ### 7.5 拆分规则与标注
+
+**拆分标准为阅读频率二分**：每次开工必读的内容留根文件；只有特定模块/任务才读的细节下沉。
 
 **触发阈值**：根 `AGENTS.md` > 300 行；某章节只对一个模块 / 任务有效；根文件需要跳转才能读完。
 
@@ -277,7 +282,7 @@
 - 任务：`local/agents/<task>.md`
 - 排障：`local/agents/GOTCHAS.md`
 
-禁止新增第二个 `AGENTS.md`。
+存量 `docs/agents/**` 保留为历史分片，不强制迁移；新增拆分优先进 `local/agents/`。禁止新增第二个 `AGENTS.md`。
 
 **参考实践（2026-10-23 调研）**：
 
@@ -288,7 +293,7 @@
 
 本账号适配：公开仓不跟踪嵌套 `AGENTS.md`，所以用 `local/agents/<module|task>.md` + 根索引实现同样的分层；**300 行是硬上限，推荐控制在 150 行以内**。
 
-**根文件只做路由器**，保留四块：`开工前`、`硬约束`、`交付前`、`索引`。索引表固定列：`文件 | 来源章节 | 管什么 | 什么时候读 | 最后更新`。
+**根文件不再是纯路由器**：必须内联契约 v2 与每次开工必读的全部内容；只有「特定模块 / 任务才读」的细节下沉。索引表固定列：`文件 | 来源章节 | 管什么 | 什么时候读 | 最后更新`。
 
 **完整标注（强制）**：每个拆分文件头部必须包含：
 
@@ -311,7 +316,7 @@ updated: YYYY-MM-DD
 2. 不新增被跟踪的嵌套 `AGENTS.md`；
 3. 单个规则只在一个文件里定义；
 4. 根文件 ≤300 行，拆分文件建议 ≤300 行；
-5. 读取顺序：根 `AGENTS.md` → `docs/agent-contract.md` → 根 `README.md` → 只读相关拆分文件；
+5. 读取顺序：根 `AGENTS.md` → 根 `README.md` → `local/README.internal.md` → 只读相关拆分文件；
 6. agent 可自行拆分，但必须完成上述标注并跑 `check-agents-md-size.sh`；
 7. 内容矛盾时以代码 / 配置与治理规范为准，同批修正。
 
