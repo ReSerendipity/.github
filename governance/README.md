@@ -7,9 +7,11 @@
 | `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§20：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本与展示图真实性（§8 / §8.1）、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18）、Dependabot 与依赖升级处置（§19）、CI 远程化与本地最小化（§20） | 40 个登记仓；8 个备份仓按 §3 单独管理 |
 | `GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外记录：现行口径、8 个备份仓与命名/发布载体对照、四轮豁免历史原文，以及 §六–§十 例外（生成物、本地治理目录、暂缓、展示图、私有资产备份） | 全账号 |
 | `desired-state.json` | 声明式期望状态：48 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
-| [`decisions/`](decisions/README.md) | ADR 决策记录（ADR-0001~ADR-0011）：为什么这样定；ADR-0007 已被 ADR-0008 取代，ADR-0008 的 §7.5 路由条款由 ADR-0011 修订 | 全账号 |
+| [`decisions/`](decisions/README.md) | ADR 决策记录（ADR-0001~ADR-0012）：为什么这样定；ADR-0007 已被 ADR-0008 取代，ADR-0008 的 §7.5 路由条款由 ADR-0011 修订；ADR-0012 标准化自进化台账 | 全账号 |
 | [`templates/agent-contract.md`](templates/agent-contract.md) | Agent 契约模板（v2）：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验；例外只引用 `GOVERNANCE-EXCLUSIONS.md` §七 | 各仓 |
 | [`templates/AGENTS.template.md`](templates/AGENTS.template.md) | 本地 `AGENTS.md` 模板：根文件内联契约 v2、本地唯一完整版（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
+| [`templates/GOTCHAS.template.md`](templates/GOTCHAS.template.md) | 自进化坑点台账模板（§7.4.1） | 各仓 |
+| [`templates/REVISION_LOG.template.md`](templates/REVISION_LOG.template.md) | 自进化修订记录模板（§7.4.2） | 各仓 |
 | [`templates/RELEASE_GOVERNANCE_TEMPLATE.md`](templates/RELEASE_GOVERNANCE_TEMPLATE.md) | §10 发布文档统一模板（2026-10-30 自仓根迁入 `governance/templates/`，暂缓迁入的在途 WIP 前置已消除） | 发布型仓 |
 
 ## 权威顺序

@@ -16,6 +16,8 @@ DEFAULT_REPOS_ROOT=$(cd "$REPO_ROOT/.." && pwd)
 TEMPLATE="$REPO_ROOT/governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md"
 CONTRACT_TEMPLATE="$REPO_ROOT/governance/templates/agent-contract.md"
 AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS.template.md"
+GOTCHAS_TEMPLATE="$REPO_ROOT/governance/templates/GOTCHAS.template.md"
+REVISION_LOG_TEMPLATE="$REPO_ROOT/governance/templates/REVISION_LOG.template.md"
 HOOK_TEMPLATE="$SCRIPT_DIR/templates/pre-push"
 OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
@@ -49,6 +51,8 @@ case "$DELIVERY" in release|service|tool|content) ;; *) err "--delivery 只支�
 [ -f "$TEMPLATE" ] || { err "找不到发布文档模板：$TEMPLATE"; exit 2; }
 [ -f "$CONTRACT_TEMPLATE" ] || { err "找不到 agent 契约模板：$CONTRACT_TEMPLATE"; exit 2; }
 [ -f "$AGENTS_TEMPLATE" ] || { err "找不到 AGENTS 模板：$AGENTS_TEMPLATE"; exit 2; }
+[ -f "$GOTCHAS_TEMPLATE" ] || { err "找不到 GOTCHAS 模板：$GOTCHAS_TEMPLATE"; exit 2; }
+[ -f "$REVISION_LOG_TEMPLATE" ] || { err "找不到 REVISION_LOG 模板：$REVISION_LOG_TEMPLATE"; exit 2; }
 [ -f "$HOOK_TEMPLATE" ] || { err "找不到 pre-push 模板：$HOOK_TEMPLATE"; exit 2; }
 
 # §1 命名：字母/数字/短横线，分段首字母大写，禁止下划线、空段与连续短横线。
@@ -104,6 +108,9 @@ EOF
 cp "$TEMPLATE" docs/release-governance.md
 cp "$CONTRACT_TEMPLATE" docs/agent-contract.md
 cp "$AGENTS_TEMPLATE" AGENTS.md
+mkdir -p local/agents
+[ -f local/agents/GOTCHAS.md ] || cp "$GOTCHAS_TEMPLATE" local/agents/GOTCHAS.md
+[ -f local/agents/REVISION_LOG.md ] || cp "$REVISION_LOG_TEMPLATE" local/agents/REVISION_LOG.md
 cp "$HOOK_TEMPLATE" .githooks/pre-push
 chmod +x .githooks/pre-push 2>/dev/null || true
 git config core.hooksPath .githooks

@@ -241,19 +241,47 @@
 |---|---|
 | 根入口、契约内联、硬约束、交付前、索引 | 根 `AGENTS.md`（≤300 行，本地） |
 | 模块 / 任务细节 | `local/agents/<module\|task>.md`（本地） |
-| 踩坑台账 / 失败签名 | `local/agents/GOTCHAS.md`（本地） |
+| 踩坑台账 / 失败签名 | `local/agents/GOTCHAS.md`（优先）；存量 `docs/agents/GOTCHAS.md` 视为历史分片 |
+| 自进化修订记录 | `local/agents/REVISION_LOG.md`（优先）；存量 `docs/agents/REVISION_LOG.md` 视为历史分片 |
 | 公开安全的最小契约 | `docs/agent-contract.md`（tracked，逐字节模板） |
 | 一次性日志、调试过程、机器绝对路径 | 不入库，留在 `local/` 或删除 |
 
-**单条记录格式**（缺任一项视为未沉淀）：
+#### 7.4.1 GOTCHAS 台账格式
 
-- 日期 + 稳定编号；
+- **路径**：优先 `local/agents/GOTCHAS.md`；存量 `docs/agents/GOTCHAS.md` 保留并继续追加，不复制双份。
+- **表头固定**：`| # | 坑点标题 | 触发场景 | 现象/报错 | 正确做法 | 首次发现日期 |`
+- **追加纪律**：编号稳定递增、追加到表尾；一条只写一个坑；历史行不改不删；推荐带 `[sig:<kebab-case>]` 失败签名。
+- **安全边界**：不得写密钥 / token / 口令 / 连接串；限制级内容只写指路，不摘正文。
+- **触发**：每次踩坑 / 修 bug 后同批追加；任务收尾自检缺项视为未完成。
+
+#### 7.4.2 REVISION_LOG 台账格式
+
+- **路径**：优先 `local/agents/REVISION_LOG.md`；存量 `docs/agents/REVISION_LOG.md` 保留并继续追加。
+- **表头固定 6 列**：`| 自进化版本 | 日期 | 触发原因 | 更新内容摘要 | 对应项目版本 | 已校验 |`
+- **追加纪律**：版本唯一且单调；日期单调不减；一行一次修订；历史行不删不改；顶部协议版本号必须与最后一行对应。
+- **机械校验**：有 `scripts/check_revision_log.py` 的仓继续用；没有的由任务收尾自检人工核对版本唯一 / 日期单调 / 列数一致。
+
+#### 7.4.3 适用范围与存量处置
+
+- **16 个非归档本地治理仓全部适用**：`.github`、Agent-Knowledge、ComfyUI-Experiment-Toolbox、DraftPeek、GalgameShell、Github-Repo-Scan、Image-DuoModel、Image-Scrapers、Nekogal-DL、Prompt-Library、ReSerendipity、rewq、SeedVR2-Lite、SpiritPal、TTS-MultiModel、VOSR2-Lite。
+- 已有 `local/agents/` 台账的继续使用；只有 `docs/agents/` 的保留为历史分片并继续追加；两者都没有的新建 `local/agents/` 版本。
+- 同一仓不得同时维护两份活跃台账；迁移只移动 / 追加，不删除历史；归档仓不追溯。
+
+#### 7.4.4 模板与脚手架
+
+- 模板：`governance/templates/GOTCHAS.template.md`、`governance/templates/REVISION_LOG.template.md`。
+- `scaffold-repo.sh` 生成根 `AGENTS.md` 时同步创建 `local/agents/` 并复制两个模板（已存在则不覆盖）。
+- 模板只提供表头与示例行，不预填项目事实；各仓按实际追加。
+
+**单条记录通用字段**（GOTCHAS 行或 REVISION_LOG 摘要至少覆盖）：
+
+- 日期 + 稳定编号 / 版本；
 - 触发场景 / 现象（可检索的报错原文或命令）；
 - 根因（一句话）；
 - 正确做法 / 命令；
 - 证据（commit、run id、日志路径）；
 - 适用范围与复核日期；
-- 失败签名 `[sig:<kebab-case>]`。
+- 失败签名 `[sig:<kebab-case>]`（GOTCHAS 推荐）。
 
 **变更流程**：
 
@@ -266,9 +294,10 @@
 
 **个性化边界**：各仓可增加架构地图、常用命令、领域术语、模块边界、已知坑；不得删减根文件四块；不得复制别仓路径 / 账号 / 端口 / 模型名。
 
-**参考实现**：DraftPeek 的根 `AGENTS.md`（合并后的完整版）+ `local/agents/GOTCHAS.md` + `FIX_LOG.md`（失败签名 → 假设 → 动作 → 结果）。
+**参考实现**：DraftPeek 的根 `AGENTS.md`（合并后的完整版）+ `docs/agents/GOTCHAS.md` + `FIX_LOG.md`（失败签名 → 假设 → 动作 → 结果）。
 
 **定期收敛**：每个 Release 或至少每月复核，删除失效条目、合并重复签名、上提稳定结论、清理一次性内容。
+
 
 ### 7.5 拆分规则与标注
 

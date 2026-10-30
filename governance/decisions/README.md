@@ -23,6 +23,7 @@
 | [ADR-0009](ADR-0009-agent-contract-v2.md) | Agent 契约 v2：例外统一引用登记表 | Accepted |
 | [ADR-0010](ADR-0010-ci-remote-first.md) | CI 远程化与本地最小化：检查必须有远端载体，私有仓盲区可选 PAT 补齐 | Accepted |
 | [ADR-0011](ADR-0011-inline-full-agents-md.md) | 根 AGENTS.md 内联完整契约并取消 docs/local 副本 | Accepted |
+| [ADR-0012](ADR-0012-self-evolution-ledgers.md) | 自进化台账标准化：GOTCHAS / REVISION_LOG | Accepted |
 
 ## 与规范的关系
 
