@@ -1,5 +1,7 @@
 # 治理漂移审计：期望状态在 governance/desired-state.json，本文件负责周检 + 手动 + 命中 JSON 的 PR。
-# （2026-10-30 定稿「远程优先、本地最少化」：公开仓免费额度，恢复 schedule 并与 workflow_dispatch 并存。）
+# （2026-10-30 定稿「远程优先、本地最少化」§20 / ADR-0010：公开仓免费额度，schedule 与 workflow_dispatch 并存。）
+# §20.4 远端盲区接入点：配置只读 Secret GOVERNANCE_READ_PAT 后，schedule / 手动派发用 owner 凭据
+# 覆盖 21 个私有仓（UNVERIFIABLE→PASS）；PR 触发表达式层固定回退默认令牌——Secret 不进 PR 运行上下文。
 # 结果写入 step summary；失败即 rc≠0，由 Actions 判红。不加入分支规则的必需检查。
 name: Governance drift audit
 
@@ -28,7 +30,8 @@ jobs:
     name: Governance drift audit
     runs-on: ubuntu-24.04
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 表达式路由：PR → 默认令牌；schedule/dispatch → GOVERNANCE_READ_PAT（未配置则回退默认令牌）。
+      GH_TOKEN: ${{ github.event_name == 'pull_request' && github.token || secrets.GOVERNANCE_READ_PAT || github.token }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - name: Run drift audit
