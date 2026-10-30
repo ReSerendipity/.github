@@ -13,7 +13,7 @@ set -uo pipefail
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 DEFAULT_REPOS_ROOT=$(cd "$REPO_ROOT/.." && pwd)
-TEMPLATE="$REPO_ROOT/RELEASE_GOVERNANCE_TEMPLATE.md"
+TEMPLATE="$REPO_ROOT/governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md"
 CONTRACT_TEMPLATE="$REPO_ROOT/governance/templates/agent-contract.md"
 AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS.slim.md"
 HOOK_TEMPLATE="$SCRIPT_DIR/templates/pre-push"

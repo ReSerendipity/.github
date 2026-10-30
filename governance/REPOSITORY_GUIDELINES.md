@@ -407,7 +407,7 @@ updated: YYYY-MM-DD
 >
 > **2026-10-19 豁免升级（用户裁决）**：下方排除清单由「不适用 §10」升级为「不适用整个 REPOSITORY_GUIDELINES.md（§1-§14）」——不再要求、不再审计本规范任何章节（含 §1 命名、§2 保护、§4 台账、§7/§8、§10、§12 结构、§13 路径、§14 硬编码）；同日**第二轮点名**再增 6 仓，2026-10-20 **第三轮点名 +1、备份仓补录 +1**，2026-10-21 **第四轮点名 +4**，清单共 **29 项**。台账/命名维度的执行载体见 §4 的 2026-10-19 变更记录与脚本 `EXCLUDED_FROM_REGISTRY`（25 项）。已交付产物（发布文档、CHANGELOG、流水线、AGENTS.md 上传）**一律保留**。
 >
-> 下发方式：**按 §17.2 推送**（作者账号可直推；非作者逐仓开分支 + PR + 合并）；文档一律以本仓 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款，只填本仓特有项，不得改写公共条款。
+> 下发方式：**按 §17.2 推送**（作者账号可直推；非作者逐仓开分支 + PR + 合并）；文档一律以本仓 `governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款，只填本仓特有项，不得改写公共条款。
 >
 > **排除清单（2026-10-19 豁免升级：整部规范（§1–§14）不适用，共 29 项，逐条留痕）**：
 >
@@ -514,7 +514,7 @@ updated: YYYY-MM-DD
 
 | 执行件 | 用途 |
 |---|---|
-| `RELEASE_GOVERNANCE_TEMPLATE.md`（本仓根目录） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
+| `governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md`（2026-10-30 自仓根迁入） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
 | `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红；2026-10-19 起已挂入本仓 `ci.yml` 的 `schedule` 周检（`release-standard-audit` 作业，批量浅克隆后跑 `--repos-dir`），排除清单在脚本内 `EXCLUDED_FROM_RELEASE_STANDARD` 声明，与本节范围声明同源；**2026-10-30 定稿：`schedule` 周检保留，并新增 `workflow_dispatch` 手动派发（远程优先、本地最少化）** |
 
 ---

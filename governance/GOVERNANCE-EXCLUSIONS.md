@@ -2,7 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-30（定稿「远程优先、本地最少化」：公开仓 Actions 为免费额度，`schedule` 周检/月度 cron 恢复并与 `workflow_dispatch` 并存，§五载体表同步；新增 `MiniMax-H3-Lite-KeyBackup`、口令入库例外与 §十 私有资产备份仓的本地上下文例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **最后更新**：2026-10-30（定稿「远程优先、本地最少化」：公开仓 Actions 为免费额度，`schedule` 周检/月度 cron 恢复并与 `workflow_dispatch` 并存，§五载体表同步；`RELEASE_GOVERNANCE_TEMPLATE.md` 自仓根迁入 `governance/templates/`（在途 WIP 前置已消除），§五路径同步；新增 `MiniMax-H3-Lite-KeyBackup`、口令入库例外与 §十 私有资产备份仓的本地上下文例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（8 项备份仓）
@@ -148,7 +148,7 @@
 | `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（8 项） | CI + 周检 |
 | `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 37 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
-| `RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
+| `governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
 
 ---
 

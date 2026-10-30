@@ -10,7 +10,7 @@
 | [`decisions/`](decisions/README.md) | ADR 决策记录（ADR-0001~ADR-0010）：为什么这样定；ADR-0007 已被 ADR-0008 取代 | 全账号 |
 | [`templates/agent-contract.md`](templates/agent-contract.md) | Agent 契约模板（v2）：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验；例外只引用 `GOVERNANCE-EXCLUSIONS.md` §七 | 各仓 |
 | [`templates/AGENTS.slim.md`](templates/AGENTS.slim.md) | 本地 `AGENTS.md` 模板：各仓根 `AGENTS.md` 的本地样板（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
-| `RELEASE_GOVERNANCE_TEMPLATE.md`（暂留根目录） | §10 发布文档统一模板；因在途 WIP 暂缓迁入（截至 2026-10-23） | 发布型仓 |
+| [`templates/RELEASE_GOVERNANCE_TEMPLATE.md`](templates/RELEASE_GOVERNANCE_TEMPLATE.md) | §10 发布文档统一模板（2026-10-30 自仓根迁入 `governance/templates/`，暂缓迁入的在途 WIP 前置已消除） | 发布型仓 |
 
 ## 权威顺序
 

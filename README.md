@@ -147,7 +147,7 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 - 决策记录：[`governance/decisions/`](governance/decisions/)（ADR-0001~0010）
 - 治理手册索引：[`governance/README.md`](governance/README.md)
 - Agent 契约：[`docs/agent-contract.md`](docs/agent-contract.md)
-- 发布文档模板：[`RELEASE_GOVERNANCE_TEMPLATE.md`](RELEASE_GOVERNANCE_TEMPLATE.md)
+- 发布文档模板：[`governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md`](governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md)
 
 ### 贡献 / 安全 / 支持
 
@@ -297,7 +297,7 @@ When a downstream repository does not ship its own file of the same name, GitHub
 - Decision records: [`governance/decisions/`](governance/decisions/) (ADR-0001~0010)
 - Governance handbook index: [`governance/README.md`](governance/README.md)
 - Agent contract: [`docs/agent-contract.md`](docs/agent-contract.md)
-- Release document template: [`RELEASE_GOVERNANCE_TEMPLATE.md`](RELEASE_GOVERNANCE_TEMPLATE.md)
+- Release document template: [`governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md`](governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md)
 
 ### Contributing / Security / Support
 
