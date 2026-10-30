@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" font-family="'Noto Sans CJK SC','Noto Sans',-apple-system,'Segoe UI',sans-serif">
   <title>治理架构：政策源 → 执行层 → 48 仓</title>
-  <desc>ReSerendipity/.github 治理架构：governance/ 政策单一事实来源，经 .github/workflows 与 scripts 执行，覆盖账号下 48 个仓库；周检漂移审计回填台账。</desc>
+  <desc>ReSerendipity/.github 治理架构：governance/ 政策单一事实来源，经 .github/workflows 与 scripts 执行，覆盖账号下 48 个仓库；漂移审计（手动 / 命中 JSON 的 PR）回填台账。</desc>
   <defs>
     <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#57606a"/>
@@ -63,7 +63,7 @@
     <text x="74" y="450" fill="#57606a">Workflow lint（actionlint+YAML）</text>
     <text x="74" y="466" fill="#57606a">DCO sign-off · self-purify 冒烟</text>
     <text x="74" y="482" fill="#57606a">§4 台账对照 · 门禁反例测试</text>
-    <text x="74" y="498" fill="#57606a">§10 发布标准审计（仅 schedule 周检）</text>
+    <text x="74" y="498" fill="#57606a">§10 发布标准审计（仅手动作业）</text>
     <text x="74" y="514" fill="#0969da">另：drift-audit.yml · scorecard.yml</text>
     <rect x="338" y="412" width="264" height="116" rx="8" fill="#ffffff" stroke="#b6d4fe"/>
     <text x="348" y="432" font-size="13" font-weight="700">家族复用工作流（workflow_call）</text>
@@ -105,5 +105,5 @@
 
   <!-- 反馈回路：层 C → 层 A（右侧） -->
   <path d="M1175,640 L1175,302 L1164,302" stroke="#bf3989" stroke-width="1.6" stroke-dasharray="6,5" fill="none" marker-end="url(#arr-dash)"/>
-  <text x="60" y="712" font-size="12.5" fill="#bf3989">周检漂移审计（drift-audit.yml · 周一 04:00 UTC）：新建 / 改名 / 删除仓库 → 台账与平台状态对账回填政策源（右侧虚线回路）</text>
+  <text x="60" y="712" font-size="12.5" fill="#bf3989">漂移审计（drift-audit.yml · 手动 / 命中 desired-state.json 的 PR）：新建 / 改名 / 删除仓库 → 台账与平台状态对账回填政策源（右侧虚线回路）</text>
 </svg>
