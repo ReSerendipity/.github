@@ -19,7 +19,8 @@
   `tracked_agents_allow` 前缀例外（私有资产备份仓）。
 - 归档状态：archived 仓 README 必须含「状态：暂时归档」声明；非归档仓不得保留该声明
   （§15.7 / §18.1）。
-- 复用工作流 SHA 固定：pinned_ref 为空时跳过（阶段 4 前）；非空时逐个调用点断言。
+- 复用工作流 SHA 固定：pinned_ref 为空时跳过（阶段 4 前）；非空时逐个调用点断言；
+  私有仓的调用点对当前凭据不可见时记 UNVERIFIABLE（与 check_repo 同口径），公开仓读取失败仍记 fatal。
 - exceptions（rewq）：只校验 `.gitignore` 仍排除声明的 scope，不限制正常提交。
 """
 
@@ -297,7 +298,7 @@ def check_exception(owner, name, spec, visible):
     return out
 
 
-def check_pins(owner, pins, selected):
+def check_pins(owner, pins, selected, visibility):
     out = {"name": "复用工作流 SHA 固定", "drift": [], "unverified": [], "skipped": [], "limited": [], "fatal": []}
     ref = (pins.get("pinned_ref") or "").strip()
     callers = [c for c in pins.get("callers", []) if c.get("repo") in selected]
@@ -313,7 +314,10 @@ def check_pins(owner, pins, selected):
         expected = (caller.get("ref") or ref).strip()
         text, err = gh_file(owner, repo, path)
         if text is None:
-            out["fatal"].append(f"{repo}/{path} 读取失败：{err}")
+            if not_found(err or "") and visibility.get(repo) == "private":
+                out["unverified"].append(f"{repo}/{path}：私有仓对当前凭据不可见，跳过 pin 校验")
+            else:
+                out["fatal"].append(f"{repo}/{path} 读取失败：{err}")
             continue
         lines = [
             line.strip()
@@ -398,7 +402,12 @@ def main(argv):
         for key in ("drift", "unverified", "skipped", "fatal"):
             target[key].extend(extra[key])
 
-    pins_result = check_pins(owner, desired.get("reusable_workflows") or {}, {s["name"] for s in selected})
+    pins_result = check_pins(
+        owner,
+        desired.get("reusable_workflows") or {},
+        {s["name"] for s in selected},
+        {spec.get("name"): spec.get("visibility") for spec in repos},
+    )
     all_rows = results + ([pins_result] if pins_result else [])
 
     lines = [
