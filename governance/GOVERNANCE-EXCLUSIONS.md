@@ -144,9 +144,10 @@
 
 | 载体 | 强制的条款 | 性质 |
 |---|---|---|
-| `ci.yml` 六个 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 | 硬门禁 + 周检（2026-10-30 定稿：远程优先、本地最少化，schedule 与手动并存） |
+| `ci.yml` 六个常驻 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`）+ 一个手动冒烟作业（`python-quality-smoke`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 / 质量底线自测 | 硬门禁 + 周检（2026-10-30 定稿：远程优先、本地最少化，schedule 与手动并存） |
 | `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（8 项） | CI + 周检 |
 | `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 37 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
+| `.github/workflows/python-quality-baseline.yml`（经 `ci.yml` 的 `python-quality-smoke` 作业） | 家族质量底线（覆盖率 + mypy ratchet）自测载体：fixtures/py_smoke 样例包 | 手动派发（2026-10-30 起，§20/ADR-0010；改动本基线合并前须跑绿） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
 | `governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
 

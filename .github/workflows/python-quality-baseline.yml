@@ -27,14 +27,16 @@
 #
 # ⚠️ 维护约定（证据绑定）：
 #   - 修改本文件等于同时修改四个仓库的门禁行为，合并前须在至少一个
-#     试点仓跑绿；
+#     试点仓跑绿；2026-10-30 起本仓另有直属冒烟载体（§20 / ADR-0010）：
+#     ci.yml 的 python-quality-smoke 作业以 fixtures/py_smoke 样例包在
+#     workflow_dispatch 上实跑两道门禁，改动合并前先派发它跑绿。
 #   - 调用点（2026-10-17 只读核对，各仓 uses 本文件的位置）：
 #       TTS-MultiModel  .github/workflows/ci.yml
 #       SeedVR2-Lite    .github/workflows/ci.yml
 #       MiniMax-H3-Lite .github/workflows/test.yml
 #       Image-duoModel  .github/workflows/ci.yml
-#     本 .github 仓的 ci.yml 只冒烟 self-purify.yml —— 本仓无 Python 包与测试，
-#     在此调用本文件会让 test-cov/typecheck 必然变红，故试点只能在上面四个仓做。
+#     本 .github 仓的 ci.yml 冒烟 self-purify.yml（push/PR）与本基线
+#     （workflow_dispatch，fixture 样例包，2026-10-30 起）。
 #   - mypy 版本升级必须连同各仓基线一起重算（口径见 typecheck 步骤注释）。
 name: Python Quality Baseline (family)
 

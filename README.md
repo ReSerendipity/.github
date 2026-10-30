@@ -28,8 +28,8 @@
 
 - **单一事实来源**：治理正文只在 `governance/`，各仓不复制、只引用；适用条款由 `desired-state.json` 的 `lifecycle × delivery` 派生（§15，两轴模型，ADR-0006）。
 - **48 仓声明式分档**：40 个台账登记仓（命名例外 8 + Train Case 32，§4）+ 8 个密钥/资产备份仓（仅 §3）；`audit-drift.py` 按周检 schedule、手动触发与命中期望状态的 PR 对账期望状态与 GitHub 平台状态（Actions 默认令牌对 21 个私有仓记 `UNVERIFIABLE`，完整核对可用 owner 凭据本地跑，或配置 `GOVERNANCE_READ_PAT` 只读 Secret 后周检远程全覆盖，见 §20.4）。
-- **CI 门禁 + 周检**：本仓 `ci.yml` 六个作业（Workflow lint / DCO sign-off / self-purify 冒烟 / §4 台账 + 期望状态一致性（公开子集）/ 门禁反例测试 / §10 发布标准审计）；另有治理漂移审计与 OSSF Scorecard 周检——2026-10-30 定稿「远程优先、本地最少化」并成文为 §20（ADR-0010）：公开仓 Actions 走免费额度，`schedule` 与 `workflow_dispatch` 并存，本地不承载定期任务。
-- **家族复用工作流**：`self-purify.yml` 自 2026-10-24 起把「本地治理文档不得被 git 跟踪」设为默认阻断；`python-quality-baseline.yml` 统一覆盖率与 mypy ratchet 质量底线（Image-DuoModel、TTS-MultiModel、SeedVR2-Lite、MiniMax-H3-Lite 试点接入）。
+- **CI 门禁 + 周检**：本仓 `ci.yml` 六个常驻作业 + 一个手动冒烟作业（Workflow lint / DCO sign-off / self-purify 冒烟 / §4 台账 + 期望状态一致性（公开子集）/ 门禁反例测试 / §10 发布标准审计 + python-quality 底线冒烟（仅派发））；另有治理漂移审计与 OSSF Scorecard 周检——2026-10-30 定稿「远程优先、本地最少化」并成文为 §20（ADR-0010）：公开仓 Actions 走免费额度，`schedule` 与 `workflow_dispatch` 并存，本地不承载定期任务。
+- **家族复用工作流**：`self-purify.yml` 自 2026-10-24 起把「本地治理文档不得被 git 跟踪」设为默认阻断；`python-quality-baseline.yml` 统一覆盖率与 mypy ratchet 质量底线（Image-DuoModel、TTS-MultiModel、SeedVR2-Lite、MiniMax-H3-Lite 试点接入；2026-10-30 起本仓 `ci.yml` 以 `fixtures/py_smoke` 样例包挂 `workflow_dispatch` 冒烟载体）。
 - **README 双版本与本地 AGENTS.md 制度**：根 `README.md` 对外（§8），`local/README.internal.md` 对内且不入库；根 `AGENTS.md` 单一本地文件（不入库、≤300 行，§7），公开契约入口是 `docs/agent-contract.md`。
 - **发布/分发统一规范**：§10 覆盖 release / package / deployment，远端优先、tag 驱动、资产附 `SHA256SUMS.txt`，镜像扫描 Trivy 默认阻断。
 
@@ -37,7 +37,7 @@
 
 **① 治理架构：政策源 → 执行层 → 48 仓**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r3.svg" alt="治理架构：政策源 → 执行层 → 48 仓" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r4.svg" alt="治理架构：政策源 → 执行层 → 48 仓" width="880">
 
 三层关系：`governance/` 是政策单一事实来源；`.github/workflows` 与 `.github/scripts` 是执行层（CI 门禁、周检审计、只读校验脚本、默认健康文件）；账号下 48 个仓库按 `delivery × lifecycle` 派生适用条款，通过一行治理引用与 `docs/agent-contract.md` 接入。右侧虚线回路表示周检漂移审计把平台状态（新建/改名/删除仓库）对账回填政策源。
 
@@ -122,7 +122,7 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 
 **查找优先级**：`仓库 .github/` → `仓库根目录` → `仓库 docs/` → 本组织默认。需要项目定制（专属许可、安全设计、模型合规条目）的仓库应自行提供同名文件覆盖默认版本。
 
-**复用工作流**：`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入，调用方应引用已审阅的提交 SHA（如 `desired-state.json` 中登记的 `pinned_ref`），而不是会漂移的 `@main`。`self-purify.yml` 自 2026-10-24 起默认阻断「本地治理文档不得被 git 跟踪」，已登记的例外仓可显式传 `enforce_critical_checks: false`。本仓自身另有六个 CI 作业（见「核心特性」）；治理漂移审计另由独立工作流承担，其在 Actions 中对私有仓只能记 `UNVERIFIABLE`，完整 48 仓核对需本地 owner 凭据。
+**复用工作流**：`.github/workflows/` 中的家族复用工作流由各仓通过 `workflow_call` 接入，调用方应引用已审阅的提交 SHA（如 `desired-state.json` 中登记的 `pinned_ref`），而不是会漂移的 `@main`。`self-purify.yml` 自 2026-10-24 起默认阻断「本地治理文档不得被 git 跟踪」，已登记的例外仓可显式传 `enforce_critical_checks: false`。本仓自身另有六个常驻 CI 作业 + 一个手动冒烟作业（见「核心特性」）；治理漂移审计另由独立工作流承担，其在 Actions 中对私有仓只能记 `UNVERIFIABLE`，完整 48 仓核对需本地 owner 凭据。
 
 ### 维护原则
 
@@ -178,7 +178,7 @@ This repository hosts no project code. The account is a personal account, so `pr
 
 - **Single source of truth**: policy text lives only in `governance/`; other repos reference, never copy. Applicable clauses are derived from the `lifecycle × delivery` model in `desired-state.json` (§15, two-axis profiling, ADR-0006).
 - **Declarative tiering of 48 repos**: 40 ledger-registered repos (8 exception names + 32 Train Case, §4) plus 8 key/asset backup repos (§3 only); `audit-drift.py` reconciles desired state against the live GitHub platform weekly (plus manual dispatch and PRs touching the manifest) — Actions' default token marks the 21 private repos `UNVERIFIABLE`; run locally with owner credentials for full coverage, or configure the read-only `GOVERNANCE_READ_PAT` secret so the weekly audit covers all 48 repos remotely (§20.4).
-- **CI gates + weekly audits**: this repo's `ci.yml` runs six jobs (workflow lint / DCO sign-off / self-purify smoke / §4 registry + desired-state consistency (public subset) / gate negative tests / §10 release-standard audit), plus a separate drift audit and an OSSF Scorecard weekly scan. Per the 2026-10-30 decision codified as §20 / ADR-0010 (remote-first, minimal-local): this public repo runs on free Actions minutes, so `schedule` and `workflow_dispatch` coexist and no recurring work is placed on the local machine.
+- **CI gates + weekly audits**: this repo's `ci.yml` runs six standing jobs (workflow lint / DCO sign-off / self-purify smoke / §4 registry + desired-state consistency (public subset) / gate negative tests / §10 release-standard audit) plus one manual-dispatch smoke job (python-quality baseline on a fixture package), with a separate drift audit and an OSSF Scorecard weekly scan. Per the 2026-10-30 decision codified as §20 / ADR-0010 (remote-first, minimal-local): this public repo runs on free Actions minutes, so `schedule` and `workflow_dispatch` coexist and no recurring work is placed on the local machine.
 - **Family reusable workflows**: `self-purify.yml` has, since 2026-10-24, made "local governance documents must not be git-tracked" a default blocking rule; `python-quality-baseline.yml` unifies coverage and mypy ratchet baselines (piloted in Image-DuoModel, TTS-MultiModel, SeedVR2-Lite, MiniMax-H3-Lite).
 - **Dual README + local-only `AGENTS.md`**: root `README.md` is the public-facing version (§8); `local/README.internal.md` is maintainer-only and never committed. A single root `AGENTS.md` stays local (≤300 lines, §7); the public entry point is `docs/agent-contract.md`.
 - **Unified release/distribution policy**: §10 covers release/package/deployment — remote-first builds, tag-driven releases, `SHA256SUMS.txt` assets, and Trivy image scanning that blocks by default.
@@ -187,7 +187,7 @@ This repository hosts no project code. The account is a personal account, so `pr
 
 **① Governance architecture: policy source → execution layer → 48 repos**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r3.svg" alt="Governance architecture: policy source → execution layer → 48 repos" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r4.svg" alt="Governance architecture: policy source → execution layer → 48 repos" width="880">
 
 `governance/` is the policy source of truth; `.github/workflows` and `.github/scripts` are the execution layer (CI gates, weekly audits, read-only checks, default health files); the 48 account repositories derive applicable clauses from `delivery × lifecycle` and connect through a one-line governance reference and `docs/agent-contract.md`. The dashed loop on the right shows the weekly drift audit feeding platform changes (repo created/renamed/deleted) back into the ledger.
 
@@ -272,7 +272,7 @@ When a downstream repository does not ship its own file of the same name, GitHub
 
 **Lookup priority**: `repo .github/` → `repo root` → `repo docs/` → org default. Repositories that need customization (per-repo licensing, security design, model-compliance notes) should ship their own same-named files.
 
-**Reusable workflows**: family workflows in `.github/workflows/` are consumed via `workflow_call`; callers must pin a reviewed commit SHA (e.g. the `pinned_ref` registered in `desired-state.json`) rather than a drifting `@main`. Since 2026-10-24, `self-purify.yml` blocks by default on any git-tracked `AGENTS.md`; registered exception repos may pass `enforce_critical_checks: false` explicitly. This repo itself runs six CI jobs (see Key Features); the governance drift audit runs as a separate workflow and marks private repos `UNVERIFIABLE` under the default Actions token — use owner credentials locally for full 48-repo coverage.
+**Reusable workflows**: family workflows in `.github/workflows/` are consumed via `workflow_call`; callers must pin a reviewed commit SHA (e.g. the `pinned_ref` registered in `desired-state.json`) rather than a drifting `@main`. Since 2026-10-24, `self-purify.yml` blocks by default on any git-tracked `AGENTS.md`; registered exception repos may pass `enforce_critical_checks: false` explicitly. This repo itself runs six standing CI jobs plus one manual smoke job (see Key Features); the governance drift audit runs as a separate workflow and marks private repos `UNVERIFIABLE` under the default Actions token — use owner credentials locally for full 48-repo coverage.
 
 ### Maintenance Principles
 

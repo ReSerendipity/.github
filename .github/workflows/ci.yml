@@ -8,7 +8,8 @@ on:
   # 2026-10-30 owner 裁决定稿「远程优先、本地最少化」：本仓为公开仓，Actions 分钟数为免费额度，
   # 周检 schedule 恢复——§4 台账的漂移与 §10 的回退都由本仓之外的动作引起（新建 / 改名 / 删除
   # 仓库、各仓发布链被改动），只在"本仓有改动"时触发会静默漏掉，故保留定期触发；手动
-  # workflow_dispatch 与 schedule 并存（派发只唤醒 release-standard-audit，其余作业由 if 排除）。
+  # workflow_dispatch 与 schedule 并存（派发唤醒 release-standard-audit 与 python-quality-smoke
+  # 两个按需作业，其余由 if 排除）。
   schedule:
     # 周检（周一 03:00 UTC = 11:00 Asia/Shanghai）
     - cron: '0 3 * * 1'
@@ -82,15 +83,31 @@ jobs:
   # 本仓从不触发它们（远程运行史 total_count=0），而 python-quality-baseline.yml
   # 自己要求「修改等于同时修改四个仓库的门禁行为，合并前须在至少一个试点仓跑绿」，
   # 此前该要求在本仓没有任何载体，改动只能等下游第一次调用时才暴露问题。
-  # python-quality-baseline.yml 无法在此冒烟：它的 package 输入是必填，且 test-cov
-  # 跑 pytest --cov-fail-under、typecheck 跑 mypy ratchet，而本仓无 Python 包/测试，
-  # 硬套只会常红。仍留在待办（需带样例输入的试点仓）。
+  # python-quality-baseline.yml 的冒烟载体自 2026-10-30 起就位（§20 / ADR-0010）：本仓无产品级
+  # Python 包，硬套会常红，故用 fixtures/py_smoke 最小样例包，只挂 workflow_dispatch（不进 PR/push），
+  # 使「改本基线 = 改四仓门禁行为」的要求在合并前有真实执行通道：手动派发跑绿即可放行改动。
   self-purify-smoke:
     name: Reusable workflow smoke (self-purify)
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     uses: ./.github/workflows/self-purify.yml
     with:
       enforce_critical_checks: true
+
+  python-quality-smoke:
+    name: Reusable workflow smoke (python-quality-baseline)
+    # 仅手动派发：跑 fixture 样例包的覆盖率 + mypy ratchet 两道门禁；与 release-standard-audit
+    # 同属「按需远端载体」，不占用 PR/push 分钟数。
+    if: github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/python-quality-baseline.yml
+    with:
+      package: .github/scripts/tests/fixtures/py_smoke/smokepkg
+      test_paths: .github/scripts/tests/fixtures/py_smoke
+      coverage_min: 80
+      mypy_target: .github/scripts/tests/fixtures/py_smoke/smokepkg
+      mypy_baseline_file: .github/scripts/tests/fixtures/py_smoke/.ci/mypy_baseline.txt
+      pip_cache_dependency_path: .github/scripts/tests/fixtures/py_smoke/requirements.txt
+    permissions:
+      contents: read
 
   # §4 现网仓库对照表此前只有本地命令 `bash .github/scripts/check-repo-registry.sh`
   # 一个载体，跑不跑取决于人记不记得，属"本机算力 + 记性"两重依赖的手工检查。

@@ -1,0 +1,1 @@
+# 空需求占位：仅作 python-quality-baseline.yml 里 setup-python pip cache 的依赖文件（§20 冒烟夹具）。
