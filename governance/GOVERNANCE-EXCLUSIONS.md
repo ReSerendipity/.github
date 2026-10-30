@@ -2,7 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-29（新增 `MiniMax-H3-Lite-KeyBackup`、口令入库例外与 §十 私有资产备份仓的本地上下文例外；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **最后更新**：2026-10-30（取消全部 Actions `schedule` 定时触发：周检/月度 cron 改为 workflow_dispatch 手动作业，§五载体表的「周检」口径同步；新增 `MiniMax-H3-Lite-KeyBackup`、口令入库例外与 §十 私有资产备份仓的本地上下文例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（8 项备份仓）
@@ -144,9 +144,9 @@
 
 | 载体 | 强制的条款 | 性质 |
 |---|---|---|
-| `ci.yml` 六个 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 | 硬门禁 + 周检 |
-| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（8 项） | CI + 周检 |
-| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 37 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule） |
+| `ci.yml` 六个 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 审计（手动） | 硬门禁 + 按需审计（2026-10-30 起周检 schedule 取消） |
+| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（8 项） | CI（每次 PR / 推送） |
+| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 37 项） | 按需审计（2026-10-19 挂入 `ci.yml`，2026-10-30 改手动触发） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
 | `RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
 

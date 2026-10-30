@@ -61,5 +61,5 @@ bash .github/scripts/scaffold-repo.sh <Repo-Name> [--private|--public] [--delive
 
 - 改动按 §17.2 的推送策略：作者账号可直推，非作者走分支 + PR + DCO；合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`。CI 的 `repo-registry` 作业在每次 PR / 推送跑这两个脚本（一致性用 `--public-only`）；完整 48 仓（含私有仓）用 owner 凭据本地跑无参模式。
 - 清单类改动需五处同步：规范正文、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、本文件、`GOVERNANCE-EXCLUSIONS.md`
-- 定位改动同时改 `desired-state.json`；`audit-drift.py` 在周检、手动触发与命中 `desired-state.json` 的 PR 上对账
+- 定位改动同时改 `desired-state.json`；`audit-drift.py` 在手动触发与命中 `desired-state.json` 的 PR 上对账（2026-10-30 起 `schedule` 周检取消）
 - 版本记录以**条款级日期标注**写在正文本身：节标题或引用块内标「（YYYY-MM-DD 新增 / 定稿 / 修订 / 扩充）」，不另建 CHANGELOG，也不建独立的变更段落。新增小节须带落地日期；既有条款被扩充或改口径时，在标题追加日期或在该节内加留痕引用块，**不改写历史日期**（§18.1 快照）

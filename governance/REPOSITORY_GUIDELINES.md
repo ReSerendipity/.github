@@ -161,6 +161,10 @@
 > 2026-10-21 变更（**第四轮豁免**，用户点名）：`p0-murder-mystery`、`Health-Info-Card`、`Lineart-Painter`、`Card-Studio` 四仓加入豁免清单（**共 29 项**，均为 public），**均不登记本表**；本表再移除 3 行（后三者原登记于短横线节，`p0-murder-mystery` 此前未登记）：短横线 17→14，全表 22→19 行。脚本 `EXCLUDED_FROM_REGISTRY` 扩至 **25 项**、`EXCLUDED_FROM_RELEASE_STANDARD` 扩至 **29 项**。语义：不适用整部规范，已交付产物一律保留。
 >
 > 2026-10-18 新增：本节对照表已从「本地命令手工跑」改为**远端 CI 门禁**——`ci.yml` 的 `repo-registry` 作业在任何 PR 与本仓推送时自动对账，并挂 `schedule` 周检（周一 03:00 UTC），覆盖「本仓无改动、台账却被外部动作改漂移」的场景。脚本与退出码口径不变（1=有差集，2=无法判定，两者都判红），本机不再需要跑它。该作业同时是 `main` 的必需检查之一（见 §2）。
+>
+> 2026-10-30 变更（owner 裁决）：账号内全部 `schedule` 定时触发取消，历史原文保留于此不作改写；
+> 「本仓无改动、台账被外部动作改漂移」的场景改由 `drift-audit.yml` 的手动触发（workflow_dispatch）
+> 与命中 `desired-state.json` 的 PR 承担，`repo-registry` 作业仍随每次 PR 与本仓推送自动跑。
 
 ## 5. 变更流程
 
@@ -509,7 +513,7 @@ updated: YYYY-MM-DD
 | 执行件 | 用途 |
 |---|---|
 | `RELEASE_GOVERNANCE_TEMPLATE.md`（本仓根目录） | 各仓发布文档的**统一模板** + 差异点采集清单；收敛时复制为各仓 `docs/release-governance.md`，只填本仓特有项 |
-| `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红；2026-10-19 起已挂入本仓 `ci.yml` 的 `schedule` 周检（`release-standard-audit` 作业，批量浅克隆后跑 `--repos-dir`），排除清单在脚本内 `EXCLUDED_FROM_RELEASE_STANDARD` 声明，与本节范围声明同源 |
+| `.github/scripts/check-release-standard.sh` | **收敛核验**（审计 + 进度对账，只读、无网络）；**非**每 PR 必需门禁——收敛完成前必然大面积 FAIL，挂上去只会常红；2026-10-19 起已挂入本仓 `ci.yml` 的 `schedule` 周检（`release-standard-audit` 作业，批量浅克隆后跑 `--repos-dir`），排除清单在脚本内 `EXCLUDED_FROM_RELEASE_STANDARD` 声明，与本节范围声明同源；**2026-10-30 起 `schedule` 取消，`release-standard-audit` 改为 `workflow_dispatch` 手动作业** |
 
 ---
 
@@ -655,6 +659,12 @@ AGENTS.md    # §7 家族（无斜线模式，匹配任意深度）
 | `active` | 近 90 天有新功能提交或新 Release | 允许新功能 | 周检 |
 | `maintenance` | 只修 bug / 依赖 / 安全 | 仅修复与密钥轮换 | 月检 |
 | `archived` | GitHub 已归档（暂时归档，可 unarchive） | 平台只读 | 不检查 |
+
+> **2026-10-30 修订（owner 裁决）**：本表的「周检 / 月检」是**维护约定的对账频度**，不再由
+> Actions `schedule` cron 强制——账号内全部 `schedule` 触发已取消。执行载体（`drift-audit.yml`、
+> `ci.yml` 的 `release-standard-audit`、`scorecard.yml`、`readme-image-provenance.yml`）改为
+> `workflow_dispatch` 手动触发，命中 `desired-state.json` 等路径的 PR 仍会自动跑漂移与图片审计；
+> 频度由维护者手动触发保证。
 
 active 与 maintenance 的**适用条款完全相同**，差别只有变更许可、审计频率与平台要求三处。
 「有没有偷偷加功能」审计查不出，靠提交审查与 PR 约定。
