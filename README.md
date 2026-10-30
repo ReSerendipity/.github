@@ -5,7 +5,7 @@
 ![CI](https://github.com/ReSerendipity/.github/actions/workflows/ci.yml/badge.svg)
 ![Last commit](https://img.shields.io/github/last-commit/ReSerendipity/.github)
 ![PRs welcome](https://img.shields.io/badge/PRs%20welcome-brightgreen)
-![Governance](https://img.shields.io/badge/governance-REPOSITORY_GUIDELINES_%C2%A71%E2%80%93%C2%A719-6e40c9)
+![Governance](https://img.shields.io/badge/governance-REPOSITORY_GUIDELINES_%C2%A71%E2%80%93%C2%A720-6e40c9)
 ![Governed repos](https://img.shields.io/badge/governed%20repos-48-1a7f37)
 
 [中文](#中文) | [English](#english)
@@ -18,7 +18,7 @@
 
 本仓库是 ReSerendipity 账号的**治理枢纽**，对外提供三类资产：
 
-1. **治理规范单一事实来源**：`governance/` 目录承载 `REPOSITORY_GUIDELINES.md`（§1–§19）、48 仓期望状态 `desired-state.json`、ADR 决策记录与模板；账号内 48 个仓库（截至 2026-10-29）以本目录为唯一权威口径。
+1. **治理规范单一事实来源**：`governance/` 目录承载 `REPOSITORY_GUIDELINES.md`（§1–§20）、48 仓期望状态 `desired-state.json`、ADR 决策记录与模板；账号内 48 个仓库（截至 2026-10-29）以本目录为唯一权威口径。
 2. **默认社区健康文件**：`CODE_OF_CONDUCT.md`、`CONTRIBUTING.md`、`SECURITY.md`、`SUPPORT.md` 与 Issue / PR 模板。当某个下属仓库没有自带同名文件时，GitHub 自动回退使用本仓库的默认版本。
 3. **家族复用工作流与校验脚本**：`self-purify.yml`（自净化，默认阻断）、`python-quality-baseline.yml`（质量底线）由各仓以 `workflow_call` 接入；`check-repo-registry.sh`、`check-governance-consistency.sh`、`check-release-standard.sh`、`check-signoff.sh` 等脚本将治理条款变成可复跑的只读门禁。
 
@@ -27,8 +27,8 @@
 ### 核心特性
 
 - **单一事实来源**：治理正文只在 `governance/`，各仓不复制、只引用；适用条款由 `desired-state.json` 的 `lifecycle × delivery` 派生（§15，两轴模型，ADR-0006）。
-- **48 仓声明式分档**：40 个台账登记仓（命名例外 8 + Train Case 32，§4）+ 8 个密钥/资产备份仓（仅 §3）；`audit-drift.py` 按周检 schedule、手动触发与命中期望状态的 PR 对账期望状态与 GitHub 平台状态（Actions 默认令牌对 21 个私有仓记 `UNVERIFIABLE`，完整核对用 owner 凭据本地跑）。
-- **CI 门禁 + 周检**：本仓 `ci.yml` 六个作业（Workflow lint / DCO sign-off / self-purify 冒烟 / §4 台账 + 期望状态一致性（公开子集）/ 门禁反例测试 / §10 发布标准审计）；另有治理漂移审计与 OSSF Scorecard 周检——2026-10-30 定稿「远程优先、本地最少化」：公开仓 Actions 走免费额度，`schedule` 与 `workflow_dispatch` 并存，本地不承载定期任务。
+- **48 仓声明式分档**：40 个台账登记仓（命名例外 8 + Train Case 32，§4）+ 8 个密钥/资产备份仓（仅 §3）；`audit-drift.py` 按周检 schedule、手动触发与命中期望状态的 PR 对账期望状态与 GitHub 平台状态（Actions 默认令牌对 21 个私有仓记 `UNVERIFIABLE`，完整核对可用 owner 凭据本地跑，或配置 `GOVERNANCE_READ_PAT` 只读 Secret 后周检远程全覆盖，见 §20.4）。
+- **CI 门禁 + 周检**：本仓 `ci.yml` 六个作业（Workflow lint / DCO sign-off / self-purify 冒烟 / §4 台账 + 期望状态一致性（公开子集）/ 门禁反例测试 / §10 发布标准审计）；另有治理漂移审计与 OSSF Scorecard 周检——2026-10-30 定稿「远程优先、本地最少化」并成文为 §20（ADR-0010）：公开仓 Actions 走免费额度，`schedule` 与 `workflow_dispatch` 并存，本地不承载定期任务。
 - **家族复用工作流**：`self-purify.yml` 自 2026-10-24 起把「本地治理文档不得被 git 跟踪」设为默认阻断；`python-quality-baseline.yml` 统一覆盖率与 mypy ratchet 质量底线（Image-DuoModel、TTS-MultiModel、SeedVR2-Lite、MiniMax-H3-Lite 试点接入）。
 - **README 双版本与本地 AGENTS.md 制度**：根 `README.md` 对外（§8），`local/README.internal.md` 对内且不入库；根 `AGENTS.md` 单一本地文件（不入库、≤300 行，§7），公开契约入口是 `docs/agent-contract.md`。
 - **发布/分发统一规范**：§10 覆盖 release / package / deployment，远端优先、tag 驱动、资产附 `SHA256SUMS.txt`，镜像扫描 Trivy 默认阻断。
@@ -37,7 +37,7 @@
 
 **① 治理架构：政策源 → 执行层 → 48 仓**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r2.svg" alt="治理架构：政策源 → 执行层 → 48 仓" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r3.svg" alt="治理架构：政策源 → 执行层 → 48 仓" width="880">
 
 三层关系：`governance/` 是政策单一事实来源；`.github/workflows` 与 `.github/scripts` 是执行层（CI 门禁、周检审计、只读校验脚本、默认健康文件）；账号下 48 个仓库按 `delivery × lifecycle` 派生适用条款，通过一行治理引用与 `docs/agent-contract.md` 接入。右侧虚线回路表示周检漂移审计把平台状态（新建/改名/删除仓库）对账回填政策源。
 
@@ -49,7 +49,7 @@
 
 **③ 48 仓治理分档矩阵：lifecycle × delivery**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261030-r2.svg" alt="48 仓治理分档矩阵：lifecycle × delivery" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261030-r3.svg" alt="48 仓治理分档矩阵：lifecycle × delivery" width="880">
 
 lifecycle（active 12 / maintenance 24 / archived 12）决定变更许可与审计频率；delivery（policy 1 / release 11 / library 1 / service 11 / tool 13 / content 3 / backup 8）决定适用条款。逐仓定位以 `governance/desired-state.json` 为唯一事实来源。
 
@@ -112,10 +112,10 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `governance/REPOSITORY_GUIDELINES.md` | 仓库治理规范 §1–§19（命名/分支/密钥备份/两轴分档/发布分发/路径/归档/文档健康/依赖升级等） |
+| `governance/REPOSITORY_GUIDELINES.md` | 仓库治理规范 §1–§20（命名/分支/密钥备份/两轴分档/发布分发/路径/归档/文档健康/依赖升级/CI 远程化等） |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外登记（8 备份仓豁免、命名例外等） |
 | `governance/desired-state.json` | 48 仓声明式期望状态；漂移审计与一致性检查的数据源 |
-| `governance/decisions/` | ADR-0001~0009 决策记录 |
+| `governance/decisions/` | ADR-0001~0010 决策记录 |
 | `governance/templates/` | `agent-contract.md` 与 `AGENTS.slim.md` 唯一模板 |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓自带表单优先） |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | 通用 PR 检查清单 |
@@ -141,10 +141,10 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 
 ### 文档与治理
 
-- 治理正文：[`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md)（§1–§19）
+- 治理正文：[`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md)（§1–§20）
 - 分档与例外：[`governance/GOVERNANCE-EXCLUSIONS.md`](governance/GOVERNANCE-EXCLUSIONS.md)
 - 期望状态：[`governance/desired-state.json`](governance/desired-state.json)（48 仓逐仓定位）
-- 决策记录：[`governance/decisions/`](governance/decisions/)（ADR-0001~0009）
+- 决策记录：[`governance/decisions/`](governance/decisions/)（ADR-0001~0010）
 - 治理手册索引：[`governance/README.md`](governance/README.md)
 - Agent 契约：[`docs/agent-contract.md`](docs/agent-contract.md)
 - 发布文档模板：[`RELEASE_GOVERNANCE_TEMPLATE.md`](RELEASE_GOVERNANCE_TEMPLATE.md)
@@ -168,7 +168,7 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 
 This repository is the **governance hub** of the ReSerendipity account. It provides three kinds of assets:
 
-1. **Single source of truth for governance policy**: `governance/` holds `REPOSITORY_GUIDELINES.md` (§1–§19), the desired-state manifest of 48 repositories (`desired-state.json`), ADR decision records and templates. All 48 repositories (as of 2026-10-29) defer to this directory.
+1. **Single source of truth for governance policy**: `governance/` holds `REPOSITORY_GUIDELINES.md` (§1–§20), the desired-state manifest of 48 repositories (`desired-state.json`), ADR decision records and templates. All 48 repositories (as of 2026-10-29) defer to this directory.
 2. **Default community health files**: `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md` plus Issue/PR templates. GitHub automatically falls back to these defaults when a downstream repository does not ship its own copy.
 3. **Family reusable workflows and gate scripts**: `self-purify.yml` (default-blocking self-cleanliness check) and `python-quality-baseline.yml` (quality floor) are consumed by other repos via `workflow_call`; `check-repo-registry.sh`, `check-governance-consistency.sh`, `check-release-standard.sh`, `check-signoff.sh` turn policy clauses into repeatable read-only gates.
 
@@ -177,8 +177,8 @@ This repository hosts no project code. The account is a personal account, so `pr
 ### Key Features
 
 - **Single source of truth**: policy text lives only in `governance/`; other repos reference, never copy. Applicable clauses are derived from the `lifecycle × delivery` model in `desired-state.json` (§15, two-axis profiling, ADR-0006).
-- **Declarative tiering of 48 repos**: 40 ledger-registered repos (8 exception names + 32 Train Case, §4) plus 8 key/asset backup repos (§3 only); `audit-drift.py` reconciles desired state against the live GitHub platform weekly (plus manual dispatch and PRs touching the manifest) — Actions' default token marks the 21 private repos `UNVERIFIABLE`; run locally with owner credentials for full coverage.
-- **CI gates + weekly audits**: this repo's `ci.yml` runs six jobs (workflow lint / DCO sign-off / self-purify smoke / §4 registry + desired-state consistency (public subset) / gate negative tests / §10 release-standard audit), plus a separate drift audit and an OSSF Scorecard weekly scan. Per the 2026-10-30 decision (remote-first, minimal-local): this public repo runs on free Actions minutes, so `schedule` and `workflow_dispatch` coexist and no recurring work is placed on the local machine.
+- **Declarative tiering of 48 repos**: 40 ledger-registered repos (8 exception names + 32 Train Case, §4) plus 8 key/asset backup repos (§3 only); `audit-drift.py` reconciles desired state against the live GitHub platform weekly (plus manual dispatch and PRs touching the manifest) — Actions' default token marks the 21 private repos `UNVERIFIABLE`; run locally with owner credentials for full coverage, or configure the read-only `GOVERNANCE_READ_PAT` secret so the weekly audit covers all 48 repos remotely (§20.4).
+- **CI gates + weekly audits**: this repo's `ci.yml` runs six jobs (workflow lint / DCO sign-off / self-purify smoke / §4 registry + desired-state consistency (public subset) / gate negative tests / §10 release-standard audit), plus a separate drift audit and an OSSF Scorecard weekly scan. Per the 2026-10-30 decision codified as §20 / ADR-0010 (remote-first, minimal-local): this public repo runs on free Actions minutes, so `schedule` and `workflow_dispatch` coexist and no recurring work is placed on the local machine.
 - **Family reusable workflows**: `self-purify.yml` has, since 2026-10-24, made "local governance documents must not be git-tracked" a default blocking rule; `python-quality-baseline.yml` unifies coverage and mypy ratchet baselines (piloted in Image-DuoModel, TTS-MultiModel, SeedVR2-Lite, MiniMax-H3-Lite).
 - **Dual README + local-only `AGENTS.md`**: root `README.md` is the public-facing version (§8); `local/README.internal.md` is maintainer-only and never committed. A single root `AGENTS.md` stays local (≤300 lines, §7); the public entry point is `docs/agent-contract.md`.
 - **Unified release/distribution policy**: §10 covers release/package/deployment — remote-first builds, tag-driven releases, `SHA256SUMS.txt` assets, and Trivy image scanning that blocks by default.
@@ -187,7 +187,7 @@ This repository hosts no project code. The account is a personal account, so `pr
 
 **① Governance architecture: policy source → execution layer → 48 repos**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r2.svg" alt="Governance architecture: policy source → execution layer → 48 repos" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-1-20261030-r3.svg" alt="Governance architecture: policy source → execution layer → 48 repos" width="880">
 
 `governance/` is the policy source of truth; `.github/workflows` and `.github/scripts` are the execution layer (CI gates, weekly audits, read-only checks, default health files); the 48 account repositories derive applicable clauses from `delivery × lifecycle` and connect through a one-line governance reference and `docs/agent-contract.md`. The dashed loop on the right shows the weekly drift audit feeding platform changes (repo created/renamed/deleted) back into the ledger.
 
@@ -199,7 +199,7 @@ Per `REPOSITORY_GUIDELINES.md` §17: four pre-work checks before any task (fetch
 
 **③ 48-repo tiering matrix: lifecycle × delivery**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261030-r2.svg" alt="48-repo tiering matrix: lifecycle × delivery" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261030-r3.svg" alt="48-repo tiering matrix: lifecycle × delivery" width="880">
 
 Lifecycle (active 12 / maintenance 24 / archived 12) decides change permission and audit cadence; delivery (policy 1 / release 11 / library 1 / service 11 / tool 13 / content 3 / backup 8) decides which clauses apply. Per-repo positioning is authoritative only in `governance/desired-state.json`.
 
@@ -262,10 +262,10 @@ When a downstream repository does not ship its own file of the same name, GitHub
 | `CONTRIBUTING.md` | Contribution guide (Conventional Commits + DCO) |
 | `SECURITY.md` | Security disclosure policy (default; repo-local version wins) |
 | `SUPPORT.md` | Support channels |
-| `governance/REPOSITORY_GUIDELINES.md` | Repository governance §1–§19 (naming/branching/secret backup/tiering/release/layout/archive/docs health/dependency upgrades) |
+| `governance/REPOSITORY_GUIDELINES.md` | Repository governance §1–§20 (naming/branching/secret backup/tiering/release-layout/archive/docs-health/dependency-upgrades/CI-remote-first) |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | Tiering & exception registry (8 backup-repo exemptions, naming exceptions, etc.) |
 | `governance/desired-state.json` | Declarative desired state for 48 repos; data source for drift audit and consistency checks |
-| `governance/decisions/` | ADR-0001~0009 decision records |
+| `governance/decisions/` | ADR-0001~0010 decision records |
 | `governance/templates/` | Sole templates for `agent-contract.md` and `AGENTS.slim.md` |
 | `.github/ISSUE_TEMPLATE/` | Generic issue forms (Bug / feature / question; repo-local forms win) |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | Generic pull request checklist |
@@ -291,10 +291,10 @@ When a downstream repository does not ship its own file of the same name, GitHub
 
 ### Documentation & Governance
 
-- Policy text: [`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md) (§1–§19)
+- Policy text: [`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md) (§1–§20)
 - Tiering & exceptions: [`governance/GOVERNANCE-EXCLUSIONS.md`](governance/GOVERNANCE-EXCLUSIONS.md)
 - Desired state: [`governance/desired-state.json`](governance/desired-state.json) (per-repo positioning of all 48 repos)
-- Decision records: [`governance/decisions/`](governance/decisions/) (ADR-0001~0009)
+- Decision records: [`governance/decisions/`](governance/decisions/) (ADR-0001~0010)
 - Governance handbook index: [`governance/README.md`](governance/README.md)
 - Agent contract: [`docs/agent-contract.md`](docs/agent-contract.md)
 - Release document template: [`RELEASE_GOVERNANCE_TEMPLATE.md`](RELEASE_GOVERNANCE_TEMPLATE.md)

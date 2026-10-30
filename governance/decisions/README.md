@@ -21,6 +21,7 @@
 | [ADR-0007](ADR-0007-public-agent-contract.md) | 公开仓根 `AGENTS.md` 精简版与 `docs/agent-contract.md` | Superseded by ADR-0008 |
 | [ADR-0008](ADR-0008-single-local-agents-md.md) | 单一本地 `AGENTS.md`，不入库，300 行上限 | Accepted |
 | [ADR-0009](ADR-0009-agent-contract-v2.md) | Agent 契约 v2：例外统一引用登记表 | Accepted |
+| [ADR-0010](ADR-0010-ci-remote-first.md) | CI 远程化与本地最小化：检查必须有远端载体，私有仓盲区可选 PAT 补齐 | Accepted |
 
 ## 与规范的关系
 

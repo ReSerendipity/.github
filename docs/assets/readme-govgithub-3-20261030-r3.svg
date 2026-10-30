@@ -26,7 +26,7 @@
   <g>
     <rect x="40" y="178" width="220" height="52" rx="6" fill="#f6f0ff" stroke="#d8c9f5"/>
     <text x="56" y="202" font-size="14" font-weight="700" fill="#6e40c9">policy（规范仓）</text>
-    <text x="56" y="220" font-size="11.5" fill="#6e40c9">§1–§19 自身维护 · 1 仓</text>
+    <text x="56" y="220" font-size="11.5" fill="#6e40c9">§1–§20 自身维护 · 1 仓</text>
     <rect x="268" y="178" width="300" height="52" rx="6" fill="#8250df" fill-opacity="0.22"/>
     <text x="418" y="209" font-size="15" font-weight="700" fill="#5f35a8" text-anchor="middle">1</text>
     <rect x="576" y="178" width="300" height="52" rx="6" fill="#8250df" fill-opacity="0"/>
@@ -123,7 +123,7 @@
   <g font-size="12.5" fill="#57606a">
     <text x="40" y="636" font-weight="700" fill="#1f2328">语义：</text>
     <text x="96" y="636">lifecycle（主轴）决定变更许可与审计频率 —— active 允许新功能、周检；maintenance 仅修复与密钥轮换、月检；archived 平台只读、不检</text>
-    <text x="96" y="656">delivery（副轴）决定适用条款（§15.3）—— policy §1–§19；release §1–§14（§10 按 distribution 取子集）；library / service / tool / content 取相应子集；backup 仅 §3</text>
+    <text x="96" y="656">delivery（副轴）决定适用条款（§15.3）—— policy §1–§20；release §1–§14（§10 按 distribution 取子集）；library / service / tool / content 取相应子集；backup 仅 §3；§17 / §18 / §20 跨档通用</text>
     <text x="40" y="680" font-weight="700" fill="#1f2328">校验：</text>
     <text x="96" y="680">check-governance-consistency.sh 校验 JSON 仓集合 == GitHub 实际集合、JSON 内部取值合法、脚本豁免项数与文档声明一致、governance/README.md 的「40 + 8」== 总数 48</text>
     <text x="40" y="704" font-weight="700" fill="#1f2328">修改定位：</text>

@@ -27,14 +27,14 @@
   <g font-size="12" fill="#24292f">
     <rect x="64" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
     <text x="74" y="232" font-size="13" font-weight="700">REPOSITORY_GUIDELINES.md</text>
-    <text x="74" y="249" font-size="11.5" fill="#57606a">治理规范 §1–§19：命名 / 分支 / 密钥备份 /</text>
-    <text x="74" y="264" font-size="11.5" fill="#57606a">两轴分档 / 发布分发 / 路径 / 文档健康</text>
+    <text x="74" y="249" font-size="11.5" fill="#57606a">治理规范 §1–§20：命名 / 分支 / 密钥备份 /</text>
+    <text x="74" y="264" font-size="11.5" fill="#57606a">两轴分档 / 发布分发 / CI 远程化</text>
     <rect x="286" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
     <text x="296" y="232" font-size="13" font-weight="700">desired-state.json</text>
     <text x="296" y="249" font-size="11.5" fill="#57606a">48 仓期望状态：lifecycle × delivery ×</text>
     <text x="296" y="264" font-size="11.5" fill="#57606a">distribution × risk × backup；漂移审计源</text>
     <rect x="508" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
-    <text x="518" y="232" font-size="13" font-weight="700">decisions/ · ADR-0001~0009</text>
+    <text x="518" y="232" font-size="13" font-weight="700">decisions/ · ADR-0001~0010</text>
     <text x="518" y="249" font-size="11.5" fill="#57606a">决策记录：为什么这样定；ADR-0007 已被</text>
     <text x="518" y="264" font-size="11.5" fill="#57606a">ADR-0008（单一本地 AGENTS.md）取代</text>
     <rect x="730" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
