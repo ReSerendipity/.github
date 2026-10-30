@@ -199,6 +199,7 @@
 - 私有仓的备份对象是非 `AGENTS.md` 的本地上下文（`local/agents/**`、`FIX_LOG.md` 等）；是否上传按各仓现有 `.gitignore` 与本节执行。
 - 误入库恢复：`git rm --cached AGENTS.md` + `.gitignore` 写 `AGENTS.md` + commit + push；本地文件保留。
 - **迁移结果（2026-10-29 复核）**：非归档仓已无跟踪的根 `AGENTS.md`（`ComfyUI-BatchPromptLoader`、`VOSR2-Lite` 已于 2026-10-29 取消跟踪）；10 个归档仓仍跟踪，按只读处理，迁移需先 unarchive。`self-purify.yml` 自 2026-10-24 默认阻断，已在 6 个下游仓接入（DraftPeek / Image-DuoModel / MiniMax-H3-Lite / SeedVR2-Lite / SpiritPal / TTS-MultiModel，调用清单以 `desired-state.json` 的 `reusable_workflows.callers` 为准）；其余非归档公开仓尚未接入，依赖本地 `.githooks/pre-push` 与 `check-agents-md-size.sh`，`audit-drift.py` 对公开仓与可见私有仓兜底检查误跟踪。
+- **归档仓清偿（2026-10-30，owner 指令）**：上条遗留的 10 个归档仓已按 §15.7「已归档仓补动作」流程批量处理——unarchive → API 删除跟踪的根 `AGENTS.md`（提交仅含取消跟踪，历史保留，DCO + noreply）→ 即时重新 archive，全程 `lifecycle` 保持 `archived`、`desired-state.json` 无改动。10 仓 commit：Android-IconAutoArrange `92b7db43`、Bilibili-Follow-Manager `85d419ec`、ChatGPT-Timezone-Fix `3ae57bed`、Free-Model-Probe `6ddb86d7`、Hugging-Face `a0333e57`、Mooncake-Deconstruction `bee81f6a`、Multi-Tracker `4d735b69`、Offer-Landing-Kit `eae4ce74`、RTX-VSR-Lite `33871015`、Unfading-Wall `c44abc5c`。至此**全账号跟踪树中的 `AGENTS.md` 清零**（§七 7.1 白名单路径与本条例外不受影响）。
 - **私有资产备份例外**：`MiniMax-H3-Lite-Local` 的 `overlay/local/` 是公开仓本地资产的备份对象，允许按 `GOVERNANCE-EXCLUSIONS.md` §十 登记例外入库；该例外由 `desired-state.json` 的 `tracked_agents_allow` 声明，不构成其他私有仓上传 `AGENTS.md` 的依据。
 - **发布验证例外**：`docs/execution/RELEASE_VERIFICATION.md` 是 §10.5 要求的发布验证产物，属 `GOVERNANCE-EXCLUSIONS.md` §七 7.1 的家族基线白名单；其余 `docs/execution/**` 仍按本节不入库。
 
