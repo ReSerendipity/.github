@@ -271,6 +271,8 @@
 
 - 模板：`governance/templates/GOTCHAS.template.md`、`governance/templates/REVISION_LOG.template.md`。
 - `scaffold-repo.sh` 生成根 `AGENTS.md` 时同步创建 `local/agents/` 并复制两个模板（已存在则不覆盖）。
+- **pre-push 强制闸**：`.github/scripts/check-ledger-append.ps1` 由各仓 `local/hooks/pre-push` 调用；代码 / 配置 / 脚本变更但 GOTCHAS 未新增行、根 `AGENTS.md` 变更但 REVISION_LOG 未新增行时阻断；提交信息写 `[skip-ledger]` 或「本次无踩坑」可放行。`.github/scripts/install-ledger-gate.ps1` 负责逐仓安装并保留原 hook 路径。
+- **验收闸**：任务交付时对比 `local/agents/.ledger-baseline.json` 行数与任务基线；声明修 bug / 踩坑但台账未新增行，判 FAIL。
 - 模板只提供表头与示例行，不预填项目事实；各仓按实际追加。
 
 **单条记录通用字段**（GOTCHAS 行或 REVISION_LOG 摘要至少覆盖）：
