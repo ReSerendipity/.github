@@ -1,9 +1,13 @@
-# 治理漂移审计：期望状态在 governance/desired-state.json，本文件由手动触发与
-# 命中期望状态的 PR 触发（schedule 周检 2026-10-30 经 owner 裁决取消）。
+# 治理漂移审计：期望状态在 governance/desired-state.json，本文件负责周检 + 手动 + 命中 JSON 的 PR。
+# （2026-10-30 定稿「远程优先、本地最少化」：公开仓免费额度，恢复 schedule 并与 workflow_dispatch 并存。）
 # 结果写入 step summary；失败即 rc≠0，由 Actions 判红。不加入分支规则的必需检查。
 name: Governance drift audit
 
 on:
+  schedule:
+    # 周检（周一 04:00 UTC = 12:00 Asia/Shanghai）。漂移由本仓之外的动作引起
+    # （新建 / 改名 / 删除仓库、分支默认值被改），只在"本仓有改动"时触发会漏。
+    - cron: '0 4 * * 1'
   workflow_dispatch:
     inputs:
       only:

@@ -5,10 +5,13 @@ on:
   push:
     branches: [main]
   pull_request:
-  # 2026-10-30 owner 裁决：取消 `schedule` 周检。workflow_dispatch 只唤醒
-  # release-standard-audit（§10 收敛对账）这一个作业，其余作业由 if 排除；
-  # 「本仓无改动、台账被外部动作改漂移」的场景由 drift-audit.yml 的手动触发
-  # 与命中 desired-state.json 的 PR 承担。
+  # 2026-10-30 owner 裁决定稿「远程优先、本地最少化」：本仓为公开仓，Actions 分钟数为免费额度，
+  # 周检 schedule 恢复——§4 台账的漂移与 §10 的回退都由本仓之外的动作引起（新建 / 改名 / 删除
+  # 仓库、各仓发布链被改动），只在"本仓有改动"时触发会静默漏掉，故保留定期触发；手动
+  # workflow_dispatch 与 schedule 并存（派发只唤醒 release-standard-audit，其余作业由 if 排除）。
+  schedule:
+    # 周检（周一 03:00 UTC = 11:00 Asia/Shanghai）
+    - cron: '0 3 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -21,8 +24,8 @@ concurrency:
 jobs:
   actionlint:
     name: Workflow lint (actionlint + YAML)
-    # 手动派发只为跑 §10 审计，本作业与门禁无关，跳过避免空跑。
-    if: github.event_name != 'workflow_dispatch'
+    # 与周期性对账/手动派发无关：周检只跑 §4 对照，派发只跑 §10 审计，本作业两者都排除。
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -57,9 +60,9 @@ jobs:
 
   signoff:
     name: DCO sign-off (Signed-off-by)
-    # 手动派发不带 PR/push 上下文：BASE_SHA 取到空值，check-signoff.sh 按"失败关闭"
-    # 退 2，不加这条每次手动触发都会白红一次（常红的门禁等于没有门禁）。
-    if: github.event_name != 'workflow_dispatch'
+    # 周检/手动派发不带 PR/push 上下文：BASE_SHA 会取到空值，check-signoff.sh 按"失败关闭"退 2，
+    # 不加这两条会变成每周固定白红一次（常红的门禁等于没有门禁）。
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -84,15 +87,15 @@ jobs:
   # 硬套只会常红。仍留在待办（需带样例输入的试点仓）。
   self-purify-smoke:
     name: Reusable workflow smoke (self-purify)
-    if: github.event_name != 'workflow_dispatch'
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     uses: ./.github/workflows/self-purify.yml
     with:
       enforce_critical_checks: true
 
   # §4 现网仓库对照表此前只有本地命令 `bash .github/scripts/check-repo-registry.sh`
   # 一个载体，跑不跑取决于人记不记得，属"本机算力 + 记性"两重依赖的手工检查。
-  # 挪到远端后，任何 PR 与本仓推送都会自动对账文档与 GitHub 现网，本机不再需要跑它
-  # （schedule 周检 2026-10-30 取消；外部动作引起的漂移由 drift-audit.yml 手动 / 命中 JSON 的 PR 对账）。
+  # 挪到远端后，任何 PR 与本仓推送都会自动对账文档与 GitHub 现网，本机不再需要跑它；
+  # 周检 schedule 随 2026-10-30「远程优先」裁决保留，覆盖仓外动作引起的漂移。
   # 同一作业同时跑 check-governance-consistency.sh 的 --public-only 模式：
   # desired-state / §4 / 文档计数的一致性也在每次 PR 与推送时校验；完整 48 仓
   # （含 21 个私有仓）仍需本地 owner 凭据运行同一脚本的无参模式。
@@ -120,8 +123,8 @@ jobs:
   # §10 收敛核验脚本此前同样只有本地命令载体。与 repo-registry 不同的是：
   # 它需要逐仓检出文件树（按 `gh repo list` 批量浅克隆全部公开仓；私有仓对
   # GITHUB_TOKEN 不可见，但 11 个 release 仓均为公开仓），放进每次 PR 会显著拖慢 CI，
-  # 且定位是"审计 + 进度对账"而非门禁（§10.7），故只在 workflow_dispatch 手动触发上跑
-  # （原 schedule 周检 2026-10-30 取消）。
+  # 且定位是"审计 + 进度对账"而非门禁（§10.7），故在 schedule 周检与 workflow_dispatch
+  # 手动派发上跑，不进每 PR 流水线。
   # 退出码口径沿用脚本：1=存在与 §10 已裁决口径冲突的 FAIL 项，2=入参不可用；
   # FAIL 判红。豁免仓（§10 排除清单 37 项 = 48 − 11 个 release 仓）由脚本内 EXCLUDED_FROM_RELEASE_STANDARD 声明，
   # 与 REPOSITORY_GUIDELINES.md §10 保持同源。
@@ -129,7 +132,7 @@ jobs:
   # 覆盖 registry / release / agents / signoff 四类载体；不加入必需检查。
   negative-tests:
     name: Governance gates negative tests
-    if: github.event_name != 'workflow_dispatch'
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -138,8 +141,8 @@ jobs:
         run: bash .github/scripts/tests/run-negative-tests.sh
 
   release-standard-audit:
-    name: Release standard audit (§10, manual)
-    if: github.event_name == 'workflow_dispatch'
+    name: Release standard audit (§10, weekly/manual)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:

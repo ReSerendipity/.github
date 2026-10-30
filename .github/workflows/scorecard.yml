@@ -1,9 +1,12 @@
-# OpenSSF Scorecard（手动触发，2026-10-30 取消周一 cron）：固定版本二进制 + SHA256 校验，矩阵扫描 10 个非归档 release 仓 + 规范仓。
+# OpenSSF Scorecard 周检（2026-10-30 定稿：公开仓免费额度，schedule 与 workflow_dispatch 并存）：固定版本二进制 + SHA256 校验，矩阵扫描 10 个非归档 release 仓 + 规范仓。
 # 归档的 Android-IconAutoArrange 按 §15.2 跳过；新增的 VOSR2-Lite 已纳入。
 # 结果写 step summary；每个仓的 JSON 作为 artifact 保留 30 天。
 name: OpenSSF Scorecard
 
 on:
+  schedule:
+    # 周一 05:00 UTC = 13:00 Asia/Shanghai（错开 04:00 的治理漂移审计）
+    - cron: '0 5 * * 1'
   workflow_dispatch:
 
 permissions:
