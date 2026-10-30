@@ -1,11 +1,9 @@
 # README 图片来源审计：按 §8.1 检查 README 图是否复用了仓内截图归档。
-# 只读审计，默认月度跑；发现问题只报红，不自动修。
+# 只读审计；每月 cron 已于 2026-10-30 取消，现为手动触发与命中文件/资产路径的 PR；
+# 发现问题只报红，不自动修。
 name: README image provenance audit
 
 on:
-  schedule:
-    # 每月 1 日 04:00 UTC（12:00 Asia/Shanghai）
-    - cron: '0 4 1 * *'
   workflow_dispatch:
     inputs:
       only:
