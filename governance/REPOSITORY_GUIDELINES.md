@@ -808,7 +808,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 - 每批提交前跑该批相关的最小检查；全部批次完成后再跑一次全量检查。
 - 推送前确认目标分支与远端一致；按以下策略选择直推或 PR：
   - **作者账号 + 未检测到多 agent + 本地预检全绿 + 该仓 `enforce_admins=false`（或未受保护）**：默认直推当前分支，包括 `main`；直推仍须 DCO、`pre-push`、CI 盯终态，GitHub 若记为 bypass 需如实留痕。
-  - **作者账号 + 检测到多 agent**：自动开分支 + PR（见 §17.5）。
+  - **作者账号 + 检测到多 agent（含跨机 / 跨克隆）**：自动开分支 + PR（见 §17.5 判定矩阵与跨机边界）。
   - **非作者协作者**：分支 + PR + 必需检查 + 审批。
   - **`enforce_admins=true` 或平台拒绝直推**：分支 + PR。
 
@@ -847,7 +847,9 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 - [ ] 需要推送 / 合并的已完成，分支已清理
 ```
 
-### 17.5 多 Agent 并发与开工前工作区判定（2026-10-23 新增）
+### 17.5 多 Agent 并发与开工前工作区判定（2026-10-23 新增；2026-10-31 补充执行件与跨机边界，ADR-0014）
+
+> 2026-10-31 修订（ADR-0014）：四查项、阈值与判定矩阵不变；新增只读执行件 `check-agent-session.sh`，并写明跨机 / 跨克隆的观测边界。
 
 **开工前四查（每个仓开始任务前必做）**：
 
@@ -874,9 +876,15 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 - 遗留处理：只提交本次任务相关文件；无关 WIP 保持原样并在报告中列出；不得删除、stash 或 reset 用户改动。
 - 锁过期：>30 分钟且进程不存在，核对后清理；活锁不删。
 
+**跨机边界（2026-10-31 补充，ADR-0014）**：
+
+- `agent-session.lock`、`git worktree list`、dirty mtime 都只存在于当前克隆；云电脑 / 另一台机器各有独立 `.git`，互相不可见。跨机并行时前三查失效，唯一有效信号是远端 `refs/heads/agent/*` 分支与开放 PR。
+- 因此**跨机场景一律分支 + PR，禁止直推 `main`**；PR 是唯一串行点，先合并者为准，后到者等合并后 rebase。
+- 本机判定用执行件 `bash .github/scripts/check-agent-session.sh`：输出 `VERDICT: START | BRANCH | DEFER | LEGACY`；`--acquire --session <id>` / `--release --session <id>` 管锁，长任务每 ≤10 分钟重跑 `--acquire` 刷新心跳。远端不可达时脚本降级为「远端未知」并提示，不误判为无并发。
+
 **处理**：
 
-- **未检测到其他 agent**：原子获取 `.git/agent-session.lock`（session id / pid / 开始时间 / 心跳），按 §17.2 直推；收尾释放锁。
+- **未检测到其他 agent**：原子获取 `.git/agent-session.lock`（session id / pid / 开始时间 / 心跳；执行件 `--acquire`，linked worktree 归到 `git rev-parse --git-common-dir`），按 §17.2 直推；收尾 `--release`。此路径只在单机单克隆内有效。
 - **检测到**：不加共享锁，立即从当前 HEAD 开 `agent/<session>/<task>-<yyyymmddHHMM>`，在该分支提交并推送，开 PR；不碰 `main`。
 - **共享文件**：`AGENTS.md`、根 README、`desired-state.json`、治理文档即使分支不同也要串行改；后到者等合并后 rebase。
 - **收尾**：合并后删除分支与 worktree，释放锁；跑一次全量审计。

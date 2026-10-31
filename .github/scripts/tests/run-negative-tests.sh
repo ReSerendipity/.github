@@ -3,7 +3,8 @@
 # 否则把断言改松/改错时不会被发现。
 #
 # 覆盖：registry（§4 对照）、release（§10 收敛 / delivery 分档）、agents（§7 行数）、
-# signoff（DCO）、consistency / audit-drift（失败关闭）、self-purify（两处规则同步）。
+# signoff（DCO）、agent-session（§17.5 并发判定）、consistency / audit-drift（失败关闭）、
+# self-purify（两处规则同步）。
 # 用法：bash .github/scripts/tests/run-negative-tests.sh
 # 退出码：0=全部符合预期；1=有用例不符合；2=环境不可用。
 set -uo pipefail
@@ -110,6 +111,57 @@ UNSIGNED=$(git rev-parse HEAD)
 
 run_case "signoff 正例" 0 bash "$SCRIPTS/check-signoff.sh" "$BASE" "$SIGNED"
 run_case "signoff 缺尾注" 1 bash "$SCRIPTS/check-signoff.sh" "$SIGNED" "$UNSIGNED"
+
+# ── agent-session：§17.5 四查判定与锁（ADR-0014）────────────────
+AS_REPO="$TMP/agent-session-repo"
+AS_REMOTE="$TMP/agent-session-remote.git"
+AS_LOCK="$AS_REPO/.git/agent-session.lock"
+git init -q -b main "$AS_REPO"
+git init -q --bare "$AS_REMOTE"
+git -C "$AS_REPO" config user.name "Gate Test"
+git -C "$AS_REPO" config user.email "gate-test@example.com"
+printf 'a\n' > "$AS_REPO/tracked.txt"
+git -C "$AS_REPO" add tracked.txt
+git -C "$AS_REPO" commit -q -m "base"
+git -C "$AS_REPO" remote add origin "$AS_REMOTE"
+git -C "$AS_REPO" push -q -u origin main
+
+run_case "agent-session 正例(干净)" 0 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote
+
+printf 'b\n' >> "$AS_REPO/tracked.txt"
+run_case "agent-session 脏文件新鲜" 4 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote
+git -C "$AS_REPO" checkout -q -- tracked.txt
+
+printf 'session=other\npid=99999\nstarted=%s\nheartbeat=%s\n' "$(date +%s)" "$(date +%s)" > "$AS_LOCK"
+run_case "agent-session 活锁判 BRANCH" 3 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote
+
+printf 'session=old\npid=99999\nstarted=%s\nheartbeat=%s\n' \
+  "$(( $(date +%s) - 3600 ))" "$(( $(date +%s) - 3600 ))" > "$AS_LOCK"
+run_case "agent-session 过期锁可接管" 0 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote --acquire --session takeover
+run_case "agent-session 锁写入正确" 0 grep -q '^session=takeover$' "$AS_LOCK"
+run_case "agent-session 拒释放他人锁" 6 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote --release --session intruder
+run_case "agent-session 释放本会话锁" 0 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote --release --session takeover
+run_case "agent-session 锁已删除" 1 test -f "$AS_LOCK"
+
+git -C "$AS_REPO" worktree add -q -b wt2 "$TMP/agent-session-wt2"
+run_case "agent-session 多 worktree" 3 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote
+git -C "$AS_REPO" worktree remove --force "$TMP/agent-session-wt2"
+
+git -C "$AS_REPO" branch agent/demo
+git -C "$AS_REPO" push -q origin agent/demo
+run_case "agent-session 远端 agent 分支" 3 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO"
+
+mkdir -p "$TMP/not-a-git"
+run_case "agent-session 非 git 目录" 2 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$TMP/not-a-git" --no-remote
 
 # ── 门禁自身：参数失败关闭 / self-purify 两处规则同步 ─────────────
 run_case "consistency 未知参数退 2" 2 bash "$SCRIPTS/check-governance-consistency.sh" --bogus

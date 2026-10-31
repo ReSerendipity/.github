@@ -146,7 +146,7 @@ jobs:
   # FAIL 判红。豁免仓（§10 排除清单 37 项 = 48 − 11 个 release 仓）由脚本内 EXCLUDED_FROM_RELEASE_STANDARD 声明，
   # 与 REPOSITORY_GUIDELINES.md §10 保持同源。
   # 门禁自身也需要被测试：正例必须绿、负例必须红，防止「把断言改松」这种静默退化。
-  # 覆盖 registry / release / agents / signoff 四类载体；不加入必需检查。
+  # 覆盖 registry / release / agents / signoff / agent-session 五类载体；不加入必需检查。
   negative-tests:
     name: Governance gates negative tests
     if: github.event_name == 'push' || github.event_name == 'pull_request'
@@ -156,6 +156,11 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - name: Run gate negative tests
         run: bash .github/scripts/tests/run-negative-tests.sh
+      # §17.5 / ADR-0014 的执行件冒烟：checkout 是干净单工作区，期望 VERDICT: START 且 rc=0；
+      # 语义反例（活锁 / 过期锁接管 / 多 worktree / 远端 agent 分支 / 非 git 目录）已由上一
+      # 步覆盖，此处只验证脚本在 Linux runner 上可用。并发判定是本地时序，不做 CI 门禁。
+      - name: Agent session checker smoke
+        run: bash .github/scripts/check-agent-session.sh --root . --no-remote
 
   release-standard-audit:
     name: Release standard audit (§10, weekly/manual)
