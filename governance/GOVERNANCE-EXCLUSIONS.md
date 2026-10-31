@@ -2,11 +2,11 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-10-31（新增 `Object-Atlas`（private / service / active / distribution=none），登记仓 40 → 41、总数 48 → 49，`EXCLUDED_FROM_RELEASE_STANDARD` 37 → 38；此前 2026-10-30 定稿「远程优先、本地最少化」：公开仓 Actions 为免费额度，`schedule` 周检/月度 cron 恢复并与 `workflow_dispatch` 并存，§五载体表同步；`RELEASE_GOVERNANCE_TEMPLATE.md` 自仓根迁入 `governance/templates/`（在途 WIP 前置已消除），§五路径同步；新增 `MiniMax-H3-Lite-KeyBackup`、口令入库例外与 §十 私有资产备份仓的本地上下文例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **最后更新**：2026-11-01（补登记漏登仓 `Subject-Courseware-Studio`（private / content / active / none）与 `VOSR2-Lite-KeyBackup`（private / backup / maintenance，仅 §3）：总额 49 → 51、登记仓 41 → 42、备份仓 8 → 9、Train Case 33 → 34，`EXCLUDED_FROM_RELEASE_STANDARD` 38 → 40、`EXCLUDED_FROM_REGISTRY` 8 → 9；此前 2026-10-31 登记 `Object-Atlas`（private / service / active / none）；2026-10-30 定稿「远程优先、本地最少化」：公开仓 Actions 为免费额度，`schedule` 周检/月度 cron 恢复并与 `workflow_dispatch` 并存，§五载体表同步；`RELEASE_GOVERNANCE_TEMPLATE.md` 自仓根迁入 `governance/templates/`（在途 WIP 前置已消除），§五路径同步；新增 `MiniMax-H3-Lite-KeyBackup`、口令入库例外与 §十 私有资产备份仓的本地上下文例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
-> 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（8 项备份仓）
-> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（38 项非 release 仓，49 − 11）
+> 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（9 项备份仓）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（40 项非 release 仓，51 − 11）
 > 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
@@ -112,25 +112,25 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **8** | 差集 B/C 只看备份仓；其余 41 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **38** | §10 收敛审计只覆盖 11 个 `release` 仓（49 − 11 = 38） |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **9** | 差集 B/C 只看备份仓；其余 42 仓全部参与 §1 命名校验 |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **40** | §10 收敛审计只覆盖 11 个 `release` 仓（51 − 11 = 40） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
-## 四、账号仓总览（2026-10-31 复核，共 49 个）
+## 四、账号仓总览（2026-11-01 复核，共 51 个）
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
-| **§4 登记（含规范仓）** | 41 | 按 §15 派生适用条款；命名例外见 §4 |
-| **备份仓** | 8 | `delivery=backup`，只按 §3 管理，不进 §4 |
-| 合计 | 49 | `gh repo list ReSerendipity` 实测 49 个，零差额 |
+| **§4 登记（含规范仓）** | 42 | 按 §15 派生适用条款；命名例外见 §4 |
+| **备份仓** | 9 | `delivery=backup`，只按 §3 管理，不进 §4 |
+| 合计 | 51 | `gh repo list ReSerendipity` 实测 51 个，零差额 |
 
-### §4 台账现状（2026-10-31 复核）
+### §4 台账现状（2026-11-01 复核）
 
-- 台账登记 **41 条**（例外名 8 + Train Case 33），覆盖全部非 `backup` 仓。
-- 台账之外的备份仓 **8 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
+- 台账登记 **42 条**（例外名 8 + Train Case 34），覆盖全部非 `backup` 仓。
+- 台账之外的备份仓 **9 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
 - 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 
 ### 分支保护实测（2026-10-19，41 仓全量，零无法判定）
@@ -145,8 +145,8 @@
 | 载体 | 强制的条款 | 性质 |
 |---|---|---|
 | `ci.yml` 六个常驻 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`）+ 一个手动冒烟作业（`python-quality-smoke`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 / 质量底线自测 | 硬门禁 + 周检（2026-10-30 定稿：远程优先、本地最少化，schedule 与手动并存） |
-| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（8 项） | CI + 周检 |
-| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 38 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
+| `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（9 项） | CI + 周检 |
+| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 40 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
 | `.github/workflows/python-quality-baseline.yml`（经 `ci.yml` 的 `python-quality-smoke` 作业） | 家族质量底线（覆盖率 + mypy ratchet）自测载体：fixtures/py_smoke 样例包 | 手动派发（2026-10-30 起，§20/ADR-0010；改动本基线合并前须跑绿） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
 | `governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
