@@ -129,6 +129,16 @@ git -C "$AS_REPO" push -q -u origin main
 run_case "agent-session 正例(干净)" 0 \
   bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote
 
+# stat-only 假阳性：只动 mtime、内容与 HEAD 一致，不应算 dirty（GOTCHAS #7/#8）
+touch "$AS_REPO/tracked.txt"
+run_case "agent-session stat 脏但无内容差异" 0 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote
+
+printf 'new\n' > "$AS_REPO/untracked.txt"
+run_case "agent-session 未跟踪文件算脏" 4 \
+  bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote
+rm -f "$AS_REPO/untracked.txt"
+
 printf 'b\n' >> "$AS_REPO/tracked.txt"
 run_case "agent-session 脏文件新鲜" 4 \
   bash "$SCRIPTS/check-agent-session.sh" --root "$AS_REPO" --no-remote

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # §17.5 多 Agent 并发判定执行件（ADR-0014）。
-# 只读四查：dirty 文件 mtime / worktree 数 / agent-session.lock 心跳 / 远端 agent/* 分支。
+# 只读四查：内容差异文件的 mtime / worktree 数 / agent-session.lock 心跳 / 远端 agent/* 分支。
+# stat-only 假阳性（`git status` 报 M 但内容与 HEAD 一致）不计 dirty（GOTCHAS #7/#8）。
 # 用法：
 #   bash .github/scripts/check-agent-session.sh [--root DIR] [--no-remote]
 #   bash .github/scripts/check-agent-session.sh [--root DIR] --acquire --session <id>
@@ -42,20 +43,23 @@ esac
 lock="$common/agent-session.lock"
 now=$(date +%s)
 
-# ── 查 1：dirty 文件与最新 mtime ──────────────────────────────
+# ── 查 1：内容差异文件与最新 mtime ─────────────────────────────
+# 只算「相对 HEAD 有内容差异」的文件 + 未跟踪文件；`git status` 的 stat-only
+# 假阳性（mtime 变了但 hash 与 HEAD 一致）不算 dirty，避免干净工作区被判 LEGACY。
 dirty_count=0
 newest_epoch=0
 dirty_state=clean
-while IFS= read -r line; do
-  [ -n "$line" ] || continue
+while IFS= read -r path; do
+  [ -n "$path" ] || continue
   dirty_count=$((dirty_count + 1))
-  path=${line:3}
-  path=${path##* -> }
   [ -f "$top/$path" ] || continue
   mt=$(stat -c %Y "$top/$path" 2>/dev/null || date -r "$top/$path" +%s 2>/dev/null || echo 0)
   case "$mt" in ''|*[!0-9]*) mt=0 ;; esac
   [ "$mt" -gt "$newest_epoch" ] && newest_epoch=$mt
-done < <(git -C "$top" status --porcelain --untracked-files=no 2>/dev/null)
+done < <({
+  git -C "$top" diff --name-only HEAD 2>/dev/null
+  git -C "$top" status --porcelain --untracked-files=normal 2>/dev/null | sed -n 's/^?? //p'
+} | sed 's/.* -> //')
 
 if [ "$dirty_count" -gt 0 ]; then
   if [ "$newest_epoch" -gt 0 ] && [ $((now - newest_epoch)) -le "$ACTIVE_SEC" ]; then

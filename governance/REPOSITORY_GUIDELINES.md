@@ -880,7 +880,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 
 - `agent-session.lock`、`git worktree list`、dirty mtime 都只存在于当前克隆；云电脑 / 另一台机器各有独立 `.git`，互相不可见。跨机并行时前三查失效，唯一有效信号是远端 `refs/heads/agent/*` 分支与开放 PR。
 - 因此**跨机场景一律分支 + PR，禁止直推 `main`**；PR 是唯一串行点，先合并者为准，后到者等合并后 rebase。
-- 本机判定用执行件 `bash .github/scripts/check-agent-session.sh`：输出 `VERDICT: START | BRANCH | DEFER | LEGACY`；`--acquire --session <id>` / `--release --session <id>` 管锁，长任务每 ≤10 分钟重跑 `--acquire` 刷新心跳。远端不可达时脚本降级为「远端未知」并提示，不误判为无并发。
+- 本机判定用执行件 `bash .github/scripts/check-agent-session.sh`：输出 `VERDICT: START | BRANCH | DEFER | LEGACY`；`--acquire --session <id>` / `--release --session <id>` 管锁，长任务每 ≤10 分钟重跑 `--acquire` 刷新心跳。远端不可达时脚本降级为「远端未知」并提示，不误判为无并发；dirty 以内容差异为准，stat-only 假阳性（`git status` 报 `M` 但哈希与 HEAD 一致）不计。
 
 **处理**：
 
