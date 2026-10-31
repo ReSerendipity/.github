@@ -44,7 +44,7 @@ REMOTE_PUBLIC=$(awk -F'\t' '$2=="false"{print $1}' "$REMOTE_TSV" | sort)
 REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 
 # 「备份仓豁免」声明（2026-10-22 起）：8 个 delivery=backup 的密钥/资产备份仓不进 §4 台账，
-# 也不参与差集 B/C 与 §1 命名校验；其余 40 仓全部登记。豁免语义见 ADR-0006 与 §15。
+# 也不参与差集 B/C 与 §1 命名校验；其余 41 仓全部登记。豁免语义见 ADR-0006 与 §15。
 # 维护要求：本清单与 §4、§15、GOVERNANCE-EXCLUSIONS.md、check-release-standard.sh 同步修改。
 EXCLUDED_FROM_REGISTRY="DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
