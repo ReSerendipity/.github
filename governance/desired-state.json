@@ -57,6 +57,7 @@
     { "name": "Mooncake-Deconstruction", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Multi-Tracker", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Nekogal-DL", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "Object-Atlas", "visibility": "private", "delivery": "service", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Offer-Landing-Kit", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "P0-Murder-Mystery", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Prompt-Library", "visibility": "private", "delivery": "content", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" font-family="'Noto Sans CJK SC','Noto Sans',-apple-system,'Segoe UI',sans-serif">
-  <title>治理架构：政策源 → 执行层 → 48 仓</title>
-  <desc>ReSerendipity/.github 治理架构：governance/ 政策单一事实来源，经 .github/workflows 与 scripts 执行，覆盖账号下 48 个仓库；周检漂移审计回填台账。</desc>
+  <title>治理架构：政策源 → 执行层 → 49 仓</title>
+  <desc>ReSerendipity/.github 治理架构：governance/ 政策单一事实来源，经 .github/workflows 与 scripts 执行，覆盖账号下 49 个仓库；周检漂移审计回填台账。</desc>
   <defs>
     <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#57606a"/>
@@ -14,7 +14,7 @@
 
   <!-- 标题 -->
   <text x="40" y="42" font-size="27" font-weight="700" fill="#1f2328">治理架构 · Governance Architecture</text>
-  <text x="40" y="66" font-size="14" fill="#57606a">ReSerendipity/.github — 政策单一事实来源 → 执行层 → 48 个仓库（截至 2026-10-29；数据源 governance/desired-state.json）</text>
+  <text x="40" y="66" font-size="14" fill="#57606a">ReSerendipity/.github — 政策单一事实来源 → 执行层 → 49 个仓库（截至 2026-10-31；数据源 governance/desired-state.json）</text>
 
   <!-- ═══ 层 A：政策源 ═══ -->
   <rect x="40" y="90" width="1120" height="195" rx="12" fill="#fbf7ff" stroke="#d8c9f5" stroke-width="1.5"/>
@@ -31,10 +31,10 @@
     <text x="74" y="264" font-size="11.5" fill="#57606a">两轴分档 / 发布分发 / CI 远程化</text>
     <rect x="286" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
     <text x="296" y="232" font-size="13" font-weight="700">desired-state.json</text>
-    <text x="296" y="249" font-size="11.5" fill="#57606a">48 仓期望状态：lifecycle × delivery ×</text>
+    <text x="296" y="249" font-size="11.5" fill="#57606a">49 仓期望状态：lifecycle × delivery ×</text>
     <text x="296" y="264" font-size="11.5" fill="#57606a">distribution × risk × backup；漂移审计源</text>
     <rect x="508" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
-    <text x="518" y="232" font-size="13" font-weight="700">decisions/ · ADR-0001~0010</text>
+    <text x="518" y="232" font-size="13" font-weight="700">decisions/ · ADR-0001~0014</text>
     <text x="518" y="249" font-size="11.5" fill="#57606a">决策记录：为什么这样定；ADR-0007 已被</text>
     <text x="518" y="264" font-size="11.5" fill="#57606a">ADR-0008（单一本地 AGENTS.md）取代</text>
     <rect x="730" y="212" width="212" height="64" rx="8" fill="#ffffff" stroke="#d8c9f5"/>
@@ -92,11 +92,11 @@
   <path d="M600,540 L600,583" stroke="#57606a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
   <text x="614" y="568" font-size="12" fill="#57606a">workflow_call 复用（固定 SHA）· 各仓根 README 一行引用治理规范（governance/README.md）</text>
 
-  <!-- ═══ 层 C：48 仓 ═══ -->
+  <!-- ═══ 层 C：49 仓 ═══ -->
   <rect x="40" y="590" width="1120" height="100" rx="12" fill="#f3f9f4" stroke="#a6d5b5" stroke-width="1.5"/>
   <rect x="40" y="590" width="210" height="30" rx="8" fill="#1a7f37"/>
-  <text x="145" y="610" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">48 个仓库 · 48 Repos</text>
-  <text x="64" y="646" font-size="13" font-weight="700" fill="#1a7f37">40 台账登记仓（例外名 8 + Train Case 32，§4）</text>
+  <text x="145" y="610" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">49 个仓库 · 49 Repos</text>
+  <text x="64" y="646" font-size="13" font-weight="700" fill="#1a7f37">41 台账登记仓（例外名 8 + Train Case 33，§4）</text>
   <text x="64" y="664" fill="#57606a" font-size="12">按 §15 delivery × lifecycle 派生适用条款；active 公开仓须具备 governance-baseline + tag-protection-v</text>
   <text x="380" y="646" font-size="13" font-weight="700" fill="#1a7f37">8 备份仓（delivery=backup，§3）</text>
   <text x="380" y="664" fill="#57606a" font-size="12">密钥 / 资产备份仓仅按 §3 结构管理（&lt;项目名&gt;-KeyBackup + SHA256SUMS），不进 §4 台账</text>
