@@ -273,6 +273,7 @@
 - `scaffold-repo.sh` 生成根 `AGENTS.md` 时同步创建 `local/agents/` 并复制两个模板（已存在则不覆盖）。
 - **pre-push 强制闸**：`.github/scripts/check-ledger-append.ps1` 由各仓 `local/hooks/pre-push` 调用；代码 / 配置 / 脚本变更但 GOTCHAS 未新增行、根 `AGENTS.md` 变更但 REVISION_LOG 未新增行时阻断；提交信息写 `[skip-ledger]` 或「本次无踩坑」可放行。`.github/scripts/install-ledger-gate.ps1` 负责逐仓安装并保留原 hook 路径。
 - **验收闸**：任务交付时对比 `local/agents/.ledger-baseline.json` 行数与任务基线；声明修 bug / 踩坑但台账未新增行，判 FAIL。
+- **格式迁移与无损校验（ADR-0013）**：条目块 / 混杂表 → 标准 6 列表的迁移，零丢失判定禁用裸 `str.split('|')` 与逐片段包含；列数用只切未转义竖线 `re.split(r'(?<!\\)\|', …)`（判据恰 6 段），正文保全用实质词元（连续 CJK/字母数字 ≥6）包含 + CJK 字符集合差，被契约明文替换的旧抬头 / 章节标题 / 字段标签不计入丢失。编码损坏台账（PUA mojibake）须先 `mbcs→UTF-8` 反解、不可恢复字节落 `?` 并在迁移行登记计数，再标准化。**改变台账行数的迁移完成后，必须对每个受影响仓重跑 `check-ledger-append.ps1 -Root <repo>`（非 `-Enforce`）刷新 `.ledger-baseline.json`**，否则 pre-push 严格 `>` 判据在缩表后永久误拦。
 - 模板只提供表头与示例行，不预填项目事实；各仓按实际追加。
 
 **单条记录通用字段**（GOTCHAS 行或 REVISION_LOG 摘要至少覆盖）：
