@@ -43,8 +43,8 @@ fi
 REMOTE_PUBLIC=$(awk -F'\t' '$2=="false"{print $1}' "$REMOTE_TSV" | sort)
 REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 
-# 「备份仓豁免」声明（2026-10-22 起）：8 个 delivery=backup 的密钥/资产备份仓不进 §4 台账，
-# 也不参与差集 B/C 与 §1 命名校验；其余 41 仓全部登记。豁免语义见 ADR-0006 与 §15。
+# 「备份仓豁免」声明（2026-10-22 起）：9 个 delivery=backup 的密钥/资产备份仓不进 §4 台账，
+# 也不参与差集 B/C 与 §1 命名校验；其余 42 仓全部登记。豁免语义见 ADR-0006 与 §15。
 # 维护要求：本清单与 §4、§15、GOVERNANCE-EXCLUSIONS.md、check-release-standard.sh 同步修改。
 EXCLUDED_FROM_REGISTRY="DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
@@ -53,7 +53,8 @@ TTS-MultiModel-KeyBackup
 Android-IconAutoArrange-KeyBackup
 Android-IconAutoArrange-Assets-Backup
 SpiritPal-KeyBackup
-MiniMax-H3-Lite-KeyBackup"
+MiniMax-H3-Lite-KeyBackup
+VOSR2-Lite-KeyBackup"
 is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }
 
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。
@@ -148,7 +149,7 @@ echo "仓库注册表对照检查  owner=$OWNER  基准=GitHub API 实际仓名"
 echo "  远程取到 $REMOTE_N 个仓（其中公开 $(echo "$REMOTE_PUBLIC" | grep -c . || true) 个）；§4 表登记 $(printf '%s\n' "$ROWS" | grep -c . || true) 条"
 echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 private 的行无法被该端点证实，故不参与差集 A。"
   echo "  本脚本对备份仓/非台账副本有显式声明（EXCLUDED_FROM_REGISTRY），后者不参与差集 B/C。"
-  echo "  本脚本只排除 8 个备份仓；§10 审计的 37 项排除（另按 §15.2 跳过归档 release 仓）见 check-release-standard.sh。"
+  echo "  本脚本只排除 9 个备份仓；§10 审计的 40 项排除（另按 §15.2 跳过归档 release 仓）见 check-release-standard.sh。"
 if [ -n "$DOC_EXEMPT" ]; then
   echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
 fi
