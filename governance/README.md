@@ -1,12 +1,12 @@
 # 治理手册（governance/）
 
-本目录是 ReSerendipity 账号的**政策文档单一事实来源**；`.github` 仍承担默认社区健康文件与复用工作流，两者分工如下。
+本目录是 ReSerendipity 账号的**政策文档单一事实来源**；`.github` 仍承担默认社区健康文件与复用工作流，两者分工如下。（2026-10-31 新增 `Object-Atlas`：私有 / service / active，登记仓与总数同步更新。）
 
 | 文件 | 作用 | 适用范围 |
 |---|---|---|
-| `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§20：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本与展示图真实性（§8 / §8.1）、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18）、Dependabot 与依赖升级处置（§19）、CI 远程化与本地最小化（§20） | 40 个登记仓；8 个备份仓按 §3 单独管理 |
+| `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§20：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本与展示图真实性（§8 / §8.1）、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18）、Dependabot 与依赖升级处置（§19）、CI 远程化与本地最小化（§20） | 41 个登记仓；8 个备份仓按 §3 单独管理 |
 | `GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外记录：现行口径、8 个备份仓与命名/发布载体对照、四轮豁免历史原文，以及 §六–§十 例外（生成物、本地治理目录、暂缓、展示图、私有资产备份） | 全账号 |
-| `desired-state.json` | 声明式期望状态：48 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
+| `desired-state.json` | 声明式期望状态：49 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
 | [`decisions/`](decisions/README.md) | ADR 决策记录（ADR-0001~ADR-0014）：为什么这样定；ADR-0007 已被 ADR-0008 取代，ADR-0008 的 §7.5 路由条款由 ADR-0011 修订；ADR-0012 标准化自进化台账；ADR-0014 给 §17.5 补执行件与跨机边界 | 全账号 |
 | [`templates/agent-contract.md`](templates/agent-contract.md) | Agent 契约模板（v2）：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验；例外只引用 `GOVERNANCE-EXCLUSIONS.md` §七 | 各仓 |
 | [`templates/AGENTS.template.md`](templates/AGENTS.template.md) | 本地 `AGENTS.md` 模板：根文件内联契约 v2、本地唯一完整版（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
@@ -61,7 +61,7 @@ bash .github/scripts/scaffold-repo.sh <Repo-Name> [--private|--public] [--delive
 
 ## 变更流程
 
-- 改动按 §17.2 的推送策略：作者账号可直推，非作者走分支 + PR + DCO；合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`。CI 的 `repo-registry` 作业在每次 PR / 推送跑这两个脚本（一致性用 `--public-only`）；完整 48 仓（含私有仓）用 owner 凭据本地跑无参模式。
+- 改动按 §17.2 的推送策略：作者账号可直推，非作者走分支 + PR + DCO；合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`。CI 的 `repo-registry` 作业在每次 PR / 推送跑这两个脚本（一致性用 `--public-only`）；完整 49 仓（含私有仓）用 owner 凭据本地跑无参模式。
 - 清单类改动需五处同步：规范正文、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、本文件、`GOVERNANCE-EXCLUSIONS.md`
 - 定位改动同时改 `desired-state.json`；`audit-drift.py` 在周检、手动触发与命中 `desired-state.json` 的 PR 上对账（2026-10-30 定稿：远程优先、本地最少化）
 - 版本记录以**条款级日期标注**写在正文本身：节标题或引用块内标「（YYYY-MM-DD 新增 / 定稿 / 修订 / 扩充）」，不另建 CHANGELOG，也不建独立的变更段落。新增小节须带落地日期；既有条款被扩充或改口径时，在标题追加日期或在该节内加留痕引用块，**不改写历史日期**（§18.1 快照）

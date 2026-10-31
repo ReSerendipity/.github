@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" font-family="'Noto Sans CJK SC','Noto Sans',-apple-system,'Segoe UI',sans-serif">
-  <title>48 仓治理分档矩阵：lifecycle × delivery</title>
-  <desc>ReSerendipity 账号 48 个仓库按 lifecycle（active / maintenance / archived）与 delivery（policy / release / library / service / tool / content / backup）分档的数量矩阵，数据来自 governance/desired-state.json。</desc>
+  <title>49 仓治理分档矩阵：lifecycle × delivery</title>
+  <desc>ReSerendipity 账号 49 个仓库按 lifecycle（active / maintenance / archived）与 delivery（policy / release / library / service / tool / content / backup）分档的数量矩阵，数据来自 governance/desired-state.json。</desc>
   <rect x="0" y="0" width="1200" height="760" fill="#ffffff"/>
 
-  <text x="40" y="42" font-size="27" font-weight="700" fill="#1f2328">48 仓治理分档矩阵 · Tiering Matrix</text>
-  <text x="40" y="66" font-size="14" fill="#57606a">lifecycle × delivery（截至 2026-10-29）｜逐仓定位以 governance/desired-state.json 为唯一事实来源（version 2，48 条）</text>
-  <text x="40" y="88" font-size="12.5" fill="#57606a">口径：§4 台账 40 行（例外名 8 + Train Case 32）+ 8 备份仓 = 48；2026-10-29 实测 gh repo list 48 个，零差额</text>
+  <text x="40" y="42" font-size="27" font-weight="700" fill="#1f2328">49 仓治理分档矩阵 · Tiering Matrix</text>
+  <text x="40" y="66" font-size="14" fill="#57606a">lifecycle × delivery（截至 2026-10-31）｜逐仓定位以 governance/desired-state.json 为唯一事实来源（version 2，49 条）</text>
+  <text x="40" y="88" font-size="12.5" fill="#57606a">口径：§4 台账 41 行（例外名 8 + Train Case 33）+ 8 备份仓 = 49；2026-10-31 实测 gh repo list 49 个，零差额</text>
 
   <!-- 列头：lifecycle -->
   <g>
     <rect x="268" y="118" width="300" height="52" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
     <text x="418" y="140" font-size="15" font-weight="700" fill="#0969da" text-anchor="middle">active（活跃）</text>
-    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 12 仓</text>
+    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 13 仓</text>
     <rect x="576" y="118" width="300" height="52" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
     <text x="726" y="140" font-size="15" font-weight="700" fill="#9a6700" text-anchor="middle">maintenance（维护）</text>
     <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 24 仓</text>
@@ -62,9 +62,9 @@
   <g>
     <rect x="40" y="340" width="220" height="52" rx="6" fill="#f2fbf6" stroke="#a6d5b5"/>
     <text x="56" y="364" font-size="14" font-weight="700" fill="#1f7a6b">service（服务）</text>
-    <text x="56" y="382" font-size="11.5" fill="#1f7a6b">§10 部署子集 · 11 仓</text>
+    <text x="56" y="382" font-size="11.5" fill="#1f7a6b">§10 部署子集 · 12 仓</text>
     <rect x="268" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.22"/>
-    <text x="418" y="371" font-size="15" font-weight="700" fill="#18594e" text-anchor="middle">1</text>
+    <text x="418" y="371" font-size="15" font-weight="700" fill="#18594e" text-anchor="middle">2</text>
     <rect x="576" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.72"/>
     <text x="726" y="371" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">6</text>
     <rect x="884" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.55"/>
@@ -112,7 +112,7 @@
     <rect x="40" y="562" width="220" height="48" rx="6" fill="#eaeef2"/>
     <text x="56" y="592" font-size="14" font-weight="700" fill="#24292f">合计 · Total</text>
     <rect x="268" y="562" width="300" height="48" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
-    <text x="418" y="592" font-size="16" font-weight="700" fill="#0969da" text-anchor="middle">12</text>
+    <text x="418" y="592" font-size="16" font-weight="700" fill="#0969da" text-anchor="middle">13</text>
     <rect x="576" y="562" width="300" height="48" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
     <text x="726" y="592" font-size="16" font-weight="700" fill="#9a6700" text-anchor="middle">24</text>
     <rect x="884" y="562" width="300" height="48" rx="6" fill="#eaeef2" stroke="#afbac4"/>
@@ -125,7 +125,7 @@
     <text x="96" y="636">lifecycle（主轴）决定变更许可与审计频率 —— active 允许新功能、周检；maintenance 仅修复与密钥轮换、月检；archived 平台只读、不检</text>
     <text x="96" y="656">delivery（副轴）决定适用条款（§15.3）—— policy §1–§20；release §1–§14（§10 按 distribution 取子集）；library / service / tool / content 取相应子集；backup 仅 §3；§17 / §18 / §20 跨档通用</text>
     <text x="40" y="680" font-weight="700" fill="#1f2328">校验：</text>
-    <text x="96" y="680">check-governance-consistency.sh 校验 JSON 仓集合 == GitHub 实际集合、JSON 内部取值合法、脚本豁免项数与文档声明一致、governance/README.md 的「40 + 8」== 总数 48</text>
+    <text x="96" y="680">check-governance-consistency.sh 校验 JSON 仓集合 == GitHub 实际集合、JSON 内部取值合法、脚本豁免项数与文档声明一致、governance/README.md 的「41 + 8」== 总数 49</text>
     <text x="40" y="704" font-weight="700" fill="#1f2328">修改定位：</text>
     <text x="136" y="704">同时改 REPOSITORY_GUIDELINES.md 与 desired-state.json；audit-drift.py 在周检 / 手动 / 命中 JSON 的 PR 上对账，漂移判红（2026-10-30 定稿：远程优先、本地最少化）</text>
   </g>
