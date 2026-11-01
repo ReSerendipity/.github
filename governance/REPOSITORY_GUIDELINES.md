@@ -796,6 +796,8 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 
 **通用性说明**：本节为账号级通用条款，适用于所有 `delivery` 类型；§15.3 的条款裁剪只针对 §1–§15，不裁剪本节。
 
+**自主收口（2026-11-01 新增，ADR-0015）**：提交、推送、合并与 CI 监控由执行方在任务结尾自主完成，不得询问用户；只有 §17.2 列出的四类例外需先征询。未推送 / 应合并未合并 / CI 未到终态，只能报「未完成 + 阻塞原因」。
+
 ### 17.1 清理
 
 - 删除本次产生的临时脚本、调试输出、截图、日志、缓存、一次性数据；确需保留的交付物放 `docs/` 或用户指定目录。
@@ -817,10 +819,13 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   - **作者账号 + 检测到多 agent（含跨机 / 跨克隆）**：自动开分支 + PR（见 §17.5 判定矩阵与跨机边界）。
   - **非作者协作者**：分支 + PR + 必需检查 + 审批。
   - **`enforce_admins=true` 或平台拒绝直推**：分支 + PR。
+  - **自主提交与推送（2026-11-01 新增，ADR-0015）**：本地检查全绿后，执行方自行按上述策略提交并推送，需要 PR 时自行开 PR，并在必检全绿、无冲突时合并；**不得在提交 / 推送 / 合并前询问用户**。例外（仍须先询问）：破坏性远端动作、平台设置变更、凭据 / 权限缺失、任务明确要求先评审。
 
 ### 17.3 CI 收敛
 
 **顺序固定（2026-10-23）**：先 commit 使工作区干净 → 再 push 触发 CI → 盯到绿色；失败时先在本地复现 / 修复，再 commit、再 push，循环直到绿色。禁止在工作区未提交时 push，禁止用 `--no-verify` 绕过。
+
+**自主监控（2026-11-01 新增，ADR-0015）**：push / PR 后由执行方自行盯到 `completed` 并读 `conclusion`；失败按本节闭环。不得把 CI 留给用户查看，也不得在未到终态时结束任务；超时须在汇报中给出 run id 与当前状态。
 
 **有 CI（存在 `.github/workflows/` 或平台等价配置）**：
 
@@ -969,7 +974,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 1. **远端载体优先**：每条可执行检查必须有远端载体——PR / 推送门禁、`schedule`（公开仓走免费分钟数）、或 `workflow_dispatch` 手动，三者按 §15.2 频度择一或并存。**本地机器不得承载任何定时任务**。
 2. **天然本地载体**（允许、且只能留在本地）：`.githooks/pre-push`（私有仓无服务器侧保护的替代控制，ADR-0004）、`check-agents-md-size.sh`（AGENTS.md 不入库，CI 不可见）、`scaffold-repo.sh`（建仓动作），以及第 4 条补齐前的私有仓完整核对。
 3. **口径一致**：远端与本地跑同一脚本、同一退出码纪律（0=clean；1=gap/drift/FAIL；2=无法判定时失败关闭），不得出现「同一承诺两种判定」。
-4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 21 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 48 仓，无需 owner 本机凭据。
+4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 24 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 51 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
 5. **私有仓不加定时作业**：私有仓 Actions 分钟数受账号账单限制（§10.6 实测欠账），不得为其新增 `schedule`。
 
 **代价（如实写明）**：远端载体受 GitHub 可用性影响；`UNVERIFIABLE`/`PARTIAL` 不是通过——未配置 `GOVERNANCE_READ_PAT` 时，私有仓完整核对仍依赖 owner 本地凭据（第 2 条）。
