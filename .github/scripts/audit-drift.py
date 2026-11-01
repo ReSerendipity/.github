@@ -22,6 +22,8 @@
 - 复用工作流 SHA 固定：pinned_ref 为空时跳过（阶段 4 前）；非空时逐个调用点断言；
   私有仓的调用点对当前凭据不可见时记 UNVERIFIABLE（与 check_repo 同口径），公开仓读取失败仍记 fatal。
 - exceptions（rewq）：只校验 `.gitignore` 仍排除声明的 scope，不限制正常提交。
+- 未登记仓（2026-11-01 新增）：远程可见但 desired-state 无的仓判 DRIFT；带上 --only /
+  --delivery / --lifecycle 过滤时跳过该项，避免单仓排查被无关差集打断。
 """
 
 from __future__ import annotations
@@ -346,6 +348,40 @@ def load_desired(path):
         return None, f"期望状态不是合法 JSON：{exc}"
 
 
+def list_remote_repos(owner):
+    """列出当前凭据可见的账号仓；返回 (name 列表, 错误)。
+
+    测试或离线核对可设 AUDIT_DRIFT_REMOTE_NAMES=<文件>，每行一个仓名，
+    用于验证「未登记仓」判据而不触碰远端。
+    """
+    override = os.environ.get("AUDIT_DRIFT_REMOTE_NAMES")
+    if override:
+        try:
+            with open(override, encoding="utf-8") as handle:
+                names = [line.strip() for line in handle if line.strip()]
+        except OSError as exc:
+            return None, f"读取 AUDIT_DRIFT_REMOTE_NAMES 失败：{exc}"
+        return names, None
+    try:
+        proc = subprocess.run(
+            ["gh", "repo", "list", owner, "--limit", "500", "--json", "name"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+    except FileNotFoundError:
+        return None, "本机未找到 gh CLI"
+    if proc.returncode != 0:
+        return None, (proc.stderr or proc.stdout or "").strip()
+    try:
+        rows = json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        return None, f"gh repo list 输出不是 JSON：{exc}"
+    names = [row.get("name") for row in rows if isinstance(row, dict) and row.get("name")]
+    return names, None
+
+
 def main(argv):
     parser = argparse.ArgumentParser(description="治理漂移审计（只读）")
     parser.add_argument("--owner", default=None, help="覆盖 desired-state.json 的 owner")
@@ -391,6 +427,18 @@ def main(argv):
         print("ERROR: 过滤后没有可审计的仓库", file=sys.stderr)
         return 2
 
+    unregistered = []
+    remote_counts = None
+    filtered = bool(only or deliveries or lifecycles)
+    if not filtered:
+        remote_names, rerr = list_remote_repos(owner)
+        if rerr:
+            print(f"ERROR: 远程仓清单取数失败：{rerr}", file=sys.stderr)
+            return 2
+        known_all = {spec.get("name") for spec in repos}
+        unregistered = sorted(name for name in remote_names if name not in known_all)
+        remote_counts = (len(remote_names), len(known_all))
+
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(lambda spec: check_repo(owner, spec, template_text), selected))
 
@@ -415,8 +463,13 @@ def main(argv):
         f"  期望源：governance/desired-state.json  owner={owner}  仓库 {len(selected)} 个",
         "  口径：只读 gh api；私有仓不可见或令牌无 admin 权限时，对应项记 UNVERIFIABLE / PARTIAL（不判红），"
         "完整覆盖需在本地用 owner 凭据运行。",
-        "",
     ]
+    if remote_counts is not None:
+        lines.append(
+            f"  远程可见：{remote_counts[0]} 个仓（desired-state {remote_counts[1]} 个；"
+            "差额为当前凭据不可见的私有仓，需 GOVERNANCE_READ_PAT）"
+        )
+    lines.append("")
     counts = {"PASS": 0, "PARTIAL": 0, "DRIFT": 0, "UNVERIFIABLE": 0, "SKIP": 0}
     drift_details = []
     unverified_details = []
@@ -457,6 +510,9 @@ def main(argv):
             lines.append(f"               · {item}")
 
     lines.append("")
+    if unregistered:
+        lines.append(f"未登记仓：{len(unregistered)} 个（远程可见、desired-state 无；见漂移明细）")
+        drift_details.extend(f"{name}: 未登记（远程有、desired-state 无）" for name in unregistered)
     if pins_result:
         lines.append(
             f"汇总：{len(results)} 仓 + 1 项横切校验 · PASS {counts['PASS']} · PARTIAL {counts['PARTIAL']} · "
