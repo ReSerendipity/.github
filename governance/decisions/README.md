@@ -26,6 +26,7 @@
 | [ADR-0012](ADR-0012-self-evolution-ledgers.md) | 自进化台账标准化：GOTCHAS / REVISION_LOG | Accepted |
 | [ADR-0013](ADR-0013-ledger-migration-and-lossless-verification.md) | 大台账格式迁移落地与无损校验口径修正 | Accepted |
 | [ADR-0014](ADR-0014-multi-agent-concurrency-enforcement.md) | 多 Agent 并发的执行件与跨机边界 | Accepted |
+| [ADR-0015](ADR-0015-autonomous-commit-push-ci-monitoring.md) | 执行方自主提交、推送、合并与 CI 监控 | Accepted |
 
 ## 与规范的关系
 
