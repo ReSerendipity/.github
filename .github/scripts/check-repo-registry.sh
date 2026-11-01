@@ -14,6 +14,12 @@ EXEMPT_NAMES=".github"
 
 err() { echo "ERROR: $*" >&2; }
 
+# Windows 的 system32\sort.exe 会顶替 GNU coreutils：不认识 -u/-o/-c，会把选项当文件名，
+# 轻则排序失效（命名差集静默跳过），重则 comm 报「not in sorted order」。检测到非 GNU 时前置 /usr/bin。
+if ! sort --version 2>/dev/null | grep -q 'GNU coreutils'; then
+  PATH="/usr/bin:$PATH"
+fi
+
 [ -f "$GUIDELINES" ] || { err "找不到 $GUIDELINES"; exit 2; }
 # 离线注入（REGISTRY_REMOTE_TSV）供门禁反例测试使用；线上未设置时仍要求 gh。
 if [ -z "${REGISTRY_REMOTE_TSV:-}" ]; then

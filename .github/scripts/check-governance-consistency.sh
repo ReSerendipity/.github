@@ -27,6 +27,13 @@ OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
 err() { echo "ERROR: $*" >&2; }
 
+# Windows 的 system32\sort.exe 会顶替 GNU coreutils（不支持 -u/-o/-c，且按本地化排序），
+# 会让 comm 报「not in sorted order」并全量假红。检测到非 GNU 时前置 /usr/bin，并固定排序 locale。
+if ! sort --version 2>/dev/null | grep -q 'GNU coreutils'; then
+  PATH="/usr/bin:$PATH"
+fi
+export LC_ALL=C
+
 PUBLIC_ONLY=0
 while [ $# -gt 0 ]; do
   case "$1" in

@@ -20,6 +20,11 @@ GUIDE="$REPO_ROOT/governance/REPOSITORY_GUIDELINES.md"
 [ -f "$GUIDE" ] || { echo "ERROR: 找不到 $GUIDE" >&2; exit 2; }
 command -v git >/dev/null 2>&1 || { echo "ERROR: 需要 git" >&2; exit 2; }
 
+# Windows 的 system32\sort.exe 会顶替 GNU coreutils（-u/-o/-c 会被当文件名）；检测到非 GNU 时前置 /usr/bin。
+if ! sort --version 2>/dev/null | grep -q 'GNU coreutils'; then
+  PATH="/usr/bin:$PATH"
+fi
+
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 

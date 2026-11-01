@@ -22,6 +22,12 @@
 #   2 = 入参不可用（目录不存在 / 参数冲突 / 未知参数）
 set -uo pipefail
 
+# Windows 的 system32\sort.exe 会顶替 GNU coreutils（-u/-o/-c 会被当文件名，且输出 CRLF）；
+# 检出/遍历路径时会把 \r 带进文件名。检测到非 GNU 时前置 /usr/bin。
+if ! sort --version 2>/dev/null | grep -q 'GNU coreutils'; then
+  PATH="/usr/bin:$PATH"
+fi
+
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 CENTRAL_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 DESIRED_STATE="$CENTRAL_ROOT/governance/desired-state.json"

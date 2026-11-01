@@ -28,6 +28,12 @@
 #   2 = 入参不可用（目录不存在 / 上限非正整数）
 set -uo pipefail
 
+# Windows 的 system32\sort.exe 会顶替 GNU coreutils（-u/-o/-c 会被当文件名，且输出 CRLF）；
+# 检出/遍历路径时会把 \r 带进文件名。检测到非 GNU 时前置 /usr/bin。
+if ! sort --version 2>/dev/null | grep -q 'GNU coreutils'; then
+  PATH="/usr/bin:$PATH"
+fi
+
 ROOT=.
 MAX=300
 INCLUDE_NESTED=0
