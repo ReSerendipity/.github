@@ -44,6 +44,9 @@ while [ $# -gt 0 ]; do
 done
 
 [ -d "$ROOT" ] || { echo "ERROR: 目录不存在：$ROOT" >&2; exit 2; }
+# 统一为正斜杠：Windows / Git Bash 传反斜杠路径时，find -path 与 NESTED_SKIP 的字面值
+# 无法匹配，嵌套仓剪枝会静默失效（实测 Image-DuoModel/comfy_kernel 仍被计入）。
+ROOT=${ROOT//\\//}
 case "$MAX" in
   ''|*[!0-9]*) echo "ERROR: --max-lines 需为正整数，实际='$MAX'" >&2; exit 2 ;;
 esac

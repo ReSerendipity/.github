@@ -95,6 +95,14 @@ seq 1 301 | sed 's/^/line /' > "$TMP/agents-over/AGENTS.md"
 run_case "agents 正例" 0 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-ok"
 run_case "agents 超行数" 1 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-over"
 
+# 嵌套 git 仓默认排除（--include-nested 才纳入）；Windows 反斜杠 root 的剪枝回归
+mkdir -p "$TMP/agents-nested/nested"
+printf 'root agent\n' > "$TMP/agents-nested/AGENTS.md"
+seq 1 301 | sed 's/^/line /' > "$TMP/agents-nested/nested/AGENTS.md"
+git init -q -b main "$TMP/agents-nested/nested"
+run_case "agents 嵌套仓默认排除" 0 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-nested"
+run_case "agents 嵌套仓显式纳入" 1 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-nested" --include-nested
+
 # ── signoff：正例 / 缺尾注 ──────────────────────────────────────
 git init -q -b main "$TMP/signoff"
 cd "$TMP/signoff" || exit 2
