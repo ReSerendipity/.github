@@ -114,6 +114,11 @@ then
   exit 2
 fi
 
+# Windows 上 Python 的 stdout 重定向会按平台换行写 CRLF，导致 awk 取出的仓名尾带 \r；
+# 与 gh（Go 写管道恒为 LF）比对时 comm 会把每行判成「双向缺失」，全量假红。
+# 统一归一化为 LF，保证两侧排序口径一致。
+tr -d '\r' < "$TMP_DIR/desired.tsv" > "$TMP_DIR/desired.tsv.lf" && mv "$TMP_DIR/desired.tsv.lf" "$TMP_DIR/desired.tsv"
+
 DESIRED_OWNER=$(awk -F'\t' '$1=="OWNER"{print $2}' "$TMP_DIR/desired.tsv")
 DESIRED_TOTAL=$(awk -F'\t' '$1=="TOTAL"{print $2}' "$TMP_DIR/desired.tsv")
 awk -F'\t' '$1=="NAME"{print $2}' "$TMP_DIR/desired.tsv" | sort > "$TMP_DIR/desired.names"
