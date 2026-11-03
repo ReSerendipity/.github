@@ -27,6 +27,7 @@
 | [ADR-0013](ADR-0013-ledger-migration-and-lossless-verification.md) | 大台账格式迁移落地与无损校验口径修正 | Accepted |
 | [ADR-0014](ADR-0014-multi-agent-concurrency-enforcement.md) | 多 Agent 并发的执行件与跨机边界 | Accepted |
 | [ADR-0015](ADR-0015-autonomous-commit-push-ci-monitoring.md) | 执行方自主提交、推送、合并与 CI 监控 | Accepted |
+| [ADR-0016](ADR-0016-account-password-vault-naming.md) | 账号级口令保险库 `KeyBackup-Passwords` 的命名例外 | Accepted |
 
 ## 与规范的关系
 

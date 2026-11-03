@@ -19,7 +19,7 @@
 - `DraftPeek-KeyBackup`
 
 例外（保持连写，不加短横线）：
-- 品牌/专有词：`Unity`、`SpiritPal`、`GalgameShell`、`DraftPeek`、`ReSerendipity`
+- 品牌/专有词：`Unity`、`SpiritPal`、`GameShell`、`DraftPeek`、`ReSerendipity`
 - 系统保留名：`.github`
 - 技术缩写按惯例保留大写：`TTS`、`RTX`、`VSR`、`H3`、`DL`、`CI`、`ComfyUI`
 
@@ -27,7 +27,7 @@
 
 ### 1.4 命名台账与本地一致性（原 §4、§6）
 
-- 现网命名台账以 **§4 表**为唯一数据源（42 行：8 个例外名 + 34 个 Train Case）；新增 / 改名先改 §4，再改远程。
+- 现网命名台账以 **§4 表**为唯一数据源（43 行：8 个例外名 + 35 个 Train Case）；新增 / 改名先改 §4，再改远程。
 - 本地克隆目录名必须与远程逐字符一致；远程重命名三步见 **§6**。
 - 命名例外须先落 ADR，再改 §4；§4 表由 `check-repo-registry.sh` 对账。
 - 本节是 §4 与 §6 的归口；两节保留原编号，分别作为数据附表与执行细则。
@@ -40,7 +40,7 @@
   - **`enforce_admins=false`，这是有意的**：本账号是个人账号，若设为 true 会连账号本人都无法直推 `main`，与下面第一条既有约定冲突。代价必须写明白——**保护不约束账号本人**，本人仍可绕过上述四项；对非管理员协作者与 force-push/删除操作才是真约束。要让它也约束本人，需同时改写本节，属单独决定。
   - **账号本人（Doro / ReSerendipity）可直接推送**，跳过 PR 流程；
   - **其他协作者一律走 Pull Request**，不得直接推送 `main`。
-  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GalgameShell`、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 23 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**候选 7 仓**：`Agent-Knowledge`、`Card-Studio`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Nekogal-DL`、`Prompt-Library`（2026-10-21 第四轮豁免后，`Card-Studio` / `Health-Info-Card` / `Lineart-Painter` 已入排除清单，**候选 4 仓**：`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）。**2026-10-29 复核：上述 4 仓均为私有仓**，按本节私有仓条款与 ADR-0004，Free 计划下服务器侧保护不可用，属平台能力缺口；**待立项项关闭**，升级 Pro 后再按同一 JSON 补发，未配置前 GitHub 侧不会拦截直推 `main`。
+  - **实测结果（2026-10-19）**：**11 仓 `protected=true`**——`.github`、`ComfyUI-Experiment-Toolbox`、`DraftPeek`、`GameShell`（原 `GalgameShell`，2026-11-02 改名）、`Github-Repo-Scan`、`Image-DuoModel`、`MiniMax-H3-Lite`、`ReSerendipity`、`SeedVR2-Lite`、`SpiritPal`、`TTS-MultiModel`（恰为有活跃 CI / 发布链的仓 + 规范仓自身）；**其余 30 仓 `protected=false`**。其中 23 仓属排除清单（2026-10-19 豁免升级：不适用整个规范，**无需保护考量**），故**候选 7 仓**：`Agent-Knowledge`、`Card-Studio`、`Health-Info-Card`、`Image-Scrapers`、`Lineart-Painter`、`Nekogal-DL`、`Prompt-Library`（2026-10-21 第四轮豁免后，`Card-Studio` / `Health-Info-Card` / `Lineart-Painter` 已入排除清单，**候选 4 仓**：`Agent-Knowledge`、`Image-Scrapers`、`Nekogal-DL`、`Prompt-Library`）。**2026-10-29 复核：上述 4 仓均为私有仓**，按本节私有仓条款与 ADR-0004，Free 计划下服务器侧保护不可用，属平台能力缺口；**待立项项关闭**，升级 Pro 后再按同一 JSON 补发，未配置前 GitHub 侧不会拦截直推 `main`。
   - 取数口径：公开仓返 404/空数组＝确无保护；私有仓在免费档下这两个请求返 403＝**无法判定**，不得据此写「未保护」。已配置后再判，须看 `branches/main` 的 `protected` 与 protection 回读的 `contexts` 数量，别只看有没有 404。本轮用 `GET /repos/<owner>/<repo>/branches/<default>` 的 `protected` 字段（认证态），41 仓全部返回明确布尔值，零 403。
 - **Ruleset 基线（2026-10-21 新增，按可见性分流）**：
   - **公开仓**统一启用两个 ruleset：`governance-baseline`（branch：`deletion` + `non_fast_forward` + `pull_request` + `required_status_checks`，检查名只填实测近 60 天成功过的项）与 `tag-protection-v`（tag：`v*` 的 `deletion` + `non_fast_forward` + `update`）。
@@ -53,7 +53,7 @@
   - **不得删除的分支**：默认分支 `main`、Pages 部署目标 `gh-pages`、release-please 工作分支 `release-please--branches--main`（合并后由机器人自行重建，删除属正常行为）、以及刻意命名的归档/备份本地分支（`archive/*DO-NOT-PUSH*`、`backup/*`）——这些是**保留对象**，不是"漏删"。
   - **清理判据**：squash 合并会使分支不再是 `main` 的祖先，`git merge-base --is-ancestor` **不可作为判断依据**；应以其**关联 PR 状态为 `MERGED`** 为准。
   - 存量清理：开关开启后，已合并的残留分支需一次性清理（2026-10-20 已执行：13 管辖仓 23 条 + `.github` 12 条）。
-  - 不适用本规范的只有 `delivery=backup` 的 9 个仓；其余仓按 §15.3 的 `delivery` 派生要求执行。`active` 公开仓仍须具备 `governance-baseline` + `tag-protection-v`，已配置的一律保留。
+  - 不适用本规范的只有 `delivery=backup` 的 10 个仓；其余仓按 §15.3 的 `delivery` 派生要求执行。`active` 公开仓仍须具备 `governance-baseline` + `tag-protection-v`，已配置的一律保留。
 - 本地与远程命名保持一致；远程重命名后需同步本地 remote URL。
 
 ## 3. 密钥与敏感信息备份规范（Secret Backup）
@@ -64,11 +64,11 @@
   - `README.md`（说明用途与恢复步骤）
   - `SHA256SUMS.txt`（校验清单）
   - `backup-passwords.txt`（仅限已登记的**口令入库例外**；默认不建）
-- 口令**原则上不放入仓库**，另行安全保管。若 owner 明确要求远程找回并接受“账号失守=加密失效”的风险，须在 `GOVERNANCE-EXCLUSIONS.md` 登记为**口令入库例外**，并在该仓 README 写明安全模型。当前登记：`Android-IconAutoArrange-Assets-Backup`、`MiniMax-H3-Lite-KeyBackup`。
+- 口令**原则上不放入仓库**，另行安全保管。若 owner 明确要求远程找回并接受“账号失守=加密失效”的风险，须在 `GOVERNANCE-EXCLUSIONS.md` 登记为**口令入库例外**，并在该仓 README 写明安全模型。当前登记：`Android-IconAutoArrange-Assets-Backup`、`MiniMax-H3-Lite-KeyBackup`、`KeyBackup-Passwords`（账号级口令保险库，见 ADR-0016）。
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-01 更新，42 行）
+## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-03 更新，43 行）
 
 ### 例外名（品牌 / 系统保留名 / 已登记命名债务，8 个）
 
@@ -79,7 +79,7 @@
 | 仓库 | 可见性 | delivery | 例外依据 |
 |---|---|---|---|
 | SpiritPal | public | release | 品牌连写（§1） |
-| GalgameShell | public | tool | 品牌连写（§1） |
+| GameShell | public | tool | 品牌连写（§1）；原名 GalgameShell，2026-11-02 远程改名 |
 | DraftPeek | public | release | 品牌连写（§1） |
 | ReSerendipity | public | content | 品牌兼账号名（§1） |
 | Unity | private | tool | 品牌专有词（§1） |
@@ -87,7 +87,7 @@
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
 
-### Train Case（34 个）
+### Train Case（35 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
@@ -98,6 +98,7 @@
 | ChatGPT-Timezone-Fix | public | tool |
 | ComfyUI-BatchPromptLoader | public | tool |
 | ComfyUI-Experiment-Toolbox | public | tool |
+| DormitoryNotes-Godot | private | service |
 | Free-Model-Probe | public | service |
 | Github-Repo-Scan | public | tool |
 | Health-Info-Card | public | release |
@@ -127,6 +128,8 @@
 | Website-Zenless-Zone-Zero | private | service |
 
 > 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024
+>
+> 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
 > 2026-11-01 变更：补登记漏登仓 `Subject-Courseware-Studio`（private / content / active / none）与 `VOSR2-Lite-KeyBackup`（private / backup / maintenance，仅 §3，不进本表）；本表 41 → 42 行，Train Case 33 → 34；合计 49 → 51 仓（42 + 9 备份仓）。
 >
@@ -269,7 +272,7 @@
 
 #### 7.4.3 适用范围与存量处置
 
-- **16 个非归档本地治理仓全部适用**：`.github`、Agent-Knowledge、ComfyUI-Experiment-Toolbox、DraftPeek、GalgameShell、Github-Repo-Scan、Image-DuoModel、Image-Scrapers、Nekogal-DL、Prompt-Library、ReSerendipity、rewq、SeedVR2-Lite、SpiritPal、TTS-MultiModel、VOSR2-Lite。
+- **16 个非归档本地治理仓全部适用**：`.github`、Agent-Knowledge、ComfyUI-Experiment-Toolbox、DraftPeek、GameShell、Github-Repo-Scan、Image-DuoModel、Image-Scrapers、Nekogal-DL、Prompt-Library、ReSerendipity、rewq、SeedVR2-Lite、SpiritPal、TTS-MultiModel、VOSR2-Lite。
 - 已有 `local/agents/` 台账的继续使用；只有 `docs/agents/` 的保留为历史分片并继续追加；两者都没有的新建 `local/agents/` 版本。
 - 同一仓不得同时维护两份活跃台账；迁移只移动 / 追加，不删除历史；归档仓不追溯。
 
@@ -751,10 +754,10 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 51 仓定位
+### 15.6 53 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 42 行是其中**非备份仓**的命名台账，9 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 43 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）
@@ -974,7 +977,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 1. **远端载体优先**：每条可执行检查必须有远端载体——PR / 推送门禁、`schedule`（公开仓走免费分钟数）、或 `workflow_dispatch` 手动，三者按 §15.2 频度择一或并存。**本地机器不得承载任何定时任务**。
 2. **天然本地载体**（允许、且只能留在本地）：`.githooks/pre-push`（私有仓无服务器侧保护的替代控制，ADR-0004）、`check-agents-md-size.sh`（AGENTS.md 不入库，CI 不可见）、`scaffold-repo.sh`（建仓动作），以及第 4 条补齐前的私有仓完整核对。
 3. **口径一致**：远端与本地跑同一脚本、同一退出码纪律（0=clean；1=gap/drift/FAIL；2=无法判定时失败关闭），不得出现「同一承诺两种判定」。
-4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 24 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 51 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
+4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 26 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 53 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
 5. **私有仓不加定时作业**：私有仓 Actions 分钟数受账号账单限制（§10.6 实测欠账），不得为其新增 `schedule`。
 
 **代价（如实写明）**：远端载体受 GitHub 可用性影响；`UNVERIFIABLE`/`PARTIAL` 不是通过——未配置 `GOVERNANCE_READ_PAT` 时，私有仓完整核对仍依赖 owner 本地凭据（第 2 条）。

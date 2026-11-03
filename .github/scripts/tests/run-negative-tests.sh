@@ -84,8 +84,8 @@ rm -rf "$TMP/release-missing/docs"
 
 run_case "release 正例" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$FIXTURES/release-ok"
 run_case "release 缺发布文档" 1 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/release-missing"
-mkdir -p "$TMP/GalgameShell" "$TMP/SeedVR2-Lite" "$TMP/Android-IconAutoArrange"
-run_case "release 非 release 仓跳过" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/GalgameShell"
+mkdir -p "$TMP/GameShell" "$TMP/SeedVR2-Lite" "$TMP/Android-IconAutoArrange"
+run_case "release 非 release 仓跳过" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/GameShell"
 run_case "release 归档 release 仓跳过" 0 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/Android-IconAutoArrange"
 run_case "release release 仓仍检查" 1 bash "$SCRIPTS/check-release-standard.sh" --root "$TMP/SeedVR2-Lite"
 
