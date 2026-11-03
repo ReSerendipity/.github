@@ -29,7 +29,7 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install actionlint v1.7.12
         env:
           ACTIONLINT_VERSION: 1.7.12
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       # 只检查本次改动引入的提交区间，不重扫全史：main 上已存在的两笔未签名
@@ -124,7 +124,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # 该脚本只发 GET（users/<owner>/repos），token 只用于免限流，不需要额外权限。
       - name: §4 对照表与现网仓库一致
         env:
@@ -153,7 +153,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Run gate negative tests
         run: bash .github/scripts/tests/run-negative-tests.sh
       # §17.5 / ADR-0014 的执行件冒烟：checkout 是干净单工作区，期望 VERDICT: START 且 rc=0；
@@ -168,7 +168,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Shallow-clone account repos
         env:
           GH_TOKEN: ${{ github.token }}
