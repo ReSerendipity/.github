@@ -13,10 +13,8 @@ updates:
     schedule:
       interval: monthly
     cooldown:
+      # github-actions 生态只支持 default-days；semver-* 子字段会判配置非法
       default-days: 7
-      semver-major-days: 30
-      semver-minor-days: 7
-      semver-patch-days: 3
     open-pull-requests-limit: 5
     labels: [dependencies]
     groups:

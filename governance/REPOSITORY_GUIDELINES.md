@@ -654,6 +654,7 @@ updated: YYYY-MM-DD
    - `.editorconfig` 的既有差异是真实需求（`DraftPeek` 的 Kotlin 段、`VOSR2-Lite` 的 `bat/cmd` CRLF 段），不得用统一模板抹平。
 2. **模板为唯一来源**：新增内容一律从 `governance/templates/` 派生；`scaffold-repo.sh` 建新仓时按 `--visibility` 与 `--delivery` 生成对应件。
 3. **dependabot 冷却期**：`cooldown.default-days` 不得低于 **7**。语义：新版本发布后先等若干天再生成 PR，避开「上游刚发布即升级」的投毒窗口；安全补丁类更新不受冷却影响。
+   - **实测口径（2026-11-03）**：`github-actions` 生态的 `cooldown` **只支持 `default-days`**；写 `semver-major-days` / `semver-minor-days` / `semver-patch-days` 会让 Dependabot 判配置非法（`The property '#/updates/0/cooldown/semver-major-days' is not supported for the package ecosystem 'github-actions'`）。`pip` / `npm` / `cargo` / `gradle` 四种生态支持全部四个字段。
 4. **dependabot 豁免须显式声明**：私有仓不开 dependabot 属**放弃自动依赖发现**的安全取舍，不是「不需要」。豁免登记必须写明风险与解除条件（升级 Pro 使 `allow_auto_merge` 可用，或以人工季度 `pip-audit` / `npm audit` 替代）。
 5. **`ARCHITECTURE.md` 质量要求**：六节齐全（定位 / 组件与依赖方向 / 数据流 / 外部依赖 / 边界与非目标 / 变更影响面），每节必须引用本仓真实目录，不得套用模板空话。`README.md` 已有架构图或 SVG 的仓直接文字化复用，不重画。
 6. **审计载体**：`audit-drift.py` 的 `check_repo` 按本节分档判定文件存在性；私有仓对 Actions 默认令牌不可见时记 `unverified`，不记 `drift`。

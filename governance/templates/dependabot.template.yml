@@ -14,15 +14,14 @@
 version: 2
 updates:
   # ── GitHub Actions（所有仓必有）──
+  # 注意：github-actions 生态的 cooldown 只支持 default-days；
+  #       写 semver-major-days / semver-minor-days / semver-patch-days 会被判配置非法。
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: monthly
     cooldown:
       default-days: 7
-      semver-major-days: 30
-      semver-minor-days: 7
-      semver-patch-days: 3
     open-pull-requests-limit: 5
     labels: [dependencies]
     groups:
