@@ -1,0 +1,35 @@
+# 模板：governance/templates/editorconfig.template
+# 用法：复制为 <repo>/.editorconfig。
+# 纪律：已有 .editorconfig 的仓保持原状，不覆盖（2026-11-03 实测已有 7 份，
+#       其中 5 份与本模板逐字一致，DraftPeek 多 Kotlin 段，VOSR2-Lite 有 bat/cmd CRLF 段）。
+# 与 .gitattributes 的 eol=lf 口径一致，不得改成 crlf。
+# https://editorconfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.py]
+indent_size = 4
+
+[*.{js,ts,tsx,jsx,json,yml,yaml,html,css,scss,vue}]
+indent_size = 2
+
+[*.rs]
+indent_size = 4
+
+[*.{kt,kts}]
+indent_size = 4
+
+[*.md]
+# markdown 行尾两空格是硬换行语法，不能去
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab

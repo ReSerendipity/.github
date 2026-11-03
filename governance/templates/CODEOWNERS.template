@@ -1,0 +1,15 @@
+# 模板：governance/templates/CODEOWNERS.template
+# 用法：复制为 <repo>/.github/CODEOWNERS（GitHub 只认 .github/、根、docs/ 三处，统一用 .github/）。
+# 纪律：既有分区安全清单的仓保持原状，不简化、不覆盖。
+# 事实：单人仓下 require_code_owner_reviews 会让作者自批死锁（公开仓）或不可用（私有仓，ADR-0004），
+#       因此本文件的作用是「reviewer 指派 + 敏感路径登记 + 未来接线点」，不是合并门禁。
+
+# ============================================================
+# CODEOWNERS — <Repo-Name> 变更负责人
+# 当前仓库仅一名协作者，所有路径默认指派 @ReSerendipity。
+# 本文件在单人仓只影响 PR 的 reviewer 指派，不构成合并门禁。
+# 新增协作者或接入机器人时，在此按区收窄授权。
+# ============================================================
+
+# 全局默认 —— 所有 PR 默认指派
+* @ReSerendipity

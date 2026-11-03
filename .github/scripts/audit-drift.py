@@ -12,7 +12,9 @@
   deletion / non_fast_forward / pull_request / required_status_checks 且检查清单非空，
   `tag-protection-v` 必须含 deletion / non_fast_forward / update。
 - 必需文件：全部仓库需 README.md；delivery=release 另需 CHANGELOG.md 与
-  docs/release-governance.md。
+  docs/release-governance.md；§12.5 通用工程件按 visibility/delivery 分档
+  （非归档非 backup：`.editorconfig` + `.github/CODEOWNERS`；公开仓另需
+  `.github/dependabot.yml`；release/service/policy 与 5 个复杂 tool 另需 `ARCHITECTURE.md`）。
 - 契约一致性：公开非归档仓必须有 docs/agent-contract.md，且与
   governance/templates/agent-contract.md 逐字节一致（§7.3）；私有仓有则比对、无则跳过。
 - 本地治理文档：非归档仓不得跟踪任何 AGENTS.md（§7.1）；可按仓登记
@@ -42,6 +44,16 @@ DESIRED_PATH = os.path.join(ROOT, "governance", "desired-state.json")
 
 BASE_FILES = ("README.md",)
 RELEASE_FILES = ("CHANGELOG.md", "docs/release-governance.md")
+# §12.5 通用工程件（2026-11-03 新增）：非归档、非 backup 仓必检前两项；
+# dependabot 仅公开仓；ARCHITECTURE.md 按 delivery 或复杂 tool 白名单。
+COMMON_FILES = (".editorconfig", ".github/CODEOWNERS")
+ARCH_COMPLEX_TOOLS = (
+    "ComfyUI-Experiment-Toolbox",
+    "GameShell",
+    "Image-Scrapers",
+    "Unity",
+    "Website-Site-Toolchain",
+)
 RULESET_RULES = {
     "governance-baseline": ("deletion", "non_fast_forward", "pull_request", "required_status_checks"),
     "tag-protection-v": ("deletion", "non_fast_forward", "update"),
@@ -213,6 +225,14 @@ def check_repo(owner, spec, template_text):
         required = list(BASE_FILES)
         if spec["delivery"] == "release":
             required += list(RELEASE_FILES)
+        # §12.5 通用工程件：archived 与 backup 仓不参与；私有仓 dependabot 可豁免（见
+        # GOVERNANCE-EXCLUSIONS.md §十一），此处只对公开仓强制。
+        if not want_archived and spec["delivery"] != "backup":
+            required += list(COMMON_FILES)
+            if spec["visibility"] == "public":
+                required.append(".github/dependabot.yml")
+            if spec["delivery"] in ("release", "service", "policy") or name in ARCH_COMPLEX_TOOLS:
+                required.append("ARCHITECTURE.md")
         for item in required:
             if item not in paths:
                 out["drift"].append(f"缺少必需文件 {item}")

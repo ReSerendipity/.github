@@ -220,3 +220,52 @@
 
 > 该例外不放宽其他私有仓：未登记 `tracked_agents_allow` 的仓仍按 §7.1 判红。
 
+---
+
+## 十一、通用工程件覆盖豁免（2026-11-03）
+
+[§12.5](REPOSITORY_GUIDELINES.md#125-通用工程件覆盖2026-11-03-新增) 要求非归档、非 `backup` 仓补齐四类厂商中立工程件。下列仓按分档豁免，登记以免被误判为漏项。
+
+### 11.1 私有仓 `dependabot.yml` 豁免（13 仓）
+
+| 仓库 | 理由 | 风险（显式声明） | 解除条件 |
+|---|---|---|---|
+| `Agent-Knowledge` | 私有仓 `allow_auto_merge=false`（§19.2 平台缺口），PR 只能人工合 | **依赖漏洞无自动发现** | 升级 Pro 后 `allow_auto_merge` 可用，或改为人工季度 `pip-audit` |
+| `DormitoryNotes-Godot` | 同上 | 同上 | 同上 |
+| `Image-Scrapers` | 同上 | 同上（且该仓 `node_modules/` 已入库，见独立议题） | 同上 |
+| `MiniMax-H3-Lite-Local` | 同上；本仓为资产备份仓，无独立依赖清单 | 同上 | 同上 |
+| `Nekogal-DL` | 同上 | 同上 | 同上 |
+| `Object-Atlas` | 同上 | 同上 | 同上 |
+| `Prompt-Library` | 同上 | 同上 | 同上 |
+| `rewq` | 同上 | 同上 | 同上 |
+| `Subject-Courseware-Studio` | 同上 | 同上 | 同上 |
+| `Unity` | 同上 | 同上 | 同上 |
+| `Website-Genshin-Impact` | 同上；且每个角色目录一个 `package.json`，逐个配置会产生海量 PR | 同上 | 同上 |
+| `Website-Honkai-Star-Rail` | 同上 | 同上 | 同上 |
+| `Website-Zenless-Zone-Zero` | 同上 | 同上 | 同上 |
+
+> **这不是「不需要」，是「放弃自动依赖发现」。** 豁免仓不得因此被视为已满足依赖安全；季度人工审计是本条的替代控制。
+> `Website-Wuthering-Waves` 虽为私有仓但已自配 `dependabot.yml`，不在此表。
+
+### 11.2 `ARCHITECTURE.md` 豁免（8 仓）
+
+| 仓库 | delivery | 理由 | 解除条件 |
+|---|---|---|---|
+| `Agent-Knowledge` | content | 内容即交付物，无代码组件 | 出现可执行组件时 |
+| `Prompt-Library` | content | 同上 | 同上 |
+| `ReSerendipity` | content | 身份/profile 仓，内容即 README | 同上 |
+| `Subject-Courseware-Studio` | content | 同上 | 同上 |
+| `ComfyUI-BatchPromptLoader` | tool | 单文件 ComfyUI 插件（15 跟踪文件），无分层 | 拆出多组件时 |
+| `Github-Repo-Scan` | tool | 单入口脚本 + 一个 dashboard（47 文件） | 组件数增加时 |
+| `Nekogal-DL` | tool | 单入口爬虫（64 文件） | 同上 |
+| `MiniMax-H3-Lite-Local` | tool | 资产备份仓（`overlay/local/`），无代码架构；365 文件不构成复杂度 | 该仓转为工程项目时 |
+
+> 其余 `tool` 仓（`GameShell`、`Image-Scrapers`、`Unity`、`ComfyUI-Experiment-Toolbox`、`Website-Site-Toolchain`）跟踪文件均 >100 且多组件，须写 `ARCHITECTURE.md`。
+
+### 11.3 不建、不迁（口径固化）
+
+- **不建 `GOVERNANCE.md`**：非 GitHub 社区健康文件标准项；职责由 `governance/README.md` 承担。
+- **不建任何厂商私有入口**：`CLAUDE.md`、`GEMINI.md`、`.cursor/rules`、`.clinerules`、`.windsurf/rules`、`.github/copilot-instructions.md`、`.github/instructions/**`、`memory-bank/`。
+- **不迁 `governance/decisions/` → `docs/adr/`**：ADR 是治理规则变更记录，属治理正文一部分。
+- **不迁 `.github/scripts/` → `scripts/`、`.github/scripts/tests/` → `tests/`**：Actions 专用脚本按 §12.1 例外留原位。
+

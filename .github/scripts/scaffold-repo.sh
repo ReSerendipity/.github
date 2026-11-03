@@ -19,6 +19,10 @@ AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS.template.md"
 GOTCHAS_TEMPLATE="$REPO_ROOT/governance/templates/GOTCHAS.template.md"
 REVISION_LOG_TEMPLATE="$REPO_ROOT/governance/templates/REVISION_LOG.template.md"
 HOOK_TEMPLATE="$SCRIPT_DIR/templates/pre-push"
+EDITORCONFIG_TEMPLATE="$REPO_ROOT/governance/templates/editorconfig.template"
+CODEOWNERS_TEMPLATE="$REPO_ROOT/governance/templates/CODEOWNERS.template"
+DEPENDABOT_TEMPLATE="$REPO_ROOT/governance/templates/dependabot.template.yml"
+ARCH_TEMPLATE="$REPO_ROOT/governance/templates/ARCHITECTURE.template.md"
 OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
 err() { echo "ERROR: $*" >&2; }
@@ -28,6 +32,7 @@ VISIBILITY='private'
 DELIVERY='tool'
 REPOS_ROOT="$DEFAULT_REPOS_ROOT"
 CREATE_REMOTE=0
+ARCHITECTURE=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -38,6 +43,7 @@ while [ $# -gt 0 ]; do
     --repos-root) REPOS_ROOT=${2:-}; shift 2 ;;
     --repos-root=*) REPOS_ROOT=${1#*=}; shift ;;
     --create-remote) CREATE_REMOTE=1; shift ;;
+    --architecture) ARCHITECTURE=1; shift ;;
     -*) err "未知参数 '$1'"; exit 2 ;;
     *)
       if [ -n "$NAME" ]; then err "只能给一个仓库名，已给 '$NAME' 与 '$1'"; exit 2; fi
@@ -54,6 +60,10 @@ case "$DELIVERY" in release|service|tool|content) ;; *) err "--delivery 只支�
 [ -f "$GOTCHAS_TEMPLATE" ] || { err "找不到 GOTCHAS 模板：$GOTCHAS_TEMPLATE"; exit 2; }
 [ -f "$REVISION_LOG_TEMPLATE" ] || { err "找不到 REVISION_LOG 模板：$REVISION_LOG_TEMPLATE"; exit 2; }
 [ -f "$HOOK_TEMPLATE" ] || { err "找不到 pre-push 模板：$HOOK_TEMPLATE"; exit 2; }
+[ -f "$EDITORCONFIG_TEMPLATE" ] || { err "找不到 editorconfig 模板：$EDITORCONFIG_TEMPLATE"; exit 2; }
+[ -f "$CODEOWNERS_TEMPLATE" ] || { err "找不到 CODEOWNERS 模板：$CODEOWNERS_TEMPLATE"; exit 2; }
+[ -f "$DEPENDABOT_TEMPLATE" ] || { err "找不到 dependabot 模板：$DEPENDABOT_TEMPLATE"; exit 2; }
+[ -f "$ARCH_TEMPLATE" ] || { err "找不到 ARCHITECTURE 模板：$ARCH_TEMPLATE"; exit 2; }
 
 # §1 命名：字母/数字/短横线，分段首字母大写，禁止下划线、空段与连续短横线。
 case "$NAME" in
@@ -71,7 +81,7 @@ done
 TARGET="$REPOS_ROOT/$NAME"
 [ ! -e "$TARGET" ] || { err "目标已存在：$TARGET"; exit 1; }
 
-mkdir -p "$TARGET/docs" "$TARGET/.githooks"
+mkdir -p "$TARGET/docs" "$TARGET/.githooks" "$TARGET/.github"
 cd "$TARGET" || { err "无法进入 $TARGET"; exit 2; }
 git init -b main --quiet || { err "git init 失败"; exit 2; }
 
@@ -115,6 +125,20 @@ cp "$HOOK_TEMPLATE" .githooks/pre-push
 chmod +x .githooks/pre-push 2>/dev/null || true
 git config core.hooksPath .githooks
 
+# §12.5 通用工程件：四件按分档生成，一律取模板正文（去掉模板头注释），不覆盖已有
+awk '/^root = true$/{p=1} p' "$EDITORCONFIG_TEMPLATE" > .editorconfig
+awk '/^# ============================================================$/{p=1} p' "$CODEOWNERS_TEMPLATE" \
+  | sed "s/<Repo-Name>/$NAME/" > .github/CODEOWNERS
+if [ "$VISIBILITY" = "public" ]; then
+  cp "$DEPENDABOT_TEMPLATE" .github/dependabot.yml
+fi
+case "$DELIVERY" in release|service|policy) ARCHITECTURE=1 ;; esac
+if [ "$ARCHITECTURE" -eq 1 ]; then
+  awk '/^# 架构 — /{p=1} p' "$ARCH_TEMPLATE" \
+    | sed "s/<Repo-Name>/$NAME/; s/delivery=<release|service|tool|content|policy>/delivery=$DELIVERY/" \
+    | sed 's/lifecycle=<active|maintenance>/lifecycle=active/' > ARCHITECTURE.md
+fi
+
 if [ "$CREATE_REMOTE" -eq 1 ]; then
   git add -A
   git update-index --chmod=+x .githooks/pre-push 2>/dev/null || true
@@ -126,8 +150,15 @@ fi
 cat <<EOF
 
 脚手架已生成：$TARGET
-  README.md / CHANGELOG.md / AGENTS.md / docs/release-governance.md / docs/agent-contract.md / .gitignore / .githooks/pre-push
+  README.md / CHANGELOG.md / AGENTS.md / ARCHITECTURE.md / docs/release-governance.md / docs/agent-contract.md
+  .editorconfig / .github/CODEOWNERS / .github/dependabot.yml / .gitignore / .githooks/pre-push
   core.hooksPath=.githooks（删除 main、非快进推送 main 会被本地拦截；逃生阀 SKIP_GOVERNANCE_HOOKS=1）
+
+  §12.5 通用工程件生成口径：
+    .editorconfig        无条件
+    .github/CODEOWNERS   无条件
+    .github/dependabot.yml  仅 --public
+    ARCHITECTURE.md      仅 release|service|policy 或显式 --architecture
 
 还需人工完成的五处同步（脚本不自动改文档）：
   1. governance/REPOSITORY_GUIDELINES.md §4 加一行（可见性 + delivery）

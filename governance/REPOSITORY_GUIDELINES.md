@@ -595,6 +595,16 @@ updated: YYYY-MM-DD
 | 仅本地内容（内部说明 / agent 上下文 / 实验记录 / 纯历史） | `local/`（根目录） | **§13.1 的唯一 ignore 容器**，整体不入库 |
 | 数据文件 | `data/` | 引导级 |
 | 仓级 CI | `.github/workflows/` | GitHub 硬要求 |
+| 代码归属 | `.github/CODEOWNERS` | 只用这一处；GitHub 也认根与 `docs/`，统一收口避免三处漂移 |
+| 编辑器一致性 | `.editorconfig`（根） | 与 `.gitattributes` 的 `eol=lf` 同口径；不得改成 `crlf` |
+| 依赖更新 | `.github/dependabot.yml` | GitHub 唯一合法位置 |
+| 架构说明 | `ARCHITECTURE.md`（根） | 分档与豁免见 §12.5 |
+
+**例外（2026-11-03 新增）**：
+
+- `.github/scripts/` 是 **Actions 专用脚本的合法位置**，不受本表「自动化脚本 → `scripts/`」约束。理由：这些脚本被 `.github/workflows/*` 直接引用，迁到 `scripts/` 会让每个 workflow 的调用路径跨目录；GitHub 自身也把 Actions 资产约定在 `.github/` 下。
+- 测试同理：`.github/scripts/tests/` 是该类脚本的测试与夹具，合法。
+- 除这两处外，其他脚本与测试仍按本表进 `scripts/` / `tests/`；`ComfyUI-*` 插件根的 `__init__.py` 与节点文件按语言惯例留根。
 
 ### 12.2 存量收敛（方案 A：全量迁移，2026-10-19 裁决）
 
@@ -624,6 +634,31 @@ updated: YYYY-MM-DD
 - 仓内路径一律 `/` 相对仓根、逐字符一致；禁止机器绝对路径进入可执行文件 / 配置。
 - 文档入库三问与 `local/` 容器见 **§13.1**；`local/` 是唯一本地容器，`AGENTS.md` 与 `local/agents/**` 均属本地上下文（§7）。
 - 本节是 §13 的归口；§13 保留原编号作为执行细则。
+
+### 12.5 通用工程件覆盖（2026-11-03 新增）
+
+**定位**：把市面仓库普遍具备、且**厂商中立**的四类工程件收编进治理，使任何模型厂商或工具接手时不必重新摸索工程约束。厂商私有入口（`CLAUDE.md`、`GEMINI.md`、`.cursor/rules`、`.clinerules`、`.windsurf/rules`、`.github/copilot-instructions.md`、`.github/instructions/**`、`memory-bank/`）**一律不建**——引入即为每家工具维护一份副本，违反「同一事实只留一处权威来源」。
+
+**适用范围**：非 `archived` 且非 `backup` 的仓库（按 `desired-state.json` 判定）。
+
+| 文件 | 覆盖要求 | 豁免条件 |
+|---|---|---|
+| `.editorconfig` | **全部适用仓** | 无。已有文件保持原状，不覆盖 |
+| `.github/CODEOWNERS` | **全部适用仓** | 无。已有分区清单保持原状，不简化 |
+| `.github/dependabot.yml` | **公开仓全部** | **私有仓**可豁免，须在 `GOVERNANCE-EXCLUSIONS.md` §十一 登记 |
+| `ARCHITECTURE.md` | `release` / `service` / `policy`，以及**有多个独立组件的 `tool`** | `content` 仓、无独立代码组件的单文件插件与小工具，须登记 |
+
+**条款**：
+
+1. **不覆盖纪律**：四件中任何已存在的文件一律保持原状。补齐只针对缺失项，避免格式化型回归。
+   - `.editorconfig` 的既有差异是真实需求（`DraftPeek` 的 Kotlin 段、`VOSR2-Lite` 的 `bat/cmd` CRLF 段），不得用统一模板抹平。
+2. **模板为唯一来源**：新增内容一律从 `governance/templates/` 派生；`scaffold-repo.sh` 建新仓时按 `--visibility` 与 `--delivery` 生成对应件。
+3. **dependabot 冷却期**：`cooldown.default-days` 不得低于 **7**。语义：新版本发布后先等若干天再生成 PR，避开「上游刚发布即升级」的投毒窗口；安全补丁类更新不受冷却影响。
+4. **dependabot 豁免须显式声明**：私有仓不开 dependabot 属**放弃自动依赖发现**的安全取舍，不是「不需要」。豁免登记必须写明风险与解除条件（升级 Pro 使 `allow_auto_merge` 可用，或以人工季度 `pip-audit` / `npm audit` 替代）。
+5. **`ARCHITECTURE.md` 质量要求**：六节齐全（定位 / 组件与依赖方向 / 数据流 / 外部依赖 / 边界与非目标 / 变更影响面），每节必须引用本仓真实目录，不得套用模板空话。`README.md` 已有架构图或 SVG 的仓直接文字化复用，不重画。
+6. **审计载体**：`audit-drift.py` 的 `check_repo` 按本节分档判定文件存在性；私有仓对 Actions 默认令牌不可见时记 `unverified`，不记 `drift`。
+7. **`GOVERNANCE.md` 不建**：GitHub 社区健康文件标准列表不含该项；治理说明继续由 `governance/README.md` 承担，避免双写。
+8. **`docs/adr/` 不迁移**：市面 `docs/adr/` 承载项目架构决策；本账号 ADR（`governance/decisions/`）是治理规则变更记录，属治理正文的一部分，迁出会把规则与依据拆到两处。
 
 ## 13. 路径规范（§12.4 执行细则，2026-10-19 新增）
 

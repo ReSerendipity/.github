@@ -1,0 +1,27 @@
+version: 2
+# 依赖更新策略（对齐家族仓 SeedVR2-Lite / VOSR2-Lite 的口径）。
+#
+# 冷却期（cooldown）：新版本发布后先等几天再生成 PR，避开「上游刚发布即升级」的
+# 投毒窗口最窄时刻。安全补丁类更新不受冷却影响，仍即时生成 PR。
+# default-days 不得低于 7（家族安全规则的下限）。
+#
+# 本仓只有 GitHub Actions 一个生态：治理正文与模板均为 Markdown / Bash / Python 脚本，
+# 无包管理器清单文件。
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    groups:
+      # minor/patch 合并成一个 PR；major 仍各自单开，逐个评审。
+      minor-and-patch:
+        applies-to: version-updates
+        update-types: [minor, patch]
+        patterns: ["*"]
