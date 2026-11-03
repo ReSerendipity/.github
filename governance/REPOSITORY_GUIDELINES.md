@@ -958,6 +958,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 
 - **ruleset 的 Dependabot 旁路不豁免** `require_extra_approval_for_unattributed_changes`——owner approve 仍是 native auto-merge 的必要环节；approve 即触发合并（其余条件满足时）。
 - 新仓 `allow_auto_merge` 必须 `true`（2026-10-27 补开 GalgameShell；新建仓由 `scaffold-repo.sh` 落实，未覆盖时手动设置）。
+  - 2026-11-03 实测：**私有仓无法开启**——`PATCH /repos/<owner>/<repo>` 带 `allow_auto_merge=true` 返回 200，但回读仍为 `false`（`Object-Atlas`、`Agent-Knowledge`、`DormitoryNotes-Godot`、`KeyBackup-Passwords` 一致；公开仓 `DraftPeek` 为 `true`）。按 ADR-0004 口径记为平台能力缺口，不逐仓算欠账；公开仓新仓仍按本条落实。
 - `gh run rerun` 重跑同一 SHA，**不重算 PR merge base**——旧 base 的红要用 `@dependabot rebase` 拿新 base 的新信号。
 - TTS 的必检清单在 classic 分支保护而非 ruleset（两套并存时以并集为准）；排查卡点先看 `required_status_checks` 再看分支保护。
 - 钉版抬升时 **grep workflows 里的旧同图约束**：CI 安装步骤的 `pip install "huggingface-hub<1.0" ...` 这类时代产物会与主锁冲突，pip check 红在安装步（先例 TTS ci.yml 随 5.20.2 迁移改 `<2.0`）。

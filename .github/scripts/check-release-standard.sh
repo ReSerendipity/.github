@@ -155,13 +155,21 @@ check_one() {
     fails=$((fails+1))
   fi
 
-  # ── §10.4 镜像链应开 provenance + sbom（推荐口径 → WARN）───
+  # ── §10.4 镜像链须有 provenance + sbom（推荐口径 → WARN）───
+  # 两条合规路径都认：
+  #   a) buildx 内联开关 provenance: true + sbom: true（构建即推送的链）；
+  #   b) 推送后按 digest 绑定的 attestation（先构建不推送 → 扫描门禁 → 再推送的链，
+  #      内联开关与 load 冲突，只能走 actions/attest-*）。
   if [ -n "$(scan_workflows 'docker/build-push-action' "$wf")" ]; then
     if [ -n "$(scan_workflows 'provenance:[ \t]*true' "$wf")" ] &&
        [ -n "$(scan_workflows 'sbom:[ \t]*true' "$wf")" ]; then
-      echo "   ok   镜像链已开 provenance + sbom"
+      echo "   ok   镜像链已开 provenance + sbom（buildx 内联）"
+    elif [ -n "$(scan_workflows 'attest-build-provenance' "$wf")" ] &&
+         [ -n "$(scan_workflows 'attest-sbom' "$wf")" ] &&
+         [ -n "$(scan_workflows 'push-to-registry:[ \t]*true' "$wf")" ]; then
+      echo "   ok   镜像链以 attestation 绑定 provenance + SBOM（推送后按 digest）"
     else
-      echo "   WARN 镜像链未同时开 provenance: true 与 sbom: true（§10.4 推荐口径）"
+      echo "   WARN 镜像链未见 provenance + sbom：既无 buildx 内联开关，也无 attest-build-provenance + attest-sbom（§10.4 推荐口径）"
       warns=$((warns+1))
     fi
   fi
