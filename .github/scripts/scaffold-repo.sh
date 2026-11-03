@@ -23,6 +23,9 @@ EDITORCONFIG_TEMPLATE="$REPO_ROOT/governance/templates/editorconfig.template"
 CODEOWNERS_TEMPLATE="$REPO_ROOT/governance/templates/CODEOWNERS.template"
 DEPENDABOT_TEMPLATE="$REPO_ROOT/governance/templates/dependabot.template.yml"
 ARCH_TEMPLATE="$REPO_ROOT/governance/templates/ARCHITECTURE.template.md"
+SECURITY_TEMPLATE="$REPO_ROOT/governance/templates/SECURITY.template.md"
+CONTRIBUTING_TEMPLATE="$REPO_ROOT/governance/templates/CONTRIBUTING.template.md"
+COC_TEMPLATE="$REPO_ROOT/governance/templates/CODE_OF_CONDUCT.template.md"
 OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
 err() { echo "ERROR: $*" >&2; }
@@ -64,6 +67,9 @@ case "$DELIVERY" in release|service|tool|content) ;; *) err "--delivery 只支�
 [ -f "$CODEOWNERS_TEMPLATE" ] || { err "找不到 CODEOWNERS 模板：$CODEOWNERS_TEMPLATE"; exit 2; }
 [ -f "$DEPENDABOT_TEMPLATE" ] || { err "找不到 dependabot 模板：$DEPENDABOT_TEMPLATE"; exit 2; }
 [ -f "$ARCH_TEMPLATE" ] || { err "找不到 ARCHITECTURE 模板：$ARCH_TEMPLATE"; exit 2; }
+[ -f "$SECURITY_TEMPLATE" ] || { err "找不到 SECURITY 模板：$SECURITY_TEMPLATE"; exit 2; }
+[ -f "$CONTRIBUTING_TEMPLATE" ] || { err "找不到 CONTRIBUTING 模板：$CONTRIBUTING_TEMPLATE"; exit 2; }
+[ -f "$COC_TEMPLATE" ] || { err "找不到 CODE_OF_CONDUCT 模板：$COC_TEMPLATE"; exit 2; }
 
 # §1 命名：字母/数字/短横线，分段首字母大写，禁止下划线、空段与连续短横线。
 case "$NAME" in
@@ -131,7 +137,27 @@ awk '/^# ============================================================$/{p=1} p' 
   | sed "s/<Repo-Name>/$NAME/" > .github/CODEOWNERS
 if [ "$VISIBILITY" = "public" ]; then
   cp "$DEPENDABOT_TEMPLATE" .github/dependabot.yml
+  awk '/^# 安全策略 — /{p=1} p' "$SECURITY_TEMPLATE" \
+    | sed "s/<Repo-Name>/$NAME/; s/<owner>/$OWNER/; s/<repo>/$NAME/" > SECURITY.md
+  awk '/^# 行为准则 — /{p=1} p' "$COC_TEMPLATE" | sed "s/<Repo-Name>/$NAME/" > CODE_OF_CONDUCT.md
+  case "$DELIVERY" in
+    release|service|policy)
+      awk '/^# 贡献指南 — /{p=1} p' "$CONTRIBUTING_TEMPLATE" | sed "s/<Repo-Name>/$NAME/" > CONTRIBUTING.md ;;
+  esac
 fi
+mkdir -p skills
+[ -f skills/README.md ] || cat > skills/README.md <<'EOF'
+# Skills
+
+本目录存放 agent 运维 skill，每个 skill 一个子目录：`<kebab-case>/SKILL.md`。
+`SKILL.md` 的 frontmatter 必填 `name` 与触发导向的 `description`；复杂 skill 可带 `references/`、`scripts/`、`assets/`。
+
+产品提示词资产、学习素材、采集的外部文档**不在此列**（治理规范 §12.5 条款 9）。
+
+## 当前 skill
+
+（新增 skill 时在此登记一行：`<name>` — 一句话用途。）
+EOF
 case "$DELIVERY" in release|service|policy) ARCHITECTURE=1 ;; esac
 if [ "$ARCHITECTURE" -eq 1 ]; then
   awk '/^# 架构 — /{p=1} p' "$ARCH_TEMPLATE" \
@@ -150,14 +176,17 @@ fi
 cat <<EOF
 
 脚手架已生成：$TARGET
-  README.md / CHANGELOG.md / AGENTS.md / ARCHITECTURE.md / docs/release-governance.md / docs/agent-contract.md
+  README.md / CHANGELOG.md / AGENTS.md / ARCHITECTURE.md / SECURITY.md / CODE_OF_CONDUCT.md / CONTRIBUTING.md
+  docs/release-governance.md / docs/agent-contract.md / skills/README.md
   .editorconfig / .github/CODEOWNERS / .github/dependabot.yml / .gitignore / .githooks/pre-push
   core.hooksPath=.githooks（删除 main、非快进推送 main 会被本地拦截；逃生阀 SKIP_GOVERNANCE_HOOKS=1）
 
   §12.5 通用工程件生成口径：
     .editorconfig        无条件
     .github/CODEOWNERS   无条件
-    .github/dependabot.yml  仅 --public
+    skills/README.md     无条件（skill 本体按需新增）
+    .github/dependabot.yml / SECURITY.md / CODE_OF_CONDUCT.md  仅 --public
+    CONTRIBUTING.md      仅 --public 且 release|service|policy
     ARCHITECTURE.md      仅 release|service|policy 或显式 --architecture
 
 还需人工完成的五处同步（脚本不自动改文档）：

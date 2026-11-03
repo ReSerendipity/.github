@@ -600,6 +600,9 @@ updated: YYYY-MM-DD
 | 依赖更新 | `.github/dependabot.yml` | GitHub 唯一合法位置 |
 | 架构说明 | `ARCHITECTURE.md`（根） | 分档与豁免见 §12.5 |
 | Agent skill | `skills/<kebab-case>/SKILL.md` | 每个 skill 一个独立子目录；frontmatter 必填 `name` + `description`；可带 `references/` `scripts/` `assets/`。产品数据、学习素材、采集的外部 skill 文档不在此列（见 §12.5 条款 9） |
+| 安全策略 | `SECURITY.md`（根） | 已存在的 `docs/SECURITY.md` 视为合规、不迁；GitHub 也认 `.github/`，新补一律写根 |
+| 贡献指南 | `CONTRIBUTING.md`（根） | 公开 `release` / `service` / `policy` 仓必建（§12.5 条款 10） |
+| 行为准则 | `CODE_OF_CONDUCT.md`（根） | 公开仓必建；不自行改写核心条款 |
 
 **例外（2026-11-03 新增）**：
 
@@ -668,6 +671,19 @@ updated: YYYY-MM-DD
    - **同一 skill 只留一份归档副本**：本账号归档仓为 `Agent-Knowledge/skills/`；其他仓需要引用时写一行指针，不复制正文。2026-11-03 已把散落在 6 个仓的 `docs/SKILL.md`（`bilibili-repo-harvest`）收敛到该归档仓。
    - **`.qoder/` 等工具本地目录不入库**：若历史误跟踪，迁移到 `skills/<name>/` 后从版本库删除，`.gitignore` 保留排除规则。
    - **双语不强制**：需要时用 `SKILL.zh_CN.md` 平级配对，并在 `skills/README.md` 索引登记。
+   - **有 `skills/` 的仓必须有 `skills/README.md` 索引**：列当前 skill 与一句话用途，新增 skill 时同步。
+10. **社区健康文件分档（2026-11-03 新增）**：
+    | 文件 | 范围 | 豁免 / 位置说明 |
+    |---|---|---|
+    | `SECURITY.md` | **全部公开仓** | 无豁免。已存在 `docs/SECURITY.md` 或 `.github/SECURITY.md` 视为合规，不迁 |
+    | `CODE_OF_CONDUCT.md` | **全部公开仓** | 无豁免 |
+    | `CONTRIBUTING.md` | **公开 `release` / `service` / `policy`** | 公开 `tool` / `content` 不强制（无外部贡献流） |
+    | `LICENSE` | 公开仓 | §11 已登记 `.github` 与身份仓豁免 |
+    | `CHANGELOG.md` | `release` | §10.2 |
+    | `SUPPORT.md` | 不强制 | 个人账号无支持渠道，写了也是空壳 |
+    | `.github/ISSUE_TEMPLATE` / `PULL_REQUEST_TEMPLATE.md` | 不强制 | 公开仓已覆盖过半；硬补会向 tool 仓塞模板噪音 |
+
+    **纪律**：三份模板只写真实通道与承诺（DCO、测试命令、报告入口），不复制别人的正文；`SECURITY.md` 中的漏洞报告入口必须指向本仓 `security/advisories/new`。
 
 ## 13. 路径规范（§12.4 执行细则，2026-10-19 新增）
 

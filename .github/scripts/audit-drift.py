@@ -14,7 +14,11 @@
 - 必需文件：全部仓库需 README.md；delivery=release 另需 CHANGELOG.md 与
   docs/release-governance.md；§12.5 通用工程件按 visibility/delivery 分档
   （非归档非 backup：`.editorconfig` + `.github/CODEOWNERS`；公开仓另需
-  `.github/dependabot.yml`；release/service/policy 与 5 个复杂 tool 另需 `ARCHITECTURE.md`）。
+  `.github/dependabot.yml` + `CODE_OF_CONDUCT.md` + `SECURITY.md`；
+  公开 release/service/policy 另需 `CONTRIBUTING.md`；
+  release/service/policy 与 5 个复杂 tool 另需 `ARCHITECTURE.md`）。
+- SKILL.md 位置：只允许 `skills/<name>/SKILL.md`；`docs/` 下出现即 drift；
+  有 `skills/` 必须有 `skills/README.md` 索引（§12.5 条款 9）。
 - 契约一致性：公开非归档仓必须有 docs/agent-contract.md，且与
   governance/templates/agent-contract.md 逐字节一致（§7.3）；私有仓有则比对、无则跳过。
 - 本地治理文档：非归档仓不得跟踪任何 AGENTS.md（§7.1）；可按仓登记
@@ -47,6 +51,10 @@ RELEASE_FILES = ("CHANGELOG.md", "docs/release-governance.md")
 # §12.5 通用工程件（2026-11-03 新增）：非归档、非 backup 仓必检前两项；
 # dependabot 仅公开仓；ARCHITECTURE.md 按 delivery 或复杂 tool 白名单。
 COMMON_FILES = (".editorconfig", ".github/CODEOWNERS")
+# §12.5 条款 10：社区健康文件按可见性 / delivery 分档。
+PUBLIC_FILES = (".github/dependabot.yml", "CODE_OF_CONDUCT.md")
+SECURITY_FILES = ("SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md")
+CONTRIBUTING_DELIVERIES = ("release", "service", "policy")
 ARCH_COMPLEX_TOOLS = (
     "ComfyUI-Experiment-Toolbox",
     "GameShell",
@@ -230,12 +238,25 @@ def check_repo(owner, spec, template_text):
         if not want_archived and spec["delivery"] != "backup":
             required += list(COMMON_FILES)
             if spec["visibility"] == "public":
-                required.append(".github/dependabot.yml")
+                required += list(PUBLIC_FILES)
+                if not any(item in paths for item in SECURITY_FILES):
+                    out["drift"].append(
+                        "缺少必需文件 SECURITY.md（根 / .github/ / docs/ 任一，§12.5 条款 10）")
+                if spec["delivery"] in CONTRIBUTING_DELIVERIES:
+                    required.append("CONTRIBUTING.md")
             if spec["delivery"] in ("release", "service", "policy") or name in ARCH_COMPLEX_TOOLS:
                 required.append("ARCHITECTURE.md")
         for item in required:
             if item not in paths:
                 out["drift"].append(f"缺少必需文件 {item}")
+
+        # §12.5 条款 9：SKILL.md 只能在 skills/<name>/ 下，docs/ 下出现即位置不合规。
+        misplaced = sorted(p for p in paths if p.startswith("docs/") and p.rsplit("/", 1)[-1] == "SKILL.md")
+        if misplaced:
+            out["drift"].append(
+                "docs/ 下的 SKILL.md 位置不合规（应为 skills/<name>/SKILL.md）：" + "、".join(misplaced[:3]))
+        if "skills/README.md" not in paths and any(p.startswith("skills/") for p in paths):
+            out["drift"].append("有 skills/ 但缺 skills/README.md 索引（§12.5 条款 9）")
 
         # §7.1 非归档仓不得跟踪 AGENTS.md；私有资产备份仓可按 tracked_agents_allow 放行。
         if not want_archived:
