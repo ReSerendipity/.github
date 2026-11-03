@@ -604,7 +604,8 @@ updated: YYYY-MM-DD
 
 - `.github/scripts/` 是 **Actions 专用脚本的合法位置**，不受本表「自动化脚本 → `scripts/`」约束。理由：这些脚本被 `.github/workflows/*` 直接引用，迁到 `scripts/` 会让每个 workflow 的调用路径跨目录；GitHub 自身也把 Actions 资产约定在 `.github/` 下。
 - 测试同理：`.github/scripts/tests/` 是该类脚本的测试与夹具，合法。
-- 除这两处外，其他脚本与测试仍按本表进 `scripts/` / `tests/`；`ComfyUI-*` 插件根的 `__init__.py` 与节点文件按语言惯例留根。
+- **运维验证脚本不是测试**：带副作用（改配置、下载权重、跑真实推理）的手工验证脚本留在 `scripts/`，不进 `tests/`。`tests/` 的语义是「pytest 等框架可自动收集的测试套件」；`test_*.py` / `*_test.py` 一旦进 `tests/` 会被 pytest 收集并执行，副作用会在 CI 里直接报错（2026-11-03 Image-DuoModel CI 实测）。
+- 除上述例外外，其他脚本与测试仍按本表进 `scripts/` / `tests/`；`ComfyUI-*` 插件根的 `__init__.py` 与节点文件按语言惯例留根。
 
 ### 12.2 存量收敛（方案 A：全量迁移，2026-10-19 裁决）
 

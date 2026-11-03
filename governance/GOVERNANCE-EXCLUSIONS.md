@@ -269,3 +269,14 @@
 - **不迁 `governance/decisions/` → `docs/adr/`**：ADR 是治理规则变更记录，属治理正文一部分。
 - **不迁 `.github/scripts/` → `scripts/`、`.github/scripts/tests/` → `tests/`**：Actions 专用脚本按 §12.1 例外留原位。
 
+### 11.4 运维验证脚本留 `scripts/`（不按 `tests/` 归位）
+
+这些文件名字像测试，实际是带副作用的手工验证脚本（改配置文件、下载权重、跑真实推理）。迁入 `tests/` 会被 pytest 自动收集并在 CI 中执行，2026-11-03 已实测导致 `Image-DuoModel` 的 Python 3.12 作业直接报错，故回滚原位并登记。
+
+| 仓库 | 文件 | 性质 | 解除条件 |
+|---|---|---|---|
+| `Image-DuoModel` | `scripts/test_portable_mode.py` | 会备份并改写 `config.yaml` 后回滚，属运维验证 | 改造成无副作用的纯单元测试后进 `tests/` |
+| `Lineart-Painter` | `scripts/smoke_test.py` | 跑真实管线并写 `smoke_out/`，被 `ci.yml` / `release.yml` 当作门禁命令调用 | 同上 |
+| `Lineart-Painter` | `scripts/webui_test.py` | 起 Web 请求处理检查，需运行环境 | 同上 |
+| `Lineart-Painter` | `scripts/_a2s_test.py` | 独立推理脚本，下划线前缀本就不被 pytest 收集 | 同上 |
+
