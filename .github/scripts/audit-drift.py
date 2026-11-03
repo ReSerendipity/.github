@@ -14,8 +14,9 @@
 - 必需文件：全部仓库需 README.md；delivery=release 另需 CHANGELOG.md 与
   docs/release-governance.md；§12.5 通用工程件按 visibility/delivery 分档
   （非归档非 backup：`.editorconfig` + `.github/CODEOWNERS`；公开仓另需
-  `.github/dependabot.yml` + `CODE_OF_CONDUCT.md` + `SECURITY.md`；
-  公开 release/service/policy 另需 `CONTRIBUTING.md`；
+  `.github/dependabot.yml` + `SECURITY.md` + `CODE_OF_CONDUCT.md`
+  （后两者根 / `.github/` / `docs/` 任一即可）；公开 release/service/policy 另需
+  `CONTRIBUTING.md`（同样三位置任一）；
   release/service/policy 与 5 个复杂 tool 另需 `ARCHITECTURE.md`）。
 - SKILL.md 位置：只允许 `skills/<name>/SKILL.md`；`docs/` 下出现即 drift；
   有 `skills/` 必须有 `skills/README.md` 索引（§12.5 条款 9）。
@@ -52,8 +53,10 @@ RELEASE_FILES = ("CHANGELOG.md", "docs/release-governance.md")
 # dependabot 仅公开仓；ARCHITECTURE.md 按 delivery 或复杂 tool 白名单。
 COMMON_FILES = (".editorconfig", ".github/CODEOWNERS")
 # §12.5 条款 10：社区健康文件按可见性 / delivery 分档。
-PUBLIC_FILES = (".github/dependabot.yml", "CODE_OF_CONDUCT.md")
+PUBLIC_FILES = (".github/dependabot.yml",)
 SECURITY_FILES = ("SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md")
+COC_FILES = ("CODE_OF_CONDUCT.md", ".github/CODE_OF_CONDUCT.md", "docs/CODE_OF_CONDUCT.md")
+CONTRIBUTING_FILES = ("CONTRIBUTING.md", ".github/CONTRIBUTING.md", "docs/CONTRIBUTING.md")
 CONTRIBUTING_DELIVERIES = ("release", "service", "policy")
 ARCH_COMPLEX_TOOLS = (
     "ComfyUI-Experiment-Toolbox",
@@ -242,8 +245,13 @@ def check_repo(owner, spec, template_text):
                 if not any(item in paths for item in SECURITY_FILES):
                     out["drift"].append(
                         "缺少必需文件 SECURITY.md（根 / .github/ / docs/ 任一，§12.5 条款 10）")
-                if spec["delivery"] in CONTRIBUTING_DELIVERIES:
-                    required.append("CONTRIBUTING.md")
+                if not any(item in paths for item in COC_FILES):
+                    out["drift"].append(
+                        "缺少必需文件 CODE_OF_CONDUCT.md（根 / .github/ / docs/ 任一，§12.5 条款 10）")
+                if spec["delivery"] in CONTRIBUTING_DELIVERIES and not any(
+                        item in paths for item in CONTRIBUTING_FILES):
+                    out["drift"].append(
+                        "缺少必需文件 CONTRIBUTING.md（根 / .github/ / docs/ 任一，§12.5 条款 10）")
             if spec["delivery"] in ("release", "service", "policy") or name in ARCH_COMPLEX_TOOLS:
                 required.append("ARCHITECTURE.md")
         for item in required:
