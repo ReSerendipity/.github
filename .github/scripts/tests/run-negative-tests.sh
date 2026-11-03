@@ -100,6 +100,23 @@ seq 1 301 | sed 's/^/line /' > "$TMP/agents-over/AGENTS.md"
 run_case "agents 正例" 0 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-ok"
 run_case "agents 超行数" 1 bash "$SCRIPTS/check-agents-md-size.sh" --root "$TMP/agents-over"
 
+# ── scaffold：§12.5 通用工程件分档生成 ──────────────────────────
+run_case "scaffold 私有 tool 只出 editorconfig + CODEOWNERS" 0 \
+  bash -c 'bash "$0" Scaffold-Private-Test --private --delivery tool --repos-root "$1" >/dev/null \
+    && test -f "$1/Scaffold-Private-Test/.editorconfig" \
+    && test -f "$1/Scaffold-Private-Test/.github/CODEOWNERS" \
+    && test ! -f "$1/Scaffold-Private-Test/.github/dependabot.yml" \
+    && test ! -f "$1/Scaffold-Private-Test/ARCHITECTURE.md"' \
+  "$SCRIPTS/scaffold-repo.sh" "$TMP"
+
+run_case "scaffold 公开 release 出全四件" 0 \
+  bash -c 'bash "$0" Scaffold-Public-Test --public --delivery release --repos-root "$1" >/dev/null \
+    && test -f "$1/Scaffold-Public-Test/.editorconfig" \
+    && test -f "$1/Scaffold-Public-Test/.github/CODEOWNERS" \
+    && test -f "$1/Scaffold-Public-Test/.github/dependabot.yml" \
+    && test -f "$1/Scaffold-Public-Test/ARCHITECTURE.md"' \
+  "$SCRIPTS/scaffold-repo.sh" "$TMP"
+
 # ── signoff：正例 / 缺尾注 ──────────────────────────────────────
 git init -q -b main "$TMP/signoff"
 cd "$TMP/signoff" || exit 2
