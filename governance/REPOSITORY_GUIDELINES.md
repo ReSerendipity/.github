@@ -683,7 +683,9 @@ updated: YYYY-MM-DD
     | `SUPPORT.md` | 不强制 | 个人账号无支持渠道，写了也是空壳 |
     | `.github/ISSUE_TEMPLATE` / `PULL_REQUEST_TEMPLATE.md` | 不强制 | 公开仓已覆盖过半；硬补会向 tool 仓塞模板噪音 |
 
-    **纪律**：三份模板只写真实通道与承诺（DCO、测试命令、报告入口），不复制别人的正文；`SECURITY.md` 中的漏洞报告入口必须指向本仓 `security/advisories/new`。
+**纪律**：三份模板只写真实通道与承诺（DCO、测试命令、报告入口），不复制别人的正文；`SECURITY.md` 中的漏洞报告入口必须指向本仓 `security/advisories/new`。
+
+**同一文件不得双份**：一份文件只能落在一个位置，不得同时在根与 `.github/` 各放一份。唯一例外是「入口页 + 详情页」分工——根文件只写一句指向，并显式声明完整版所在路径（先例：`Image-DuoModel` 的根 `SECURITY.md` 指向 `.github/SECURITY.md`）。
 
 ## 13. 路径规范（§12.4 执行细则，2026-10-19 新增）
 
