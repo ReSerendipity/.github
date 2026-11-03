@@ -599,6 +599,7 @@ updated: YYYY-MM-DD
 | 编辑器一致性 | `.editorconfig`（根） | 与 `.gitattributes` 的 `eol=lf` 同口径；不得改成 `crlf` |
 | 依赖更新 | `.github/dependabot.yml` | GitHub 唯一合法位置 |
 | 架构说明 | `ARCHITECTURE.md`（根） | 分档与豁免见 §12.5 |
+| Agent skill | `skills/<kebab-case>/SKILL.md` | 每个 skill 一个独立子目录；frontmatter 必填 `name` + `description`；可带 `references/` `scripts/` `assets/`。产品数据、学习素材、采集的外部 skill 文档不在此列（见 §12.5 条款 9） |
 
 **例外（2026-11-03 新增）**：
 
@@ -661,6 +662,12 @@ updated: YYYY-MM-DD
 6. **审计载体**：`audit-drift.py` 的 `check_repo` 按本节分档判定文件存在性；私有仓对 Actions 默认令牌不可见时记 `unverified`，不记 `drift`。
 7. **`GOVERNANCE.md` 不建**：GitHub 社区健康文件标准列表不含该项；治理说明继续由 `governance/README.md` 承担，避免双写。
 8. **`docs/adr/` 不迁移**：市面 `docs/adr/` 承载项目架构决策；本账号 ADR（`governance/decisions/`）是治理规则变更记录，属治理正文的一部分，迁出会把规则与依据拆到两处。
+9. **`skills/` 边界与单一副本（2026-11-03 新增）**：
+   - **只放 agent 运维 skill**：位置 `skills/<kebab-case>/SKILL.md`，frontmatter 必填 `name` 与触发导向的 `description`，复杂 skill 可带 `references/` `scripts/` `assets/`。
+   - **不算 skill、留各自目录**：产品数据里的提示词资产（如 `workflows/blueprints/skills/`）、学习素材（如 `overlay/skills-learning/`）、采集的外部 skill 文档（如 `Prompt-Library/docs/规范文档/MS技能-*`）、工具自带的 skill（如 `tools/xbrowser/`）。这些混进 `skills/` 会把产品内容与运维 skill 混为一谈。
+   - **同一 skill 只留一份归档副本**：本账号归档仓为 `Agent-Knowledge/skills/`；其他仓需要引用时写一行指针，不复制正文。2026-11-03 已把散落在 6 个仓的 `docs/SKILL.md`（`bilibili-repo-harvest`）收敛到该归档仓。
+   - **`.qoder/` 等工具本地目录不入库**：若历史误跟踪，迁移到 `skills/<name>/` 后从版本库删除，`.gitignore` 保留排除规则。
+   - **双语不强制**：需要时用 `SKILL.zh_CN.md` 平级配对，并在 `skills/README.md` 索引登记。
 
 ## 13. 路径规范（§12.4 执行细则，2026-10-19 新增）
 
