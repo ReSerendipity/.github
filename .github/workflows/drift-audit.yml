@@ -34,7 +34,7 @@ jobs:
       # 表达式路由：PR → 默认令牌；schedule/dispatch → GOVERNANCE_READ_PAT（未配置则回退默认令牌）。
       GH_TOKEN: ${{ github.event_name == 'pull_request' && github.token || secrets.GOVERNANCE_READ_PAT || github.token }}
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Run drift audit
         shell: bash
         env:
