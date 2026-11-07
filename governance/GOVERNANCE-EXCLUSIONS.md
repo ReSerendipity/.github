@@ -251,7 +251,7 @@
 >
 > **2026-11-07 修订**：`Unity` 移出本表——该仓当日复测 `GET /repos/ReSerendipity/Unity` 仍返回 404 且无改名跳转，已随 §四 删除留痕与 ADR-0017 移出台账，本表 14 → 13 仓；其余各行不变。
 >
-> **过渡态（2026-11-07）**：`dsh-superagent` 已在 `desired-state.json` 定档 `public`（插件须以公开仓库地址安装），但远程仓库尚未切换，故本行豁免在切换前继续有效。切换公开当日：从本表移出（13 → 12），并先补 `.github/dependabot.yml`（含 `cooldown.default-days >= 7`，§19.1）。在此之前不得把它当作「公开仓已满足依赖安全」。
+> **过渡态（2026-11-07）**：`dsh-superagent` 的最终档位定为 **public**（插件须以公开仓库地址安装），但业主裁定先停在切换之前，`desired-state.json` 与其远程仓库均仍为 `private`，故本行豁免在切换前继续有效。切换公开当日：`desired-state.json` 与该行一并改为 public，从本表移出（13 → 12），并先补 `.github/dependabot.yml`（含 `cooldown.default-days >= 7`，§19.1）。在此之前不得把它当作「公开仓已满足依赖安全」。
 
 ### 11.2 `ARCHITECTURE.md` 豁免（8 仓）
 
