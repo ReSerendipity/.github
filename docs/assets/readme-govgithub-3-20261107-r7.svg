@@ -12,7 +12,7 @@
   <g>
     <rect x="268" y="118" width="300" height="52" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
     <text x="418" y="140" font-size="15" font-weight="700" fill="#0969da" text-anchor="middle">active（活跃）</text>
-    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 15 仓</text>
+    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 16 仓</text>
     <rect x="576" y="118" width="300" height="52" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
     <text x="726" y="140" font-size="15" font-weight="700" fill="#9a6700" text-anchor="middle">maintenance（维护）</text>
     <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 26 仓</text>
@@ -74,7 +74,7 @@
   <g>
     <rect x="40" y="394" width="220" height="52" rx="6" fill="#f2fbf2" stroke="#a6d5b5"/>
     <text x="56" y="418" font-size="14" font-weight="700" fill="#1a7f37">tool（工具）</text>
-    <text x="56" y="436" font-size="11.5" fill="#1a7f37">免 §3 / §10 · 13 仓</text>
+    <text x="56" y="436" font-size="11.5" fill="#1a7f37">免 §3 / §10 · 14 仓</text>
     <rect x="268" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.55"/>
     <text x="418" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
     <rect x="576" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.55"/>

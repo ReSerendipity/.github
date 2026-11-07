@@ -113,7 +113,7 @@
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
 | `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 43 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **42** | §10 收敛审计只覆盖 11 个 `release` 仓（53 − 11 = 42） |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **43** | §10 收敛审计只覆盖 11 个 `release` 仓（54 − 11 = 43） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 

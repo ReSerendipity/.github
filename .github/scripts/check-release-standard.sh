@@ -221,6 +221,7 @@ ComfyUI-BatchPromptLoader
 ComfyUI-Experiment-Toolbox
 DraftPeek-KeyBackup
 DormitoryNotes-Godot
+dsh-superagent
 Free-Model-Probe
 GameShell
 Github-Repo-Scan

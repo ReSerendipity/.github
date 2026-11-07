@@ -27,7 +27,7 @@
 
 ### 1.4 命名台账与本地一致性（原 §4、§6）
 
-- 现网命名台账以 **§4 表**为唯一数据源（43 行：8 个例外名 + 35 个 Train Case）；新增 / 改名先改 §4，再改远程。
+- 现网命名台账以 **§4 表**为唯一数据源（44 行：8 个例外名 + 36 个 Train Case）；新增 / 改名先改 §4，再改远程。
 - 本地克隆目录名必须与远程逐字符一致；远程重命名三步见 **§6**。
 - 命名例外须先落 ADR，再改 §4；§4 表由 `check-repo-registry.sh` 对账。
 - 本节是 §4 与 §6 的归口；两节保留原编号，分别作为数据附表与执行细则。
@@ -68,7 +68,7 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-03 更新，43 行）
+## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-07 更新，44 行）
 
 ### 例外名（品牌 / 系统保留名 / 已登记命名债务，8 个）
 
@@ -87,7 +87,7 @@
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
 
-### Train Case（35 个）
+### Train Case（36 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
@@ -99,6 +99,7 @@
 | ComfyUI-BatchPromptLoader | public | tool |
 | ComfyUI-Experiment-Toolbox | public | tool |
 | DormitoryNotes-Godot | private | service |
+| dsh-superagent | private | tool |
 | Free-Model-Probe | public | service |
 | Github-Repo-Scan | public | tool |
 | Health-Info-Card | public | release |
@@ -130,6 +131,8 @@
 > 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024
 >
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
+>
+> 2026-11-07 变更：新登记 `dsh-superagent`（private / tool / active / none；官方原型的 Windows 适配插件，寄住官方 DeepSeek Harness）；本表 43 → 44 行，Train Case 35 → 36；合计 53 → 54 仓（44 + 10 备份仓）。远程仍有 `JunctionScanner`、`Prompt-Provenance`、`superagent-demo` 未登记与 `Offer-Landing-Kit`、`Unity` 已不存在四类既有漂移，属账号级待裁决项，本次不代为定档。
 >
 > 2026-11-01 变更：补登记漏登仓 `Subject-Courseware-Studio`（private / content / active / none）与 `VOSR2-Lite-KeyBackup`（private / backup / maintenance，仅 §3，不进本表）；本表 41 → 42 行，Train Case 33 → 34；合计 49 → 51 仓（42 + 9 备份仓）。
 >
@@ -816,10 +819,10 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 53 仓定位
+### 15.6 54 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 43 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 44 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）
@@ -1040,7 +1043,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 1. **远端载体优先**：每条可执行检查必须有远端载体——PR / 推送门禁、`schedule`（公开仓走免费分钟数）、或 `workflow_dispatch` 手动，三者按 §15.2 频度择一或并存。**本地机器不得承载任何定时任务**。
 2. **天然本地载体**（允许、且只能留在本地）：`.githooks/pre-push`（私有仓无服务器侧保护的替代控制，ADR-0004）、`check-agents-md-size.sh`（AGENTS.md 不入库，CI 不可见）、`scaffold-repo.sh`（建仓动作），以及第 4 条补齐前的私有仓完整核对。
 3. **口径一致**：远端与本地跑同一脚本、同一退出码纪律（0=clean；1=gap/drift/FAIL；2=无法判定时失败关闭），不得出现「同一承诺两种判定」。
-4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 26 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 53 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
+4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 26 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 54 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
 5. **私有仓不加定时作业**：私有仓 Actions 分钟数受账号账单限制（§10.6 实测欠账），不得为其新增 `schedule`。
 
 **代价（如实写明）**：远端载体受 GitHub 可用性影响；`UNVERIFIABLE`/`PARTIAL` 不是通过——未配置 `GOVERNANCE_READ_PAT` 时，私有仓完整核对仍依赖 owner 本地凭据（第 2 条）。
