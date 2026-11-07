@@ -248,7 +248,10 @@
 
 > **这不是「不需要」，是「放弃自动依赖发现」。** 豁免仓不得因此被视为已满足依赖安全；季度人工审计是本条的替代控制。
 > `Website-Wuthering-Waves` 虽为私有仓但已自配 `dependabot.yml`，不在此表。
+>
 > **2026-11-07 修订**：`Unity` 移出本表——该仓当日复测 `GET /repos/ReSerendipity/Unity` 仍返回 404 且无改名跳转，已随 §四 删除留痕与 ADR-0017 移出台账，本表 14 → 13 仓；其余各行不变。
+>
+> **过渡态（2026-11-07）**：`dsh-superagent` 已在 `desired-state.json` 定档 `public`（插件须以公开仓库地址安装），但远程仓库尚未切换，故本行豁免在切换前继续有效。切换公开当日：从本表移出（13 → 12），并先补 `.github/dependabot.yml`（含 `cooldown.default-days >= 7`，§19.1）。在此之前不得把它当作「公开仓已满足依赖安全」。
 
 ### 11.2 `ARCHITECTURE.md` 豁免（8 仓）
 

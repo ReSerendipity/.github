@@ -133,6 +133,8 @@
 >
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
+> 2026-11-07 变更（第三次，开源定位）：`dsh-superagent` 在 `desired-state.json` 中的 `visibility` 由 `private` 改为 `public`。依据是分发方式：插件若不以公开仓库地址分发，外部无法用 `dsh plugin add "git+https://github.com/ReSerendipity/dsh-superagent.git#<commit>"` 安装（业主 2026-11-07 已定档，后续必定开源）。本表的「可见性」列与远程仓库**尚未切换**，仍为 private；切换公开当日须一次性同步远程、本表该行与 `GOVERNANCE-EXCLUSIONS.md` §11.1（移出 dependabot 豁免，13 → 12），并先补 `.github/dependabot.yml`。过渡期内 `check-governance-consistency.sh --public-only` 会报 `desired-state 有、远程无：dsh-superagent`，属已授权漂移，不按漏登记处理。
+>
 > 2026-11-07 变更（第二次，账号级漂移裁决）：新登记 `Prompt-Provenance`（private / tool / active / none）、`Superagent-Demo`（private / tool / active / none）、`Junction-Scanner`（public / tool / archived / none），`dsh-superagent`（private / tool / active / none）由 Train Case 转入**例外名**（上游生态名，ADR-0017）；`JunctionScanner` 远程改名为 `Junction-Scanner`、`superagent-demo` 改名为 `Superagent-Demo`（均无本地克隆，无需同步目录）；`Offer-Landing-Kit`（public / service / archived）与 `Unity`（private / tool / maintenance）远程 404 已不存在，移出台账。本表 44 → 45 行（例外名维持 8：`dsh-superagent` 顶替 `Unity`；Train Case 36 → 37）；合计 54 → 55 仓（45 + 10 备份仓）。
 >
 > 2026-11-07 变更（第一次）：新登记 `dsh-superagent`（private / tool / active / none；官方原型的 Windows 适配插件，寄住官方 DeepSeek Harness）；本表 43 → 44 行，Train Case 35 → 36；合计 53 → 54 仓（44 + 10 备份仓）。远程仍有 `JunctionScanner`、`Prompt-Provenance`、`superagent-demo` 未登记与 `Offer-Landing-Kit`、`Unity` 已不存在四类既有漂移，属账号级待裁决项，本次不代为定档。
