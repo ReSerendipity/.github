@@ -5,13 +5,13 @@
 
 ## 1. 定位
 
-本仓是 `ReSerendipity` 账号 53 个仓库的**治理单一事实来源**。它不承载业务代码、不产出可分发制品、没有 release 链；它的「产品」是规则正文、机器可读期望状态、可执行校验脚本与复用模板。
+本仓是 `ReSerendipity` 账号 55 个仓库的**治理单一事实来源**。它不承载业务代码、不产出可分发制品、没有 release 链；它的「产品」是规则正文、机器可读期望状态、可执行校验脚本与复用模板。
 
 ## 2. 组件与依赖方向
 
 ```text
                  ┌──────────────────────────────┐
-                 │ governance/desired-state.json │  ← 唯一机器可读事实源（53 仓两轴定位）
+                 │ governance/desired-state.json │  ← 唯一机器可读事实源（55 仓两轴定位）
                  └──────────────┬───────────────┘
                                 │ 被读取
         ┌───────────────────────┼────────────────────────┐
@@ -33,7 +33,7 @@
 
 | 层 | 目录 | 职责 | 是否入库 |
 |---|---|---|---|
-| 事实层 | `governance/desired-state.json` | 53 仓的 visibility / delivery / lifecycle / distribution / risk | 是 |
+| 事实层 | `governance/desired-state.json` | 55 仓的 visibility / delivery / lifecycle / distribution / risk | 是 |
 | 规则层 | `governance/REPOSITORY_GUIDELINES.md`、`governance/decisions/` | 人读正文与 ADR 决策依据 | 是 |
 | 例外层 | `governance/GOVERNANCE-EXCLUSIONS.md` | 例外与豁免登记，避免规则正文里堆条件 | 是 |
 | 执行层 | `.github/scripts/`、`.github/workflows/` | 校验器（Bash/Python）与 CI 触发 | 是 |
