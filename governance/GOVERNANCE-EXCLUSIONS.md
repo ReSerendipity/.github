@@ -164,6 +164,7 @@
 | `Github-Repo-Scan` | `scan-data.json`、`dashboard.html`、`all_repos_report.txt`、`scan_run*.txt` | 每次扫描的快照随主分支入库以保留可回溯性，接受大 diff | 本仓 `docs/adr/0003-snapshot-committing.md` |
 | `P0-Murder-Mystery` | `index.html`、`P0事故剧本杀.html` | `build.py` 生成的单文件游戏；`index.html` 为 Pages legacy 入口，另一份为分享副本 | 本仓 `README.md`「构建与输出」 |
 | `SpiritPal` | `src-tauri/binaries/spiritpal-mcp-*`（5 个：4 个 Android triple + 1 个 Windows） | Android `externalBin` 所需的预编译 sidecar；当前无 Android 交叉构建步骤，移除会阻断打包。Windows 副本由 CI 每次重建，待清理 | 本仓 `ci.yml` externalBin 注释 |
+| `dsh-superagent` | `lib/`（tsdown 构建产物） | `dsh plugin add git+…#<commit>` 直接消费入库产物，安装时无需构建工具链；`package.json` 的 `files` 与 `main`/`types` 均指向 `lib`，移除会让 git / tarball 安装失效 | 本仓 `CONTRIBUTING.md` 第 4 条；`scripts/release-check.ps1` 的「committed lib matches a fresh build」检查 |
 
 > 例外仅限上表；新增生成物入库须先修改本节并说明可验证理由。`Image-DuoModel` 的 `release/build_metadata.json` / `release/sbom.json` 已于 2026-10-24 改为不入库。
 
