@@ -2,7 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-11-07（§11.1 私有 dependabot 豁免补登记 `dsh-superagent`，13 → 14 仓，理由含「运行期依赖已打进 `lib`」这一实测口径；同日早前：账号级漂移裁决：新登记 `Prompt-Provenance`（private / tool / active / none）、`Superagent-Demo`（private / tool / active / none）、`Junction-Scanner`（public / tool / archived / none），`dsh-superagent` 转命名例外（上游生态名，ADR-0017）；`JunctionScanner` → `Junction-Scanner`、`superagent-demo` → `Superagent-Demo` 远程改名；`Offer-Landing-Kit` 与 `Unity` 远程 404，移出台账：总额 54 → 55、登记仓 44 → 45、备份仓 10、例外名维持 8（`dsh-superagent` 顶替 `Unity` 的位置）、Train Case 36 → 37、`EXCLUDED_FROM_RELEASE_STANDARD` 43 → 44；此前 2026-11-01 补登记 `Subject-Courseware-Studio` 与 `VOSR2-Lite-KeyBackup`；2026-10-31 登记 `Object-Atlas`；2026-10-30 定稿「远程优先、本地最少化」；`RELEASE_GOVERNANCE_TEMPLATE.md` 迁入 `governance/templates/`；`MiniMax-H3-Lite-KeyBackup` 与口令入库例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **最后更新**：2026-11-07（§11.1 私有 dependabot 豁免补登记 `dsh-superagent`，13 → 14 仓，理由含「运行期依赖已打进 `lib`」这一实测口径；同日稍后：§八 暂缓项与 §11.1/§11.2 的 `Unity` 404 残留以留痕方式移除，§11.1 14 → 13 仓；同日早前：账号级漂移裁决：新登记 `Prompt-Provenance`（private / tool / active / none）、`Superagent-Demo`（private / tool / active / none）、`Junction-Scanner`（public / tool / archived / none），`dsh-superagent` 转命名例外（上游生态名，ADR-0017）；`JunctionScanner` → `Junction-Scanner`、`superagent-demo` → `Superagent-Demo` 远程改名；`Offer-Landing-Kit` 与 `Unity` 远程 404，移出台账：总额 54 → 55、登记仓 44 → 45、备份仓 10、例外名维持 8（`dsh-superagent` 顶替 `Unity` 的位置）、Train Case 36 → 37、`EXCLUDED_FROM_RELEASE_STANDARD` 43 → 44；此前 2026-11-01 补登记 `Subject-Courseware-Studio` 与 `VOSR2-Lite-KeyBackup`；2026-10-31 登记 `Object-Atlas`；2026-10-30 定稿「远程优先、本地最少化」；`RELEASE_GOVERNANCE_TEMPLATE.md` 迁入 `governance/templates/`；`MiniMax-H3-Lite-KeyBackup` 与口令入库例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（10 项备份仓）
@@ -196,7 +196,7 @@
 ## 八、暂缓项（非豁免，2026-10-24）
 
 - `Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`：§8 README 对外装修与 §14 本地路径清理**暂缓**。这是用户明确的暂缓，不是豁免；四仓仍按 `delivery=service` 参与其余条款。解除条件：用户明确要求，或对外可见性变化。
-- `Unity`（private / tool / maintenance）：游戏类项目，位于另一台设备，用户 2026-10-24 明确暂缓；`local/README.internal.md` 未补，其余条款保留约束。解除条件：设备可用且用户明确要求。
+- `Unity`（private / tool / maintenance）：~~游戏类项目，位于另一台设备，用户 2026-10-24 明确暂缓；`local/README.internal.md` 未补，其余条款保留约束。解除条件：设备可用且用户明确要求。~~ **2026-11-07 作废**：该仓已随账号级漂移裁决移出台账（当日复测 `GET /repos/ReSerendipity/Unity` 仍返回 404 且无改名跳转，见 §四 删除留痕与 ADR-0017），暂缓对象不复存在；若日后重建同名仓，按新仓登记，不恢复本条。
 
 ---
 
@@ -228,7 +228,7 @@
 
 [§12.5](REPOSITORY_GUIDELINES.md#125-通用工程件覆盖2026-11-03-新增) 要求非归档、非 `backup` 仓补齐四类厂商中立工程件。下列仓按分档豁免，登记以免被误判为漏项。
 
-### 11.1 私有仓 `dependabot.yml` 豁免（14 仓）
+### 11.1 私有仓 `dependabot.yml` 豁免（13 仓）
 
 | 仓库 | 理由 | 风险（显式声明） | 解除条件 |
 |---|---|---|---|
@@ -242,13 +242,13 @@
 | `Prompt-Library` | 同上 | 同上 | 同上 |
 | `rewq` | 同上 | 同上 | 同上 |
 | `Subject-Courseware-Studio` | 同上 | 同上 | 同上 |
-| `Unity` | 同上 | 同上 | 同上 |
 | `Website-Genshin-Impact` | 同上；且每个角色目录一个 `package.json`，逐个配置会产生海量 PR | 同上 | 同上 |
 | `Website-Honkai-Star-Rail` | 同上 | 同上 | 同上 |
 | `Website-Zenless-Zone-Zero` | 同上 | 同上 | 同上 |
 
 > **这不是「不需要」，是「放弃自动依赖发现」。** 豁免仓不得因此被视为已满足依赖安全；季度人工审计是本条的替代控制。
 > `Website-Wuthering-Waves` 虽为私有仓但已自配 `dependabot.yml`，不在此表。
+> **2026-11-07 修订**：`Unity` 移出本表——该仓当日复测 `GET /repos/ReSerendipity/Unity` 仍返回 404 且无改名跳转，已随 §四 删除留痕与 ADR-0017 移出台账，本表 14 → 13 仓；其余各行不变。
 
 ### 11.2 `ARCHITECTURE.md` 豁免（8 仓）
 
@@ -263,7 +263,7 @@
 | `Nekogal-DL` | tool | 单入口爬虫（64 文件） | 同上 |
 | `MiniMax-H3-Lite-Local` | tool | 资产备份仓（`overlay/local/`），无代码架构；365 文件不构成复杂度 | 该仓转为工程项目时 |
 
-> 其余 `tool` 仓（`GameShell`、`Image-Scrapers`、`Unity`、`ComfyUI-Experiment-Toolbox`、`Website-Site-Toolchain`）跟踪文件均 >100 且多组件，须写 `ARCHITECTURE.md`。
+> 其余 `tool` 仓（`GameShell`、`Image-Scrapers`、`ComfyUI-Experiment-Toolbox`、`Website-Site-Toolchain`）跟踪文件均 >100 且多组件，须写 `ARCHITECTURE.md`。（2026-11-07：原列出的 `Unity` 已随 §四 删除留痕移出台账——`GET /repos/ReSerendipity/Unity` 404，从本句移除；其余四仓不变。）
 
 ### 11.3 不建、不迁（口径固化）
 
