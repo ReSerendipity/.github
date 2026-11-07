@@ -4,7 +4,7 @@
 
 | 文件 | 作用 | 适用范围 |
 |---|---|---|
-| `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§20：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本与展示图真实性（§8 / §8.1）、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18）、Dependabot 与依赖升级处置（§19）、CI 远程化与本地最小化（§20） | 45 个登记仓；10 个备份仓按 §3 单独管理 |
+| `REPOSITORY_GUIDELINES.md` | 治理规范 §1–§21：命名与目录（§1 含原 §4/§6 归口）、分支、密钥备份、变更流程、单一本地 `AGENTS.md`（§7，含自进化 §7.4 / 拆分 §7.5）、README 双版本与展示图真实性（§8 / §8.1）、本地产物、发布分发、许可证、结构与路径（§12 含原 §13 归口）、硬编码、治理分档与暂时归档（§15 / §15.7）、开工前工作区判定、任务收尾与 CI 收敛（§17）、Markdown 文档健康（§18）、Dependabot 与依赖升级处置（§19）、CI 远程化与本地最小化（§20）、GitHub 仓库描述（§21） | 45 个登记仓；10 个备份仓按 §3 单独管理 |
 | `GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外记录：现行口径、10 个备份仓与命名/发布载体对照、四轮豁免历史原文，以及 §六–§十 例外（生成物、本地治理目录、暂缓、展示图、私有资产备份） | 全账号 |
 | `desired-state.json` | 声明式期望状态：55 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
 | [`decisions/`](decisions/README.md) | ADR 决策记录（ADR-0001~ADR-0017）：为什么这样定；ADR-0007 已被 ADR-0008 取代，ADR-0008 的 §7.5 路由条款由 ADR-0011 修订；ADR-0012 标准化自进化台账；ADR-0014 给 §17.5 补执行件与跨机边界；ADR-0015 明确执行方自主提交、推送、合并与 CI 监控；ADR-0016 登记账号级口令保险库 `KeyBackup-Passwords` 的命名例外；ADR-0017 登记 `dsh-superagent` 的上游生态名例外 | 全账号 |
@@ -64,4 +64,5 @@ bash .github/scripts/scaffold-repo.sh <Repo-Name> [--private|--public] [--delive
 - 改动按 §17.2 的推送策略：作者账号可直推，非作者走分支 + PR + DCO；合并前 `check-repo-registry.sh`、`check-governance-consistency.sh` 必须 `rc=0`。CI 的 `repo-registry` 作业在每次 PR / 推送跑这两个脚本（一致性用 `--public-only`）；完整 55 仓（含私有仓）用 owner 凭据本地跑无参模式。
 - 清单类改动需五处同步：规范正文、`check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`、`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`、本文件、`GOVERNANCE-EXCLUSIONS.md`
 - 定位改动同时改 `desired-state.json`；`audit-drift.py` 在周检、手动触发与命中 `desired-state.json` 的 PR 上对账（2026-10-30 定稿：远程优先、本地最少化）
+- GitHub 仓库描述按 §21 更新；描述本身不属于 `desired-state.json` 定位字段，除非仓库定位也改变，否则不改该台账。
 - 版本记录以**条款级日期标注**写在正文本身：节标题或引用块内标「（YYYY-MM-DD 新增 / 定稿 / 修订 / 扩充）」，不另建 CHANGELOG，也不建独立的变更段落。新增小节须带落地日期；既有条款被扩充或改口径时，在标题追加日期或在该节内加留痕引用块，**不改写历史日期**（§18.1 快照）

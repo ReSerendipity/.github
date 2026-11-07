@@ -1052,3 +1052,24 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 **代价（如实写明）**：远端载体受 GitHub 可用性影响；`UNVERIFIABLE`/`PARTIAL` 不是通过——未配置 `GOVERNANCE_READ_PAT` 时，私有仓完整核对仍依赖 owner 本地凭据（第 2 条）。
 
 **不采用**：本机 crontab / 任务计划承载周检（关机断网即漏检，回到「记性 + 算力」两重依赖）；把全权 OAuth token 塞进 Secret（违反最小权限与第 4 条只读口径）。
+
+## 21. GitHub 仓库描述（2026-11-07 新增）
+
+**目标**：用仓库页面上的短描述，让读者快速了解项目类别与核心用途；描述是稳定的项目摘要，不是版本公告或发行说明。
+
+**适用范围**：ReSerendipity 账号下全部 GitHub 仓库，包括公开仓、私有仓、备份仓与已归档仓。
+
+**规范**：
+
+1. **中英双语**：同一描述包含中文和英文，使用 `中文描述 | English description` 分隔；两种语言表达相同的项目定位与核心用途，不要求逐字直译。
+2. **简短定义**：优先用一两句说明「这是什么」及「主要解决什么问题 / 提供什么用途」。可补充一项稳定且有辨识度的特征；不必罗列完整功能、技术栈或使用说明。
+3. **优先稳定事实**：描述项目长期成立的类别、用途和核心方式。避免易过期信息，包括版本号、精确数量、当前 Release 或安装包形态、临时支持的平台 / 模型列表、价格、开发进度、归档状态等。此类信息放在 README、Release 或其他适当文档中维护。
+4. **准确且可核实**：以项目当前实际定位和主要实现为准，参考 README、源码与实际交付物；不把计划能力写成已实现能力，不用无法证实的夸大表述。项目核心定位发生改变时再更新描述，不因常规版本或发行包变化而例行修改。
+5. **平台长度限制**：中英文及分隔符合计不得超过 GitHub 仓库描述字段的 350 字符上限；尽量留出余量，避免把描述写成迷你 README。
+
+**示例**：
+
+- `本地视频与图像超分工具，提供独立 Web 界面，无需 ComfyUI。 | A local video and image super-resolution tool with a standalone web UI; no ComfyUI required.`
+- `Android 原生代码与文本编辑器，提供终端、Markdown 预览与语法高亮。 | A native Android code and text editor with a terminal, Markdown preview, and syntax highlighting.`
+
+---
