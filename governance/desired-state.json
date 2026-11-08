@@ -25,6 +25,7 @@
       "ghcr": { "checks": ["trivy", "provenance", "sbom"] },
       "pages": { "checks": ["deploy-rollback"] },
       "direct-ssh": { "checks": ["deploy-rollback"] },
+      "npm": { "checks": ["version-tag-consistency", "integrity"] },
       "none": { "checks": [] }
     }
   },
@@ -43,7 +44,7 @@
     { "name": "DormitoryNotes-Godot", "visibility": "private", "delivery": "service", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "DraftPeek", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "DraftPeek-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
-    { "name": "dsh-superagent", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "dsh-superagent", "visibility": "public", "delivery": "tool", "distribution": ["npm"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Free-Model-Probe", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "GameShell", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Github-Repo-Scan", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
