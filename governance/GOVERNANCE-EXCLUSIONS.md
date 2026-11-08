@@ -3,6 +3,8 @@
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
 > **最后更新**：2026-11-07（§11.1 私有 dependabot 豁免补登记 `dsh-superagent`，13 → 14 仓，理由含「运行期依赖已打进 `lib`」这一实测口径；同日稍后：§八 暂缓项与 §11.1/§11.2 的 `Unity` 404 残留以留痕方式移除，§11.1 14 → 13 仓；同日早前：账号级漂移裁决：新登记 `Prompt-Provenance`（private / tool / active / none）、`Superagent-Demo`（private / tool / active / none）、`Junction-Scanner`（public / tool / archived / none），`dsh-superagent` 转命名例外（上游生态名，ADR-0017）；`JunctionScanner` → `Junction-Scanner`、`superagent-demo` → `Superagent-Demo` 远程改名；`Offer-Landing-Kit` 与 `Unity` 远程 404，移出台账：总额 54 → 55、登记仓 44 → 45、备份仓 10、例外名维持 8（`dsh-superagent` 顶替 `Unity` 的位置）、Train Case 36 → 37、`EXCLUDED_FROM_RELEASE_STANDARD` 43 → 44；此前 2026-11-01 补登记 `Subject-Courseware-Studio` 与 `VOSR2-Lite-KeyBackup`；2026-10-31 登记 `Object-Atlas`；2026-10-30 定稿「远程优先、本地最少化」；`RELEASE_GOVERNANCE_TEMPLATE.md` 迁入 `governance/templates/`；`MiniMax-H3-Lite-KeyBackup` 与口令入库例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
+> **2026-11-08 更新**：§11.1 `dsh-superagent` 随转公开与 `dependabot.yml` 落地移出本表，13 → 12 仓（详见 §11.1 修订条）。
+>
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（10 项备份仓）
@@ -229,13 +231,12 @@
 
 [§12.5](REPOSITORY_GUIDELINES.md#125-通用工程件覆盖2026-11-03-新增) 要求非归档、非 `backup` 仓补齐四类厂商中立工程件。下列仓按分档豁免，登记以免被误判为漏项。
 
-### 11.1 私有仓 `dependabot.yml` 豁免（13 仓）
+### 11.1 私有仓 `dependabot.yml` 豁免（12 仓）
 
 | 仓库 | 理由 | 风险（显式声明） | 解除条件 |
 |---|---|---|---|
 | `Agent-Knowledge` | 私有仓 `allow_auto_merge=false`（§19.2 平台缺口），PR 只能人工合 | **依赖漏洞无自动发现** | 升级 Pro 后 `allow_auto_merge` 可用，或改为人工季度 `pip-audit` |
 | `DormitoryNotes-Godot` | 同上 | 同上 | 同上 |
-| `dsh-superagent` | 同上；私有 Free 档无服务器侧保护与 Dependabot 能力（实测 API 403），且运行期依赖已打进 `lib`（`tsdown` 的 `deps.alwaysBundle`），装机侧只剩 `@deepseek-ai/*` 由宿主提供 | 同上；开发期依赖（vitest/tsdown/typescript）仍无自动发现 | 升级 Pro 或转公开后开 `dependabot.yml`；替代控制为人工 `pnpm audit` / 随 `release:check` 复核锁文件 |
 | `Image-Scrapers` | 同上 | 同上（且该仓 `node_modules/` 已入库，见独立议题） | 同上 |
 | `MiniMax-H3-Lite-Local` | 同上；本仓为资产备份仓，无独立依赖清单 | 同上 | 同上 |
 | `Nekogal-DL` | 同上 | 同上 | 同上 |
@@ -252,7 +253,7 @@
 >
 > **2026-11-07 修订**：`Unity` 移出本表——该仓当日复测 `GET /repos/ReSerendipity/Unity` 仍返回 404 且无改名跳转，已随 §四 删除留痕与 ADR-0017 移出台账，本表 14 → 13 仓；其余各行不变。
 >
-> **过渡态（2026-11-07）**：`dsh-superagent` 的最终档位定为 **public**（插件须以公开仓库地址安装），但业主裁定先停在切换之前，`desired-state.json` 与其远程仓库均仍为 `private`，故本行豁免在切换前继续有效。切换公开当日：`desired-state.json` 与该行一并改为 public，从本表移出（13 → 12），并先补 `.github/dependabot.yml`（含 `cooldown.default-days >= 7`，§19.1）。在此之前不得把它当作「公开仓已满足依赖安全」。
+> **2026-11-08 修订（过渡态结束）**：`dsh-superagent` 已转 **public**（远程实测 `visibility=public`），并已在仓内补 `.github/dependabot.yml`（npm 与 github-actions 两生态，`cooldown.default-days: 7`，§19.1），故从本表移出，13 → 12 仓。原 2026-11-07 过渡态说明中「`desired-state.json` 与其远程仓库均仍为 `private`、切换前豁免继续有效」已不再成立，由本条事实替代。
 
 ### 11.2 `ARCHITECTURE.md` 豁免（8 仓）
 

@@ -82,7 +82,7 @@
 | GameShell | public | tool | 品牌连写（§1）；原名 GalgameShell，2026-11-02 远程改名 |
 | DraftPeek | public | release | 品牌连写（§1） |
 | ReSerendipity | public | content | 品牌兼账号名（§1） |
-| dsh-superagent | private | tool | 上游生态名（与 `deepseek-ai/dsh-superagent-prototype` 对齐，ADR-0017） |
+| dsh-superagent | public | tool | 上游生态名（与 `deepseek-ai/dsh-superagent-prototype` 对齐，ADR-0017） |
 | rewq | private | service | 历史品牌名；按 §15.5 `credentials` 管理 |
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
@@ -133,7 +133,7 @@
 >
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
-> 2026-11-07 变更（第三次，开源定位的意图留痕）：`dsh-superagent` 的最终档位定为 **public**，依据是分发方式——插件若不以公开仓库地址分发，外部无法用 `dsh plugin add "git+https://github.com/ReSerendipity/dsh-superagent.git#<commit>"` 安装（业主 2026-11-07 已定档，后续必定开源）。但业主同日裁定**先停在切换之前**：`desired-state.json` 的 `visibility` 暂按 `private` 登记，与本表该行、远程仓库三者保持一致，避免出现「登记值领先于平台事实」的必检红。切换公开当日须一次性完成四件事：远程 `gh repo edit --visibility public`、本表该行改为 public、`desired-state.json` 改为 public、`GOVERNANCE-EXCLUSIONS.md` §11.1 移出该行（13 → 12），并先补 `.github/dependabot.yml`（`cooldown.default-days >= 7`）。在此之前不得把它登记为 public，也不得据此声称已具备公开仓义务。
+> 2026-11-08 变更（转公开已执行，事实记录）：`dsh-superagent` 的可见性已由 private 切换为 **public**，远程仓库实测 `visibility=public`（`gh api repos/ReSerendipity/dsh-superagent`）。依据是分发方式——插件必须以公开仓库地址分发，外部才能用 `dsh plugin add "git+https://github.com/ReSerendipity/dsh-superagent.git#<commit>"` 安装。切换当日一次性完成了此前约定的四件事：① 远程 visibility 切为 public；② 本表该行改为 public；③ `desired-state.json` 改为 public；④ `GOVERNANCE-EXCLUSIONS.md` §11.1 移出该行（13 → 12）。切换前已补齐 `.github/dependabot.yml`（npm 与 github-actions 两生态，`cooldown.default-days: 7`，§19.1）。原 2026-11-07「先停在切换之前」的过渡态记录由本条事实替代。
 >
 > 2026-11-07 变更（第二次，账号级漂移裁决）：新登记 `Prompt-Provenance`（private / tool / active / none）、`Superagent-Demo`（private / tool / active / none）、`Junction-Scanner`（public / tool / archived / none），`dsh-superagent`（private / tool / active / none）由 Train Case 转入**例外名**（上游生态名，ADR-0017）；`JunctionScanner` 远程改名为 `Junction-Scanner`、`superagent-demo` 改名为 `Superagent-Demo`（均无本地克隆，无需同步目录）；`Offer-Landing-Kit`（public / service / archived）与 `Unity`（private / tool / maintenance）远程 404 已不存在，移出台账。本表 44 → 45 行（例外名维持 8：`dsh-superagent` 顶替 `Unity`；Train Case 36 → 37）；合计 54 → 55 仓（45 + 10 备份仓）。
 >
