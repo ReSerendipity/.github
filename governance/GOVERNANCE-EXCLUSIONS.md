@@ -231,12 +231,13 @@
 
 [§12.5](REPOSITORY_GUIDELINES.md#125-通用工程件覆盖2026-11-03-新增) 要求非归档、非 `backup` 仓补齐四类厂商中立工程件。下列仓按分档豁免，登记以免被误判为漏项。
 
-### 11.1 私有仓 `dependabot.yml` 豁免（12 仓）
+### 11.1 私有仓 `dependabot.yml` 豁免（13 仓）
 
 | 仓库 | 理由 | 风险（显式声明） | 解除条件 |
 |---|---|---|---|
 | `Agent-Knowledge` | 私有仓 `allow_auto_merge=false`（§19.2 平台缺口），PR 只能人工合 | **依赖漏洞无自动发现** | 升级 Pro 后 `allow_auto_merge` 可用，或改为人工季度 `pip-audit` |
 | `DormitoryNotes-Godot` | 同上 | 同上 | 同上 |
+| `dsh-superagent-archive` | 同上；公开基线切换后旧仓转私有存档（只读保留 Issue/PR/Release/tag），不再接受依赖升级 | 同上；风险仅留存于存档内容 | 同上 |
 | `Image-Scrapers` | 同上 | 同上（且该仓 `node_modules/` 已入库，见独立议题） | 同上 |
 | `MiniMax-H3-Lite-Local` | 同上；本仓为资产备份仓，无独立依赖清单 | 同上 | 同上 |
 | `Nekogal-DL` | 同上 | 同上 | 同上 |
@@ -254,6 +255,8 @@
 > **2026-11-07 修订**：`Unity` 移出本表——该仓当日复测 `GET /repos/ReSerendipity/Unity` 仍返回 404 且无改名跳转，已随 §四 删除留痕与 ADR-0017 移出台账，本表 14 → 13 仓；其余各行不变。
 >
 > **2026-11-08 修订（过渡态结束）**：`dsh-superagent` 已转 **public**（远程实测 `visibility=public`），并已在仓内补 `.github/dependabot.yml`（npm 与 github-actions 两生态，`cooldown.default-days: 7`，§19.1），故从本表移出，13 → 12 仓。原 2026-11-07 过渡态说明中「`desired-state.json` 与其远程仓库均仍为 `private`、切换前豁免继续有效」已不再成立，由本条事实替代。
+>
+> **2026-11-08 修订（公开基线切换，同上日稍后）**：`dsh-superagent` 旧仓已远程改名为 `dsh-superagent-archive` 并设为 **private**（只读存档，保留原 Issue/PR/Release/tag）；该私有仓 `allow_auto_merge=false`（§19.2 平台缺口），登记入本表，12 → 13 仓。`dsh-superagent` 同名新仓仍为 **public**（`desired-state.json` 与 §4 表不变），不适用本条。
 
 ### 11.2 `ARCHITECTURE.md` 豁免（8 仓）
 
