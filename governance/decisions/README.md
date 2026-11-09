@@ -29,6 +29,7 @@
 | [ADR-0015](ADR-0015-autonomous-commit-push-ci-monitoring.md) | 执行方自主提交、推送、合并与 CI 监控 | Accepted |
 | [ADR-0016](ADR-0016-account-password-vault-naming.md) | 账号级口令保险库 `KeyBackup-Passwords` 的命名例外 | Accepted |
 | [ADR-0017](ADR-0017-dsh-superagent-upstream-naming.md) | `dsh-superagent` 的上游生态名例外与同批新增仓命名裁决 | Accepted |
+| [ADR-0018](ADR-0018-new-repo-registration-and-archive-name.md) | `dsh-superagent-archive` 例外名继承与 `BookSpine-Wall` / `MirrorDuo` / `OrbitCube` 入账、遗留计数修正 | Accepted |
 
 ## 与规范的关系
 

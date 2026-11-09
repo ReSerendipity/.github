@@ -4,7 +4,7 @@
   <desc>ReSerendipity 账号 55 个仓库按 lifecycle（active / maintenance / archived）与 delivery（policy / release / library / service / tool / content / backup）分档的数量矩阵，数据来自 governance/desired-state.json。</desc>
   <rect x="0" y="0" width="1200" height="760" fill="#ffffff"/>
 
-  <text x="40" y="42" font-size="27" font-weight="700" fill="#1f2328">55 仓治理分档矩阵 · Tiering Matrix</text>
+  <text x="40" y="42" font-size="27" font-weight="700" fill="#1f2328">59 仓治理分档矩阵 · Tiering Matrix</text>
   <text x="40" y="66" font-size="14" fill="#57606a">lifecycle × delivery（截至 2026-11-07）｜逐仓定位以 governance/desired-state.json 为唯一事实来源（version 2，55 条）</text>
   <text x="40" y="88" font-size="12.5" fill="#57606a">口径：§4 台账 45 行（例外名 8 + Train Case 37）+ 10 备份仓 = 55；2026-11-07 实测 gh repo list 55 个，零差额</text>
 
@@ -12,10 +12,10 @@
   <g>
     <rect x="268" y="118" width="300" height="52" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
     <text x="418" y="140" font-size="15" font-weight="700" fill="#0969da" text-anchor="middle">active（活跃）</text>
-    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 16 仓</text>
+    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 21 仓</text>
     <rect x="576" y="118" width="300" height="52" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
     <text x="726" y="140" font-size="15" font-weight="700" fill="#9a6700" text-anchor="middle">maintenance（维护）</text>
-    <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 25 仓</text>
+    <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 26 仓</text>
     <rect x="884" y="118" width="300" height="52" rx="6" fill="#eaeef2" stroke="#afbac4"/>
     <text x="1034" y="140" font-size="15" font-weight="700" fill="#57606a" text-anchor="middle">archived（归档）</text>
     <text x="1034" y="158" font-size="12" fill="#6e7781" text-anchor="middle">平台只读 · 不检 · 12 仓</text>
@@ -26,7 +26,7 @@
   <g>
     <rect x="40" y="178" width="220" height="52" rx="6" fill="#f6f0ff" stroke="#d8c9f5"/>
     <text x="56" y="202" font-size="14" font-weight="700" fill="#6e40c9">policy（规范仓）</text>
-    <text x="56" y="220" font-size="11.5" fill="#6e40c9">§1–§20 自身维护 · 1 仓</text>
+    <text x="56" y="220" font-size="11.5" fill="#6e40c9">§1–§21 自身维护 · 1 仓</text>
     <rect x="268" y="178" width="300" height="52" rx="6" fill="#8250df" fill-opacity="0.22"/>
     <text x="418" y="209" font-size="15" font-weight="700" fill="#5f35a8" text-anchor="middle">1</text>
     <rect x="576" y="178" width="300" height="52" rx="6" fill="#8250df" fill-opacity="0"/>
@@ -62,7 +62,7 @@
   <g>
     <rect x="40" y="340" width="220" height="52" rx="6" fill="#f2fbf6" stroke="#a6d5b5"/>
     <text x="56" y="364" font-size="14" font-weight="700" fill="#1f7a6b">service（服务）</text>
-    <text x="56" y="382" font-size="11.5" fill="#1f7a6b">§10 部署子集 · 13 仓</text>
+    <text x="56" y="382" font-size="11.5" fill="#1f7a6b">§10 部署子集 · 12 仓</text>
     <rect x="268" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.22"/>
     <text x="418" y="371" font-size="15" font-weight="700" fill="#18594e" text-anchor="middle">3</text>
     <rect x="576" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.72"/>
@@ -74,11 +74,11 @@
   <g>
     <rect x="40" y="394" width="220" height="52" rx="6" fill="#f2fbf2" stroke="#a6d5b5"/>
     <text x="56" y="418" font-size="14" font-weight="700" fill="#1a7f37">tool（工具）</text>
-    <text x="56" y="436" font-size="11.5" fill="#1a7f37">免 §3 / §10 · 16 仓</text>
+    <text x="56" y="436" font-size="11.5" fill="#1a7f37">免 §3 / §10 · 20 仓</text>
     <rect x="268" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.55"/>
-    <text x="418" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">7</text>
+    <text x="418" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">10</text>
     <rect x="576" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.55"/>
-    <text x="726" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+    <text x="726" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
     <rect x="884" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.72"/>
     <text x="1034" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
   </g>

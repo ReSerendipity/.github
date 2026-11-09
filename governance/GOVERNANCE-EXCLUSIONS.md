@@ -8,7 +8,7 @@
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（10 项备份仓）
-> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（44 项非 release 仓，55 − 11）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（48 项非 release 仓，59 − 11）
 > 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
@@ -19,7 +19,7 @@
 **本文件自 2026-10-22 起是「治理分档与例外记录」，不再是「整部规范不适用」的白名单。** 现行规则：
 
 1. **`delivery=backup` 的 10 个仓**（密钥 / 资产备份仓）整部规范不适用，只按 §3 的 `<项目名>-KeyBackup` 结构、`SHA256SUMS.txt` 与轮换更新要求管理；不进 §4 台账，不参与 §1 命名与 §10 审计。**2026-11-03 补登记**：`KeyBackup-Passwords`（账号级口令保险库，名字不取 `<项目名>-KeyBackup` 形态，命名例外见 ADR-0016；内含明文口令台账，风险口径同下表「口令入库例外」）。现行 10 仓清单以 `desired-state.json` 为准。
-2. **其余 45 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
+2. **其余 49 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
 3. **命名例外**（品牌 / 系统保留名 / 上游生态名 / 已登记债务）见 §4「例外名」表；新增例外须先落 ADR。
 4. **`rewq` 的硬约束收窄**：`.gitignore` 必须排除 `ssh-backup/`、`.ssh/` 与 `*.pem` / `*.key` 等私钥；正常提交与推送不受限制（§15.5）。
 
@@ -114,26 +114,26 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 45 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **44** | §10 收敛审计只覆盖 11 个 `release` 仓（55 − 11 = 44） |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 49 仓全部参与 §1 命名校验 |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **48** | §10 收敛审计只覆盖 11 个 `release` 仓（59 − 11 = 48） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
-## 四、账号仓总览（2026-11-07 复核，共 55 个）
+## 四、账号仓总览（2026-11-08 复核，共 59 个）
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
-| **§4 登记（含规范仓）** | 45 | 按 §15 派生适用条款；命名例外见 §4 |
+| **§4 登记（含规范仓）** | 49 | 按 §15 派生适用条款；命名例外见 §4 |
 | **备份仓** | 10 | `delivery=backup`，只按 §3 管理，不进 §4 |
-| 合计 | 55 | `gh repo list ReSerendipity` 实测 55 个，零差额 |
+| 合计 | 59 | `gh repo list ReSerendipity` 实测 59 个，零差额 |
 
 > **2026-11-07 删除留痕**：`Offer-Landing-Kit`（public / service / archived）与 `Unity`（private / tool / maintenance）在 owner 凭据下 `GET /repos/ReSerendipity/<name>` 均返回 404（无改名跳转），判定为远程已不存在，从 `desired-state.json` 与 §4 台账移除；若后续确认是改名或转移，按 §6 改名流程重新入账。
 
 ### §4 台账现状（2026-11-07 复核）
 
-- 台账登记 **45 条**（例外名 8 + Train Case 37），覆盖全部非 `backup` 仓。
+- 台账登记 **49 条**（例外名 9 + Train Case 40），覆盖全部非 `backup` 仓。
 - 台账之外的备份仓 **10 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
 - 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 
@@ -150,7 +150,7 @@
 |---|---|---|
 | `ci.yml` 六个常驻 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`）+ 一个手动冒烟作业（`python-quality-smoke`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 / 质量底线自测 | 硬门禁 + 周检（2026-10-30 定稿：远程优先、本地最少化，schedule 与手动并存） |
 | `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（9 项） | CI + 周检 |
-| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 40 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
+| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 48 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
 | `.github/workflows/python-quality-baseline.yml`（经 `ci.yml` 的 `python-quality-smoke` 作业） | 家族质量底线（覆盖率 + mypy ratchet）自测载体：fixtures/py_smoke 样例包 | 手动派发（2026-10-30 起，§20/ADR-0010；改动本基线合并前须跑绿） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
 | `governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
@@ -231,11 +231,14 @@
 
 [§12.5](REPOSITORY_GUIDELINES.md#125-通用工程件覆盖2026-11-03-新增) 要求非归档、非 `backup` 仓补齐四类厂商中立工程件。下列仓按分档豁免，登记以免被误判为漏项。
 
-### 11.1 私有仓 `dependabot.yml` 豁免（13 仓）
+### 11.1 私有仓 `dependabot.yml` 豁免（16 仓）
 
 | 仓库 | 理由 | 风险（显式声明） | 解除条件 |
 |---|---|---|---|
 | `Agent-Knowledge` | 私有仓 `allow_auto_merge=false`（§19.2 平台缺口），PR 只能人工合 | **依赖漏洞无自动发现** | 升级 Pro 后 `allow_auto_merge` 可用，或改为人工季度 `pip-audit` |
+| `BookSpine-Wall` | 同上；本仓零运行时依赖（单页 HTML + 原生 JS），无依赖清单可扫 | 同上（无依赖清单，实际暴露面为零） | 同上；若引入依赖清单则改为直接配置 dependabot |
+| `MirrorDuo` | 同上；本仓零运行时依赖（单页 HTML + 原生 JS），无依赖清单可扫 | 同上（无依赖清单，实际暴露面为零） | 同上；若引入依赖清单则改为直接配置 dependabot |
+| `OrbitCube` | 同上；本仓零运行时依赖（单页 HTML + 原生 JS），无依赖清单可扫 | 同上（无依赖清单，实际暴露面为零） | 同上；若引入依赖清单则改为直接配置 dependabot |
 | `DormitoryNotes-Godot` | 同上 | 同上 | 同上 |
 | `dsh-superagent-archive` | 同上；公开基线切换后旧仓转私有存档（只读保留 Issue/PR/Release/tag），不再接受依赖升级 | 同上；风险仅留存于存档内容 | 同上 |
 | `Image-Scrapers` | 同上 | 同上（且该仓 `node_modules/` 已入库，见独立议题） | 同上 |
@@ -258,7 +261,7 @@
 >
 > **2026-11-08 修订（公开基线切换，同上日稍后）**：`dsh-superagent` 旧仓已远程改名为 `dsh-superagent-archive` 并设为 **private**（只读存档，保留原 Issue/PR/Release/tag）；该私有仓 `allow_auto_merge=false`（§19.2 平台缺口），登记入本表，12 → 13 仓。`dsh-superagent` 同名新仓仍为 **public**（`desired-state.json` 与 §4 表不变），不适用本条。
 
-### 11.2 `ARCHITECTURE.md` 豁免（8 仓）
+### 11.2 `ARCHITECTURE.md` 豁免（10 仓）
 
 | 仓库 | delivery | 理由 | 解除条件 |
 |---|---|---|---|
@@ -270,8 +273,10 @@
 | `Github-Repo-Scan` | tool | 单入口脚本 + 一个 dashboard（47 文件） | 组件数增加时 |
 | `Nekogal-DL` | tool | 单入口爬虫（64 文件） | 同上 |
 | `MiniMax-H3-Lite-Local` | tool | 资产备份仓（`overlay/local/`），无代码架构；365 文件不构成复杂度 | 该仓转为工程项目时 |
+| `BookSpine-Wall` | tool | 单文件 HTML 交付（`index.html` 即项目本体），无分层组件；证据与文档随仓 | 拆出多组件或引入构建链时 |
+| `MirrorDuo` | tool | 单文件 HTML 交付 + 素材副本（`index.html` + `assets/`），无分层组件 | 同上 |
 
-> 其余 `tool` 仓（`GameShell`、`Image-Scrapers`、`ComfyUI-Experiment-Toolbox`、`Website-Site-Toolchain`）跟踪文件均 >100 且多组件，须写 `ARCHITECTURE.md`。（2026-11-07：原列出的 `Unity` 已随 §四 删除留痕移出台账——`GET /repos/ReSerendipity/Unity` 404，从本句移除；其余四仓不变。）
+> 其余 `tool` 仓（`GameShell`、`Image-Scrapers`、`ComfyUI-Experiment-Toolbox`、`Website-Site-Toolchain`、`OrbitCube`）跟踪文件均 >100 且多组件，须写 `ARCHITECTURE.md`；`OrbitCube` 已于 2026-11-08 落地该文件。（2026-11-07：原列出的 `Unity` 已随 §四 删除留痕移出台账——`GET /repos/ReSerendipity/Unity` 404，从本句移除；其余四仓不变。）
 
 ### 11.3 不建、不迁（口径固化）
 
