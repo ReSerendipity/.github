@@ -208,7 +208,7 @@ if [ -n "$ROOT" ]; then
 else
   # 排除清单（2026-10-22 两轴模型）：§10 只覆盖 delivery=release 的 11 个仓，
   # 其中归档仓按 §15.2 跳过常规审计（Android-IconAutoArrange），实扫 10 个；
-  # 其余 44 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
+  # 其余 48 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
   # 改清单须五处同步（§15、§4、check-repo-registry.sh、本声明、GOVERNANCE-EXCLUSIONS.md）。
   EXCLUDED_FROM_RELEASE_STANDARD=".github
 Agent-Knowledge
@@ -253,7 +253,11 @@ Website-Genshin-Impact
 Website-Honkai-Star-Rail
 Website-Site-Toolchain
 Website-Wuthering-Waves
-Website-Zenless-Zone-Zero"
+Website-Zenless-Zone-Zero
+BookSpine-Wall
+MirrorDuo
+OrbitCube
+dsh-superagent-archive"
 
   # 多仓模式：只扫含 .git 的一级子目录。跳过项**逐条显式列出**，不静默吞。
   SKIPPED=()

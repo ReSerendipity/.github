@@ -27,7 +27,7 @@
 
 ### 1.4 命名台账与本地一致性（原 §4、§6）
 
-- 现网命名台账以 **§4 表**为唯一数据源（45 行：8 个例外名 + 37 个 Train Case）；新增 / 改名先改 §4，再改远程。
+- 现网命名台账以 **§4 表**为唯一数据源（49 行：9 个例外名 + 40 个 Train Case）；新增 / 改名先改 §4，再改远程。
 - 本地克隆目录名必须与远程逐字符一致；远程重命名三步见 **§6**。
 - 命名例外须先落 ADR，再改 §4；§4 表由 `check-repo-registry.sh` 对账。
 - 本节是 §4 与 §6 的归口；两节保留原编号，分别作为数据附表与执行细则。
@@ -68,9 +68,9 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-07 更新，45 行）
+## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-08 更新，49 行）
 
-### 例外名（品牌 / 系统保留名 / 已登记命名债务，8 个）
+### 例外名（品牌 / 系统保留名 / 已登记命名债务，9 个）
 
 > **何为例外名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断）。
 > `.github` 属 GitHub **系统保留名**；`Code-Time-Machine-1024` 是**已登记债务**，
@@ -83,17 +83,19 @@
 | DraftPeek | public | release | 品牌连写（§1） |
 | ReSerendipity | public | content | 品牌兼账号名（§1） |
 | dsh-superagent | public | tool | 上游生态名（与 `deepseek-ai/dsh-superagent-prototype` 对齐，ADR-0017） |
+| dsh-superagent-archive | private | tool | 上游生态名派生（继承 `dsh-superagent`，ADR-0018） |
 | rewq | private | service | 历史品牌名；按 §15.5 `credentials` 管理 |
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
 
-### Train Case（37 个）
+### Train Case（40 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
 | Agent-Knowledge | private | content |
 | Android-IconAutoArrange | public | release |
 | Bilibili-Follow-Manager | private | tool |
+| BookSpine-Wall | private | tool |
 | Card-Studio | public | release |
 | ChatGPT-Timezone-Fix | public | tool |
 | ComfyUI-BatchPromptLoader | public | tool |
@@ -109,10 +111,12 @@
 | Lineart-Painter | public | release |
 | MiniMax-H3-Lite | public | release |
 | MiniMax-H3-Lite-Local | private | tool |
+| MirrorDuo | private | tool |
 | Mooncake-Deconstruction | public | service |
 | Multi-Tracker | public | tool |
 | Nekogal-DL | private | tool |
 | Object-Atlas | private | service |
+| OrbitCube | private | tool |
 | P0-Murder-Mystery | public | service |
 | Prompt-Library | private | content |
 | Prompt-Provenance | private | tool |
@@ -129,13 +133,16 @@
 | Website-Wuthering-Waves | private | service |
 | Website-Zenless-Zone-Zero | private | service |
 
-> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent
+> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、dsh-superagent-archive
 >
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
 > 2026-11-08 变更（转公开已执行，事实记录）：`dsh-superagent` 的可见性已由 private 切换为 **public**，远程仓库实测 `visibility=public`（`gh api repos/ReSerendipity/dsh-superagent`）。依据是分发方式——插件必须以公开仓库地址分发，外部才能用 `dsh plugin add "git+https://github.com/ReSerendipity/dsh-superagent.git#<commit>"` 安装。切换当日一次性完成了此前约定的四件事：① 远程 visibility 切为 public；② 本表该行改为 public；③ `desired-state.json` 改为 public；④ `GOVERNANCE-EXCLUSIONS.md` §11.1 移出该行（13 → 12）。切换前已补齐 `.github/dependabot.yml`（npm 与 github-actions 两生态，`cooldown.default-days: 7`，§19.1）。原 2026-11-07「先停在切换之前」的过渡态记录由本条事实替代。
 >
 > 2026-11-07 变更（第二次，账号级漂移裁决）：新登记 `Prompt-Provenance`（private / tool / active / none）、`Superagent-Demo`（private / tool / active / none）、`Junction-Scanner`（public / tool / archived / none），`dsh-superagent`（private / tool / active / none）由 Train Case 转入**例外名**（上游生态名，ADR-0017）；`JunctionScanner` 远程改名为 `Junction-Scanner`、`superagent-demo` 改名为 `Superagent-Demo`（均无本地克隆，无需同步目录）；`Offer-Landing-Kit`（public / service / archived）与 `Unity`（private / tool / maintenance）远程 404 已不存在，移出台账。本表 44 → 45 行（例外名维持 8：`dsh-superagent` 顶替 `Unity`；Train Case 36 → 37）；合计 54 → 55 仓（45 + 10 备份仓）。
+
+> 2026-11-08 变更（新仓入账）：登记 `BookSpine-Wall`、`MirrorDuo`、`OrbitCube`（均 private / tool / active / none，名为 Train Case 合规名，直接入 Train Case 表）与 `dsh-superagent-archive`（private / tool / maintenance / none；例外名，继承 `dsh-superagent` 的上游生态名，ADR-0018）。本表 45 → 49 行（例外名 8 → 9；Train Case 37 → 40）；合计 55 → 59 仓（49 + 10 备份仓）。同批修正 §15.6 遗留的旧计数（54 仓 / 44 行 → 59 仓 / 49 行）。
+> `dsh-superagent-archive` 实质只读，但 GitHub `archived=false`，故 `lifecycle` 按 §15.2 判据记 `maintenance`；是否真正 archive 属平台设置，待所有者裁决。
 >
 > 2026-11-07 变更（第一次）：新登记 `dsh-superagent`（private / tool / active / none；官方原型的 Windows 适配插件，寄住官方 DeepSeek Harness）；本表 43 → 44 行，Train Case 35 → 36；合计 53 → 54 仓（44 + 10 备份仓）。远程仍有 `JunctionScanner`、`Prompt-Provenance`、`superagent-demo` 未登记与 `Offer-Landing-Kit`、`Unity` 已不存在四类既有漂移，属账号级待裁决项，本次不代为定档。
 >
@@ -825,10 +832,10 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 54 仓定位
+### 15.6 59 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 44 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 49 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）
