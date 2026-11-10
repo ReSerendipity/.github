@@ -1,7 +1,7 @@
 # 文档索引（docs/INDEX）
 
 > 最后核对：2026-11-10　｜　维护：文档整理工单 WO-DOC-B01
-> 本文件是 `.github` 仓 Markdown 的机器可读总索引：仓根 7 篇 + `docs/` 1 篇 + `governance/` 32 篇 + `.github/` 3 篇 + `local/` 3 篇。
+> 本文件是 `.github` 仓 Markdown 的机器可读总索引：仓根 7 篇 + `docs/` 1 篇 + `governance/` 32 篇 + `.github/` 3 篇 + `local/` 3 篇 = 46 篇；其中 `local/` 3 篇不入库，`git ls-files '*.md'` 计 43 篇。
 > **权威顺序**（照 [`governance/README.md`](../governance/README.md) 第 17–23 行）：本仓 `governance/` 政策文档 > 各仓 `docs/` > 各仓 `README.md`；本文件只是索引，不承载政策正文。
 
 ## 状态口径
