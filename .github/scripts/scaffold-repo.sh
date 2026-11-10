@@ -15,17 +15,17 @@ REPO_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 DEFAULT_REPOS_ROOT=$(cd "$REPO_ROOT/.." && pwd)
 TEMPLATE="$REPO_ROOT/governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md"
 CONTRACT_TEMPLATE="$REPO_ROOT/governance/templates/agent-contract.md"
-AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS.template.md"
-GOTCHAS_TEMPLATE="$REPO_ROOT/governance/templates/GOTCHAS.template.md"
-REVISION_LOG_TEMPLATE="$REPO_ROOT/governance/templates/REVISION_LOG.template.md"
+AGENTS_TEMPLATE="$REPO_ROOT/governance/templates/AGENTS_TEMPLATE.md"
+GOTCHAS_TEMPLATE="$REPO_ROOT/governance/templates/GOTCHAS_TEMPLATE.md"
+REVISION_LOG_TEMPLATE="$REPO_ROOT/governance/templates/REVISION_LOG_TEMPLATE.md"
 HOOK_TEMPLATE="$SCRIPT_DIR/templates/pre-push"
 EDITORCONFIG_TEMPLATE="$REPO_ROOT/governance/templates/editorconfig.template"
 CODEOWNERS_TEMPLATE="$REPO_ROOT/governance/templates/CODEOWNERS.template"
 DEPENDABOT_TEMPLATE="$REPO_ROOT/governance/templates/dependabot.template.yml"
-ARCH_TEMPLATE="$REPO_ROOT/governance/templates/ARCHITECTURE.template.md"
-SECURITY_TEMPLATE="$REPO_ROOT/governance/templates/SECURITY.template.md"
-CONTRIBUTING_TEMPLATE="$REPO_ROOT/governance/templates/CONTRIBUTING.template.md"
-COC_TEMPLATE="$REPO_ROOT/governance/templates/CODE_OF_CONDUCT.template.md"
+ARCH_TEMPLATE="$REPO_ROOT/governance/templates/ARCHITECTURE_TEMPLATE.md"
+SECURITY_TEMPLATE="$REPO_ROOT/governance/templates/SECURITY_TEMPLATE.md"
+CONTRIBUTING_TEMPLATE="$REPO_ROOT/governance/templates/CONTRIBUTING_TEMPLATE.md"
+COC_TEMPLATE="$REPO_ROOT/governance/templates/CODE_OF_CONDUCT_TEMPLATE.md"
 OWNER=${GOVERNANCE_OWNER:-ReSerendipity}
 
 err() { echo "ERROR: $*" >&2; }

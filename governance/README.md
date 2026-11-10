@@ -9,15 +9,15 @@
 | `desired-state.json` | 声明式期望状态：59 仓两轴定位 + 复用工作流调用点；漂移审计与一致性检查的数据源 | 全账号 |
 | [`decisions/`](decisions/README.md) | ADR 决策记录（ADR-0001~ADR-0018）：为什么这样定；ADR-0007 已被 ADR-0008 取代，ADR-0008 的 §7.5 路由条款由 ADR-0011 修订；ADR-0012 标准化自进化台账；ADR-0014 给 §17.5 补执行件与跨机边界；ADR-0015 明确执行方自主提交、推送、合并与 CI 监控；ADR-0016 登记账号级口令保险库 `KeyBackup-Passwords` 的命名例外；ADR-0017 登记 `dsh-superagent` 的上游生态名例外；ADR-0018 登记 `dsh-superagent-archive` 例外名继承与 `BookSpine-Wall` / `MirrorDuo` / `OrbitCube` 入账 | 全账号 |
 | [`templates/agent-contract.md`](templates/agent-contract.md) | Agent 契约模板（v2）：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验；例外只引用 `GOVERNANCE-EXCLUSIONS.md` §七 | 各仓 |
-| [`templates/AGENTS.template.md`](templates/AGENTS.template.md) | 本地 `AGENTS.md` 模板：根文件内联契约 v2、本地唯一完整版（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
-| [`templates/GOTCHAS.template.md`](templates/GOTCHAS.template.md) | 自进化坑点台账模板（§7.4.1） | 各仓 |
-| [`templates/REVISION_LOG.template.md`](templates/REVISION_LOG.template.md) | 自进化修订记录模板（§7.4.2） | 各仓 |
+| [`templates/AGENTS_TEMPLATE.md`](templates/AGENTS_TEMPLATE.md) | 本地 `AGENTS.md` 模板：根文件内联契约 v2、本地唯一完整版（不入库，≤300 行），`scaffold-repo.sh` 按此生成 | 各仓 |
+| [`templates/GOTCHAS_TEMPLATE.md`](templates/GOTCHAS_TEMPLATE.md) | 自进化坑点台账模板（§7.4.1） | 各仓 |
+| [`templates/REVISION_LOG_TEMPLATE.md`](templates/REVISION_LOG_TEMPLATE.md) | 自进化修订记录模板（§7.4.2） | 各仓 |
 | [`templates/RELEASE_GOVERNANCE_TEMPLATE.md`](templates/RELEASE_GOVERNANCE_TEMPLATE.md) | §10 发布文档统一模板（2026-10-30 自仓根迁入 `governance/templates/`，暂缓迁入的在途 WIP 前置已消除） | 发布型仓 |
-| [`templates/ARCHITECTURE.template.md`](templates/ARCHITECTURE.template.md) | 架构说明模板（仓库定位、模块边界、数据流） | 各仓 |
-| [`templates/CODE_OF_CONDUCT.template.md`](templates/CODE_OF_CONDUCT.template.md) | 行为准则模板 | 公开仓 |
-| [`templates/CONTRIBUTING.template.md`](templates/CONTRIBUTING.template.md) | 贡献指南模板 | 公开仓 |
-| [`templates/SECURITY.template.md`](templates/SECURITY.template.md) | 安全披露模板 | 公开仓 |
-| [`templates/SKILL.template.md`](templates/SKILL.template.md) | Skill 说明模板（触发条件、输入输出、边界） | Skill 仓 |
+| [`templates/ARCHITECTURE_TEMPLATE.md`](templates/ARCHITECTURE_TEMPLATE.md) | 架构说明模板（仓库定位、模块边界、数据流） | 各仓 |
+| [`templates/CODE_OF_CONDUCT_TEMPLATE.md`](templates/CODE_OF_CONDUCT_TEMPLATE.md) | 行为准则模板 | 公开仓 |
+| [`templates/CONTRIBUTING_TEMPLATE.md`](templates/CONTRIBUTING_TEMPLATE.md) | 贡献指南模板 | 公开仓 |
+| [`templates/SECURITY_TEMPLATE.md`](templates/SECURITY_TEMPLATE.md) | 安全披露模板 | 公开仓 |
+| [`templates/SKILL_TEMPLATE.md`](templates/SKILL_TEMPLATE.md) | Skill 说明模板（触发条件、输入输出、边界） | Skill 仓 |
 
 ## 权威顺序
 

@@ -1,4 +1,4 @@
-# 模板：governance/templates/CONTRIBUTING.template.md
+# 模板：governance/templates/CONTRIBUTING_TEMPLATE.md
 # 用法：复制为 <repo>/CONTRIBUTING.md。
 # 范围：公开 release / service / policy 仓（§12.5 条款 10）。
 # 纪律：只写本仓真实的命令与约束，不复述治理规范正文。

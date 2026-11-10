@@ -244,7 +244,7 @@
 - **入库侧**：`self-purify.yml` 已于 2026-10-24 翻转为阻断任何被跟踪的 `AGENTS.md`（默认开启；例外仓须先在 `GOVERNANCE-EXCLUSIONS.md` 登记理由与解除条件，再显式传 `enforce_critical_checks: false`）。
 - **契约一致性**：`audit-drift.py` 比对仓内 `docs/agent-contract.md` 与 `governance/templates/agent-contract.md`，不一致判红。
 - **行数检查**：`.github/scripts/check-agents-md-size.sh` 默认上限 300，检查根 `AGENTS.md` 与 `local/agents/*.md`；非 CI 门禁。
-- **脚手架**：`scaffold-repo.sh` 复制 `governance/templates/AGENTS.template.md` 生成根 `AGENTS.md`（本地文件），并写入新仓最小 `.gitignore`（`/local/` + `AGENTS.md`）；密钥、大文件、构建产物等规则由各仓按 §3/§9 继续追加，不是替换整个 `.gitignore`。
+- **脚手架**：`scaffold-repo.sh` 复制 `governance/templates/AGENTS_TEMPLATE.md` 生成根 `AGENTS.md`（本地文件），并写入新仓最小 `.gitignore`（`/local/` + `AGENTS.md`）；密钥、大文件、构建产物等规则由各仓按 §3/§9 继续追加，不是替换整个 `.gitignore`。
 - **调用**：`bash .github/scripts/check-agents-md-size.sh --root <仓库目录>`；可挂本地 `pre-commit`。
 - **扫描口径**：只算活动文件，排除归档/备份副本、生成目录与嵌套 git 仓；`--include-nested` 显式纳入。
 - **内联契约一致性**：根 `AGENTS.md` 不入库，无法进 CI；由会话自检 + 本地验收脚本（比对第 2 节块哈希与必含章节）承担，验收记录随任务台账留存。
@@ -293,7 +293,7 @@
 
 #### 7.4.4 模板与脚手架
 
-- 模板：`governance/templates/GOTCHAS.template.md`、`governance/templates/REVISION_LOG.template.md`。
+- 模板：`governance/templates/GOTCHAS_TEMPLATE.md`、`governance/templates/REVISION_LOG_TEMPLATE.md`。
 - `scaffold-repo.sh` 生成根 `AGENTS.md` 时同步创建 `local/agents/` 并复制两个模板（已存在则不覆盖）。
 - **pre-push 强制闸**：`.github/scripts/check-ledger-append.ps1` 由各仓 `local/hooks/pre-push` 调用；代码 / 配置 / 脚本变更但 GOTCHAS 未新增行、根 `AGENTS.md` 变更但 REVISION_LOG 未新增行时阻断；提交信息写 `[skip-ledger]` 或「本次无踩坑」可放行。`.github/scripts/install-ledger-gate.ps1` 负责逐仓安装并保留原 hook 路径。
 - **验收闸**：任务交付时对比 `local/agents/.ledger-baseline.json` 行数与任务基线；声明修 bug / 踩坑但台账未新增行，判 FAIL。

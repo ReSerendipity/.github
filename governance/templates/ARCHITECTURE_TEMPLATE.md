@@ -1,4 +1,4 @@
-# 模板：governance/templates/ARCHITECTURE.template.md
+# 模板：governance/templates/ARCHITECTURE_TEMPLATE.md
 # 用法：复制为 <repo>/ARCHITECTURE.md。
 # 纪律：每节必须来自本仓真实目录与配置，不得套用模板空话；
 #       无独立代码组件的仓（content 仓、单文件插件）走 GOVERNANCE-EXCLUSIONS.md §十一 豁免，不硬凑。

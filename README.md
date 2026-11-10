@@ -116,7 +116,7 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 | `governance/GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外登记（10 备份仓豁免、命名例外等） |
 | `governance/desired-state.json` | 59 仓声明式期望状态；漂移审计与一致性检查的数据源 |
 | `governance/decisions/` | ADR-0001~0017 决策记录 |
-| `governance/templates/` | 13 个模板件（含 `agent-contract.md`、`AGENTS.template.md` 等） |
+| `governance/templates/` | 13 个模板件（含 `agent-contract.md`、`AGENTS_TEMPLATE.md` 等） |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓自带表单优先） |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | 通用 PR 检查清单 |
 
@@ -266,7 +266,7 @@ When a downstream repository does not ship its own file of the same name, GitHub
 | `governance/GOVERNANCE-EXCLUSIONS.md` | Tiering & exception registry (10 backup-repo exemptions, naming exceptions, etc.) |
 | `governance/desired-state.json` | Declarative desired state for 59 repos; data source for drift audit and consistency checks |
 | `governance/decisions/` | ADR-0001~0017 decision records |
-| `governance/templates/` | 13 templates including `agent-contract.md` and `AGENTS.template.md` |
+| `governance/templates/` | 13 templates including `agent-contract.md` and `AGENTS_TEMPLATE.md` |
 | `.github/ISSUE_TEMPLATE/` | Generic issue forms (Bug / feature / question; repo-local forms win) |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | Generic pull request checklist |
 

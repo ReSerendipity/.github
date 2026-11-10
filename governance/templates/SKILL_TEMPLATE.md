@@ -1,4 +1,4 @@
-# 模板：governance/templates/SKILL.template.md
+# 模板：governance/templates/SKILL_TEMPLATE.md
 # 用法：复制为 <repo>/skills/<kebab-case>/SKILL.md。
 # 纪律：description 写「什么时候触发」，不是「这是什么」；正文只写可执行步骤与本仓真实路径。
 # 不算 skill 的内容（产品提示词资产、学习素材、采集的外部文档）不进 skills/（§12.5 条款 9）。

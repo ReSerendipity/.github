@@ -71,15 +71,15 @@
 | 文档 | 用途 | 状态 | 核对日期 |
 |---|---|---|---|
 | [`agent-contract.md`](../governance/templates/agent-contract.md) | Agent 契约 v2 模板：各仓 `docs/agent-contract.md` 逐字节复制，漂移审计校验 | 模板 | 2026-11-10 |
-| [`AGENTS.template.md`](../governance/templates/AGENTS.template.md) | 本地 `AGENTS.md` 模板：内联契约 v2、本地唯一完整版（不入库、≤300 行） | 模板 | 2026-11-10 |
-| [`ARCHITECTURE.template.md`](../governance/templates/ARCHITECTURE.template.md) | 仓 `ARCHITECTURE.md` 模板 | 模板 | 2026-11-10 |
-| [`CODE_OF_CONDUCT.template.md`](../governance/templates/CODE_OF_CONDUCT.template.md) | 行为准则模板 | 模板 | 2026-11-10 |
-| [`CONTRIBUTING.template.md`](../governance/templates/CONTRIBUTING.template.md) | 贡献指南模板（含分支约定、行为准则引用） | 模板 | 2026-11-10 |
-| [`GOTCHAS.template.md`](../governance/templates/GOTCHAS.template.md) | 自进化坑点台账模板（§7.4.1） | 模板 | 2026-11-10 |
+| [`AGENTS_TEMPLATE.md`](../governance/templates/AGENTS_TEMPLATE.md) | 本地 `AGENTS.md` 模板：内联契约 v2、本地唯一完整版（不入库、≤300 行） | 模板 | 2026-11-10 |
+| [`ARCHITECTURE_TEMPLATE.md`](../governance/templates/ARCHITECTURE_TEMPLATE.md) | 仓 `ARCHITECTURE.md` 模板 | 模板 | 2026-11-10 |
+| [`CODE_OF_CONDUCT_TEMPLATE.md`](../governance/templates/CODE_OF_CONDUCT_TEMPLATE.md) | 行为准则模板 | 模板 | 2026-11-10 |
+| [`CONTRIBUTING_TEMPLATE.md`](../governance/templates/CONTRIBUTING_TEMPLATE.md) | 贡献指南模板（含分支约定、行为准则引用） | 模板 | 2026-11-10 |
+| [`GOTCHAS_TEMPLATE.md`](../governance/templates/GOTCHAS_TEMPLATE.md) | 自进化坑点台账模板（§7.4.1） | 模板 | 2026-11-10 |
 | [`RELEASE_GOVERNANCE_TEMPLATE.md`](../governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md) | §10 发布文档统一模板（2026-10-30 自仓根迁入） | 模板 | 2026-11-10 |
-| [`REVISION_LOG.template.md`](../governance/templates/REVISION_LOG.template.md) | 自进化修订记录模板（§7.4.2） | 模板 | 2026-11-10 |
-| [`SECURITY.template.md`](../governance/templates/SECURITY.template.md) | 安全策略模板 | 模板 | 2026-11-10 |
-| [`SKILL.template.md`](../governance/templates/SKILL.template.md) | Skill 编写模板 | 模板 | 2026-11-10 |
+| [`REVISION_LOG_TEMPLATE.md`](../governance/templates/REVISION_LOG_TEMPLATE.md) | 自进化修订记录模板（§7.4.2） | 模板 | 2026-11-10 |
+| [`SECURITY_TEMPLATE.md`](../governance/templates/SECURITY_TEMPLATE.md) | 安全策略模板 | 模板 | 2026-11-10 |
+| [`SKILL_TEMPLATE.md`](../governance/templates/SKILL_TEMPLATE.md) | Skill 编写模板 | 模板 | 2026-11-10 |
 
 > `governance/desired-state.json` 为**声明式期望状态**（59 仓两轴定位 + 复用工作流调用点，漂移审计数据源），非 Markdown，不在本索引正文；口径说明见 [`governance/README.md`](../governance/README.md)。
 

@@ -1,4 +1,4 @@
-# 模板：governance/templates/CODE_OF_CONDUCT.template.md
+# 模板：governance/templates/CODE_OF_CONDUCT_TEMPLATE.md
 # 用法：复制为 <repo>/CODE_OF_CONDUCT.md。
 # 来源：Contributor Covenant 2.1 精简版（https://www.contributor-covenant.org）。
 # 纪律：不自行改写核心条款；执行联系方式按本仓实际情况填写。

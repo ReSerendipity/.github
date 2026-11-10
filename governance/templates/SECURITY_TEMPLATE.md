@@ -1,4 +1,4 @@
-# 模板：governance/templates/SECURITY.template.md
+# 模板：governance/templates/SECURITY_TEMPLATE.md
 # 用法：复制为 <repo>/SECURITY.md（默认根目录；已存在的 docs/SECURITY.md 不迁）。
 # 纪律：只写真实的报告通道与响应承诺，不复制别人的安全策略正文。
 # 占位：<owner> / <repo> / <响应时效> 由 scaffold 或人工替换。
