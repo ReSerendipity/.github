@@ -13,6 +13,11 @@
 | [`templates/GOTCHAS.template.md`](templates/GOTCHAS.template.md) | 自进化坑点台账模板（§7.4.1） | 各仓 |
 | [`templates/REVISION_LOG.template.md`](templates/REVISION_LOG.template.md) | 自进化修订记录模板（§7.4.2） | 各仓 |
 | [`templates/RELEASE_GOVERNANCE_TEMPLATE.md`](templates/RELEASE_GOVERNANCE_TEMPLATE.md) | §10 发布文档统一模板（2026-10-30 自仓根迁入 `governance/templates/`，暂缓迁入的在途 WIP 前置已消除） | 发布型仓 |
+| [`templates/ARCHITECTURE.template.md`](templates/ARCHITECTURE.template.md) | 架构说明模板（仓库定位、模块边界、数据流） | 各仓 |
+| [`templates/CODE_OF_CONDUCT.template.md`](templates/CODE_OF_CONDUCT.template.md) | 行为准则模板 | 公开仓 |
+| [`templates/CONTRIBUTING.template.md`](templates/CONTRIBUTING.template.md) | 贡献指南模板 | 公开仓 |
+| [`templates/SECURITY.template.md`](templates/SECURITY.template.md) | 安全披露模板 | 公开仓 |
+| [`templates/SKILL.template.md`](templates/SKILL.template.md) | Skill 说明模板（触发条件、输入输出、边界） | Skill 仓 |
 
 ## 权威顺序
 
