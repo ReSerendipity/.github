@@ -81,7 +81,7 @@
 | [`SECURITY_TEMPLATE.md`](../governance/templates/SECURITY_TEMPLATE.md) | 安全策略模板 | 模板 | 2026-11-10 |
 | [`SKILL_TEMPLATE.md`](../governance/templates/SKILL_TEMPLATE.md) | Skill 编写模板 | 模板 | 2026-11-10 |
 
-> `governance/desired-state.json` 为**声明式期望状态**（59 仓两轴定位 + 复用工作流调用点，漂移审计数据源），非 Markdown，不在本索引正文；口径说明见 [`governance/README.md`](../governance/README.md)。
+> `governance/desired-state.json` 为**声明式期望状态**（61 仓两轴定位 + 复用工作流调用点，漂移审计数据源），非 Markdown，不在本索引正文；口径说明见 [`governance/README.md`](../governance/README.md)。
 
 ## 四、.github/（平台配置文件）
 

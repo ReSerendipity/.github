@@ -27,7 +27,7 @@
 
 ### 1.4 命名台账与本地一致性（原 §4、§6）
 
-- 现网命名台账以 **§4 表**为唯一数据源（49 行：9 个例外名 + 40 个 Train Case）；新增 / 改名先改 §4，再改远程。
+- 现网命名台账以 **§4 表**为唯一数据源（51 行：10 个例外名 + 41 个 Train Case）；新增 / 改名先改 §4，再改远程。
 - 本地克隆目录名必须与远程逐字符一致；远程重命名三步见 **§6**。
 - 命名例外须先落 ADR，再改 §4；§4 表由 `check-repo-registry.sh` 对账。
 - 本节是 §4 与 §6 的归口；两节保留原编号，分别作为数据附表与执行细则。
@@ -68,9 +68,9 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-08 更新，49 行）
+## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-11 更新，51 行）
 
-### 例外名（品牌 / 系统保留名 / 已登记命名债务，9 个）
+### 例外名（品牌 / 系统保留名 / 已登记命名债务，10 个）
 
 > **何为例外名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断）。
 > `.github` 属 GitHub **系统保留名**；`Code-Time-Machine-1024` 是**已登记债务**，
@@ -81,14 +81,15 @@
 | SpiritPal | public | release | 品牌连写（§1） |
 | GameShell | public | tool | 品牌连写（§1）；原名 GalgameShell，2026-11-02 远程改名 |
 | DraftPeek | public | release | 品牌连写（§1） |
+| Saltline-plus | public | tool | 品牌连写（第三方游戏品牌 Saltline + -plus 后缀，§1） |
 | ReSerendipity | public | content | 品牌兼账号名（§1） |
 | dsh-superagent | public | tool | 上游生态名（与 `deepseek-ai/dsh-superagent-prototype` 对齐，ADR-0017） |
-| dsh-superagent-archive | private | tool | 上游生态名派生（继承 `dsh-superagent`，ADR-0018） |
+| winlator-app | public | tool | 上游生态名派生（winlator + -app，ADR-0017 同型） |
 | rewq | private | service | 历史品牌名；按 §15.5 `credentials` 管理 |
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
 
-### Train Case（40 个）
+### Train Case（41 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
@@ -121,6 +122,7 @@
 | Prompt-Library | private | content |
 | Prompt-Provenance | private | tool |
 | RTX-VSR-Lite | public | library |
+| Scan-Memories | private | tool |
 | SeedVR2-Lite | public | release |
 | Subject-Courseware-Studio | private | content |
 | Superagent-Demo | private | tool |
@@ -133,7 +135,7 @@
 | Website-Wuthering-Waves | private | service |
 | Website-Zenless-Zone-Zero | private | service |
 
-> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、dsh-superagent-archive
+> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app
 >
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
@@ -143,6 +145,10 @@
 
 > 2026-11-08 变更（新仓入账）：登记 `BookSpine-Wall`、`MirrorDuo`、`OrbitCube`（均 private / tool / active / none，名为 Train Case 合规名，直接入 Train Case 表）与 `dsh-superagent-archive`（private / tool / maintenance / none；例外名，继承 `dsh-superagent` 的上游生态名，ADR-0018）。本表 45 → 49 行（例外名 8 → 9；Train Case 37 → 40）；合计 55 → 59 仓（49 + 10 备份仓）。同批修正 §15.6 遗留的旧计数（54 仓 / 44 行 → 59 仓 / 49 行）。
 > `dsh-superagent-archive` 实质只读，但 GitHub `archived=false`，故 `lifecycle` 按 §15.2 判据记 `maintenance`；是否真正 archive 属平台设置，待所有者裁决。
+>
+> 2026-11-11 变更（集合差收敛）：按业主裁决收敛账号级集合差。① 登记 `Saltline-plus`（public / tool / active / none；第三方游戏的非官方周边工具，品牌连写 `Saltline` + `-plus`，按 §1 入例外名）；② 登记 `winlator-app`（public / tool / active / none；Android 端以 Wine + Box86/Box64 运行 Windows 应用的工具仓，上游生态名 `winlator` + `-app` 派生，ADR-0017 同型）；③ 移除 `dsh-superagent-archive`（远程已删除：2026-11-11 `gh api repos/ReSerendipity/dsh-superagent-archive` 返回 404、`gh repo list` 无该名、远端 61 仓无改名候选）。本表 50 → 51 行（例外名 9 → 10，Train Case 维持 41）；合计 60 → 61 仓（51 + 10 备份仓）；`EXCLUDED_FROM_RELEASE_STANDARD` 49 → 50 项。
+>
+> 2026-11-11 变更（新仓入账）：登记 `Scan-Memories`（private / tool / active / none；Three.js 三维扫描浏览工具，名字为合规 Train Case 名，直接入 Train Case 表）。本表 49 → 50 行（例外名维持 9；Train Case 40 → 41）；合计 59 → 60 仓（50 + 10 备份仓）。
 >
 > 2026-11-07 变更（第一次）：新登记 `dsh-superagent`（private / tool / active / none；官方原型的 Windows 适配插件，寄住官方 DeepSeek Harness）；本表 43 → 44 行，Train Case 35 → 36；合计 53 → 54 仓（44 + 10 备份仓）。远程仍有 `JunctionScanner`、`Prompt-Provenance`、`superagent-demo` 未登记与 `Offer-Landing-Kit`、`Unity` 已不存在四类既有漂移，属账号级待裁决项，本次不代为定档。
 >
@@ -832,10 +838,10 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 59 仓定位
+### 15.6 61 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 49 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 51 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）

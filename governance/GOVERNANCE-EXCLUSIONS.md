@@ -8,7 +8,7 @@
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（10 项备份仓）
-> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（48 项非 release 仓，59 − 11）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（50 项非 release 仓，61 − 11）
 > 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
@@ -19,7 +19,7 @@
 **本文件自 2026-10-22 起是「治理分档与例外记录」，不再是「整部规范不适用」的白名单。** 现行规则：
 
 1. **`delivery=backup` 的 10 个仓**（密钥 / 资产备份仓）整部规范不适用，只按 §3 的 `<项目名>-KeyBackup` 结构、`SHA256SUMS.txt` 与轮换更新要求管理；不进 §4 台账，不参与 §1 命名与 §10 审计。**2026-11-03 补登记**：`KeyBackup-Passwords`（账号级口令保险库，名字不取 `<项目名>-KeyBackup` 形态，命名例外见 ADR-0016；内含明文口令台账，风险口径同下表「口令入库例外」）。现行 10 仓清单以 `desired-state.json` 为准。
-2. **其余 49 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
+2. **其余 51 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
 3. **命名例外**（品牌 / 系统保留名 / 上游生态名 / 已登记债务）见 §4「例外名」表；新增例外须先落 ADR。
 4. **`rewq` 的硬约束收窄**：`.gitignore` 必须排除 `ssh-backup/`、`.ssh/` 与 `*.pem` / `*.key` 等私钥；正常提交与推送不受限制（§15.5）。
 
@@ -114,26 +114,26 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 49 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **48** | §10 收敛审计只覆盖 11 个 `release` 仓（59 − 11 = 48） |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 51 仓全部参与 §1 命名校验 |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **50** | §10 收敛审计只覆盖 11 个 `release` 仓（61 − 11 = 50） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
-## 四、账号仓总览（2026-11-08 复核，共 59 个）
+## 四、账号仓总览（2026-11-11 台账复核，共 61 个）
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
-| **§4 登记（含规范仓）** | 49 | 按 §15 派生适用条款；命名例外见 §4 |
+| **§4 登记（含规范仓）** | 51 | 按 §15 派生适用条款；命名例外见 §4 |
 | **备份仓** | 10 | `delivery=backup`，只按 §3 管理，不进 §4 |
-| 合计 | 59 | `gh repo list ReSerendipity` 实测 59 个，零差额 |
+| 合计 | 61 | 台账口径 61 个；2026-11-11 远程 `gh repo list` 实测 61 个，**零差额**（`Saltline-plus`、`winlator-app` 已按业主裁决登记入账，`dsh-superagent-archive` 远程 404 已移出） |
 
 > **2026-11-07 删除留痕**：`Offer-Landing-Kit`（public / service / archived）与 `Unity`（private / tool / maintenance）在 owner 凭据下 `GET /repos/ReSerendipity/<name>` 均返回 404（无改名跳转），判定为远程已不存在，从 `desired-state.json` 与 §4 台账移除；若后续确认是改名或转移，按 §6 改名流程重新入账。
 
-### §4 台账现状（2026-11-07 复核）
+### §4 台账现状（2026-11-11 复核）
 
-- 台账登记 **49 条**（例外名 9 + Train Case 40），覆盖全部非 `backup` 仓。
+- 台账登记 **51 条**（例外名 10 + Train Case 41），覆盖全部非 `backup` 仓。
 - 台账之外的备份仓 **10 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
 - 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 
@@ -150,7 +150,7 @@
 |---|---|---|
 | `ci.yml` 六个常驻 CI 作业（`Workflow lint` / `DCO sign-off` / `self-purify（阻断）` / `Repository registry`（含 `check-governance-consistency.sh --public-only`）/ `Governance gates negative tests` / `Release standard audit`）+ 一个手动冒烟作业（`python-quality-smoke`） | §1 / §2 / §4 / §7-§8 / 提交签名 / §15 期望状态一致性（公开子集）/ §10 周检审计 / 质量底线自测 | 硬门禁 + 周检（2026-10-30 定稿：远程优先、本地最少化，schedule 与手动并存） |
 | `.github/scripts/check-repo-registry.sh` | §4 台账 + §1 命名 + 台账豁免声明（9 项） | CI + 周检 |
-| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 48 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
+| `.github/scripts/check-release-standard.sh` | §10 收敛核验（豁免 50 项） | 周检审计（2026-10-19 挂入 `ci.yml` schedule，2026-10-30 起另可 `workflow_dispatch` 手动派发） |
 | `.github/workflows/python-quality-baseline.yml`（经 `ci.yml` 的 `python-quality-smoke` 作业） | 家族质量底线（覆盖率 + mypy ratchet）自测载体：fixtures/py_smoke 样例包 | 手动派发（2026-10-30 起，§20/ADR-0010；改动本基线合并前须跑绿） |
 | `.github/scripts/check-agents-md-size.sh` | §7 的 300 行上限（仅公开仓） | 本地命令 |
 | `governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md` | §10 下发模板 | 模板 |
