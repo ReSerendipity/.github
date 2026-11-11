@@ -203,6 +203,9 @@ run_case "self-purify 两处规则同步" 0 python3 "$SCRIPTS/tests/check-self-p
 # ── readme 图路径：相对路径 / jsDelivr / GitHub blob/raw / SVG ──
 run_case "readme 图路径解析" 0 python3 "$SCRIPTS/tests/check-readme-image-paths.py"
 
+# ── readme 图审计新增检查：TOPICS / INPLACE / CAPTION 纯函数正反例 ──
+run_case "readme 图审计新增检查" 0 python3 "$SCRIPTS/tests/check-readme-image-audit.py"
+
 cd "$REPO_ROOT" || exit 2
 
 echo ""

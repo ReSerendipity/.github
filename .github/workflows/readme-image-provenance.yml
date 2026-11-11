@@ -51,5 +51,11 @@ jobs:
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             args+=(--only .github --skip-blank)
           fi
+          # 检查项与分级（2026-11-11 扩充）：
+          #   REUSE / MISSING —— 既有阻断项，由 --fail-on-reuse 控制；
+          #   NEAR_BLANK —— 既有近空白启发式，只告警不阻断；
+          #   TOPICS / INPLACE / CAPTION / ALT —— 新增检查，默认只告警不阻断。
+          #     升级为阻断需显式加 --fail-on-warn（或分项 --fail-on-topics /
+          #     --fail-on-inplace / --fail-on-caption），本 workflow 暂不加，保持 CI 绿灯。
           python3 .github/scripts/check-readme-image-provenance.py "${args[@]}" \
             | tee -a "$GITHUB_STEP_SUMMARY"

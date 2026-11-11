@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 """README 展示图来源审计（只读）。
 
-两类检查：
-1. 来源：README 图是否与仓内截图归档（screenshots/、docs/screenshots/、captures/、
-   shots/、test-results/ 等）逐字节同源；同源即“复用历史截图”，判红。
-2. 空白：下载 README 图，算近空白启发式（边缘能量 / 标准差 / 主色占比）；只告警，
-   不阻断，用于提示“整屏空白/占位图”类画面。
+检查项与分级：
+1. 来源（阻断）：README 图是否与仓内截图归档（screenshots/、docs/screenshots/、
+   captures/、shots/、test-results/ 等）逐字节同源；同源即“复用历史截图”，判红。
+2. 空白（告警）：下载 README 图，算近空白启发式（边缘能量 / 标准差 / 主色占比）；
+   只告警，不阻断，用于提示“整屏空白/占位图”类画面。
+3. TOPICS（告警，2026-11-11 新增）：公开仓 topics 为空（§8 要求公开仓带 Topics）。
+4. INPLACE（告警，新增）：README 图同一路径在默认分支被原地修改超过 1 次，且文件名
+   无 -YYYYMMDD 日期后缀（§8.1.4 禁止原地覆盖同名展示图）。
+5. CAPTION / ALT（告警，新增）：同一图在 README 中多处引用而 alt/图注不一致（仅同语言
+   类别内比较，跨语言差异不报），或引用缺 alt 文本。
+
+REUSE / MISSING 是既有阻断项（--fail-on-reuse 语义不变）；近空白与新增三项默认只告警。
+新增三项可经 --fail-on-warn（或分项 --fail-on-topics / --fail-on-inplace /
+--fail-on-caption）升级为阻断。
 
 用法：
     python .github/scripts/check-readme-image-provenance.py [--fail-on-reuse] [--only a,b] [--skip-blank]
@@ -32,9 +41,11 @@ OWNER = "ReSerendipity"
 API = "https://api.github.com"
 SHOT_RE = re.compile(r"(?i)(^|/)(screenshots?|shots|captures?|snapshots?|test-results|post-assets)/")
 MARKDOWN_IMG_RE = re.compile(
-    r"!\[[^\]]*\]\(\s*(?:<)?([^)\s>]+)(?:>)?(?:\s+['\"][^'\"]*['\"])?\s*\)"
+    r"!\[([^\]]*)\]\(\s*(?:<)?([^)\s>]+)(?:>)?(?:\s+['\"][^'\"]*['\"])?\s*\)"
 )
-HTML_IMG_RE = re.compile(r"<img\b[^>]*\bsrc\s*=\s*['\"]([^'\"]+)['\"]", re.I)
+HTML_IMG_TAG_RE = re.compile(r"<img\b[^>]*>", re.I)
+HTML_SRC_RE = re.compile(r"\bsrc\s*=\s*['\"]([^'\"]+)['\"]", re.I)
+HTML_ALT_RE = re.compile(r"\salt\s*=\s*['\"]([^'\"]*)['\"]", re.I)
 JSDELIVR_RE = re.compile(
     r"https?://(?:gcore\.)?jsdelivr\.net/gh/([^@/]+)/([^@]+)@([^/]+)/([^\s\)\]\"'?#]+)", re.I
 )
@@ -44,6 +55,10 @@ GITHUB_RE = re.compile(
 RAW_GITHUB_RE = re.compile(
     r"https?://raw\.githubusercontent\.com/([^/]+)/([^/]+)/([^/]+)/([^\s\)\]\"'?#]+)", re.I
 )
+# §8.1.4 合规做法的日期后缀：-20261108.svg / -20261108-2.png
+DATED_NAME_RE = re.compile(r"-(\d{8})(?:-\d+)?\.[A-Za-z0-9]+$")
+# CJK 汉字（扩展 A + 基本区 + 兼容区），用于 alt 语言类别判定
+CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 
 RASTER_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".webp")
 
@@ -99,36 +114,64 @@ def _clean_path(path: str) -> str:
     return path
 
 
+def _resolve(raw: str, repo: str) -> str | None:
+    """把一条图片引用解析为本仓相对路径；外部仓 / data: URI 返回 None。"""
+    raw = raw.strip()
+    if not raw or raw.startswith("data:"):
+        return None
+    if raw.startswith("//"):
+        raw = "https:" + raw
+    if raw.startswith(("http://", "https://")):
+        for regex in (JSDELIVR_RE, GITHUB_RE, RAW_GITHUB_RE):
+            match = regex.match(raw)
+            if not match:
+                continue
+            owner, name, _ref, path = match.groups()
+            if owner.lower() == OWNER.lower() and name.lower() == repo.lower():
+                cleaned = _clean_path(path)
+                if cleaned:
+                    return cleaned
+            break
+        return None
+    cleaned = _clean_path(raw)
+    if cleaned and not cleaned.startswith("../"):
+        return cleaned
+    return None
+
+
+def extract_refs(text: str, repo: str) -> list[tuple[str, str]]:
+    """从 Markdown / HTML 图片引用中提取 (仓内相对路径, alt) 列表。
+
+    顺序保留、不去重（同一图多处引用用于 CAPTION/ALT 一致性检查）；
+    仅保留指向本仓（OWNER/repo）的路径，外部图床与 data: URI 跳过。
+    Markdown 取 ![alt](path) 的 alt；<img> 取 alt= 属性，缺失记空字符串。
+    """
+    refs: list[tuple[str, str]] = []
+    for match in MARKDOWN_IMG_RE.finditer(text):
+        alt, raw = match.group(1), match.group(2)
+        path = _resolve(raw, repo)
+        if path:
+            refs.append((path, alt.strip()))
+    for tag in HTML_IMG_TAG_RE.finditer(text):
+        tag_text = tag.group(0)
+        src = HTML_SRC_RE.search(tag_text)
+        if not src:
+            continue
+        alt_match = HTML_ALT_RE.search(tag_text)
+        alt = alt_match.group(1).strip() if alt_match else ""
+        path = _resolve(src.group(1), repo)
+        if path:
+            refs.append((path, alt))
+    return refs
+
+
 def extract_paths(text: str, repo: str) -> set[str]:
-    """从 Markdown / HTML 图片引用中提取仓内相对路径。
+    """从 Markdown / HTML 图片引用中提取仓内相对路径（兼容旧调用，只返回路径集合）。
 
     支持 jsDelivr、GitHub blob/raw、raw.githubusercontent 绝对 URL 与相对路径；
     仅保留指向本仓（OWNER/repo）的路径，外部图床与 data: URI 跳过。
     """
-    urls = MARKDOWN_IMG_RE.findall(text) + HTML_IMG_RE.findall(text)
-    paths: set[str] = set()
-    for raw in urls:
-        raw = raw.strip()
-        if not raw or raw.startswith("data:"):
-            continue
-        if raw.startswith("//"):
-            raw = "https:" + raw
-        if raw.startswith(("http://", "https://")):
-            for regex in (JSDELIVR_RE, GITHUB_RE, RAW_GITHUB_RE):
-                match = regex.match(raw)
-                if not match:
-                    continue
-                owner, name, _ref, path = match.groups()
-                if owner.lower() == OWNER.lower() and name.lower() == repo.lower():
-                    cleaned = _clean_path(path)
-                    if cleaned:
-                        paths.add(cleaned)
-                break
-            continue
-        cleaned = _clean_path(raw)
-        if cleaned and not cleaned.startswith("../"):
-            paths.add(cleaned)
-    return paths
+    return {path for path, _alt in extract_refs(text, repo)}
 
 
 def fetch_image(repo: str, branch: str, path: str) -> bytes | None:
@@ -192,12 +235,90 @@ def is_near_blank(m: dict[str, float]) -> bool:
     return (m["grad"] < 1.5 and m["std"] < 8.0) or (m["dom"] > 0.97 and m["grad"] < 2.5)
 
 
-def audit(repo: str, blank: bool) -> tuple[list[str], list[str]]:
-    default_branch = read_json(f"/repos/{OWNER}/{repo}")["default_branch"]
+def fetch_commit_count(repo: str, path: str) -> int | None:
+    """取默认分支上该路径的提交总数（?path= 分页累加）；取不到返回 None。
+
+    新增文件本身也是 1 次提交，不算原地覆盖；> 1 才说明同一路径被改动过。
+    """
+    quoted = urllib.parse.quote(path, safe="")
+    total = 0
+    page = 1
+    while True:
+        try:
+            data = json.loads(
+                api(f"/repos/{OWNER}/{repo}/commits?path={quoted}&per_page=100&page={page}").decode("utf-8")
+            )
+        except (urllib.error.HTTPError, urllib.error.URLError, OSError, ValueError):
+            return None
+        if not isinstance(data, list):
+            return None
+        total += len(data)
+        if len(data) < 100:
+            return total
+        page += 1
+
+
+def check_topics(repo: str, topics: list[str] | None) -> str | None:
+    """topics 为空列表 → TOPICS 告警；topics 为 None（取不到）→ 跳过（调用方记 UNVERIFIABLE）。"""
+    if topics is None:
+        return None
+    if not topics:
+        return f"{repo} | TOPICS | - | topics 为空（§8 要求公开仓带 Topics）"
+    return None
+
+
+def check_inplace(repo: str, path: str, commit_count: int) -> str | None:
+    """同一路径提交数 > 1 且文件名无 -YYYYMMDD 后缀 → INPLACE 告警（§8.1.4）。"""
+    if commit_count > 1 and not DATED_NAME_RE.search(path):
+        return f"{repo} | INPLACE | {path} | 同名原地修改 {commit_count} 次且文件名无 -YYYYMMDD 后缀（§8.1.4）"
+    return None
+
+
+def _has_cjk(text: str) -> bool:
+    """文本是否含 CJK 汉字（扩展 A + 基本区 + 兼容区）。"""
+    return bool(CJK_RE.search(text))
+
+
+def check_caption(repo: str, path: str, alts: list[str]) -> list[tuple[str, str]]:
+    """同一图多处引用 alt 不一致 → CAPTION；任一引用缺 alt → ALT。
+
+    alts 为同一仓内路径在 README 中每次引用的 alt 文本（保序、含重复）。
+    CAPTION 判定（2026-11-11 阶段2 收窄）：仅当多处引用的 alt 属于同一语言类别
+    （同含 CJK，或同不含 CJK）且文本不一致时才报；跨语言差异（典型为中英文案
+    各一次）不报。空字符串不含 CJK，归入「不含 CJK」类别。
+    """
+    warnings: list[tuple[str, str]] = []
+    if any(not alt for alt in alts):
+        warnings.append(("ALT", f"{repo} | ALT | {path} | 缺少 alt 文本"))
+    by_category: dict[bool, set[str]] = {}
+    for alt in alts:
+        by_category.setdefault(_has_cjk(alt), set()).add(alt)
+    if any(len(values) > 1 for values in by_category.values()):
+        warnings.append(
+            ("CAPTION", f"{repo} | CAPTION | {path} | 同一图在 README 中出现多次但 alt/图注不一致")
+        )
+    return warnings
+
+
+def audit(repo: str, blank: bool) -> tuple[list[str], list[str], list[tuple[str, str]]]:
+    """返回 (findings, 近空白告警, 新增检查告警)；新增告警为 (KIND, message) 列表。"""
+    info = read_json(f"/repos/{OWNER}/{repo}")
+    default_branch = info["default_branch"]
+    topics = info.get("topics")
+
+    new_warnings: list[tuple[str, str]] = []
+    if topics is None:
+        print(f"{repo} | UNVERIFIABLE | - | topics 字段缺失，跳过 TOPICS 检查")
+    else:
+        warning = check_topics(repo, topics)
+        if warning:
+            new_warnings.append(("TOPICS", warning))
+
     readme = read_text(f"/repos/{OWNER}/{repo}/readme")
-    readme_paths = extract_paths(readme, repo)
+    refs = extract_refs(readme, repo)
+    readme_paths = {path for path, _alt in refs}
     if not readme_paths:
-        return [], []
+        return [], [], new_warnings
 
     tree = read_json(f"/repos/{OWNER}/{repo}/git/trees/{default_branch}?recursive=1").get("tree", [])
     sha_to_paths: dict[str, list[str]] = {}
@@ -220,6 +341,14 @@ def audit(repo: str, blank: bool) -> tuple[list[str], list[str]]:
         if others:
             findings.append(f"{repo} | REUSE | {path} <- {', '.join(sorted(others))}")
 
+        commit_count = fetch_commit_count(repo, path)
+        if commit_count is None:
+            print(f"{repo} | UNVERIFIABLE | {path} | 无法获取提交历史，跳过 INPLACE 检查")
+        else:
+            warning = check_inplace(repo, path, commit_count)
+            if warning:
+                new_warnings.append(("INPLACE", warning))
+
         if blank and path.lower().endswith(RASTER_EXTS):  # SVG 无法做像素近空白检测
             data = fetch_image(repo, default_branch, path)
             if data:
@@ -229,20 +358,45 @@ def audit(repo: str, blank: bool) -> tuple[list[str], list[str]]:
                         f"{repo} | NEAR_BLANK | {path} | "
                         f"std={metrics['std']:.1f} grad={metrics['grad']:.2f} dom={metrics['dom']:.2f}"
                     )
-    return findings, warnings
+
+    alts_by_path: dict[str, list[str]] = {}
+    for path, alt in refs:
+        alts_by_path.setdefault(path, []).append(alt)
+    for path in sorted(alts_by_path):
+        new_warnings.extend(check_caption(repo, path, alts_by_path[path]))
+
+    return findings, warnings, new_warnings
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--fail-on-reuse", action="store_true")
+    parser = argparse.ArgumentParser(
+        description=(
+            "README 展示图来源审计（只读）。REUSE/MISSING 为既有阻断项；"
+            "TOPICS/INPLACE/CAPTION/ALT 为新增检查，默认只告警不阻断。"
+        )
+    )
+    parser.add_argument("--fail-on-reuse", action="store_true", help="REUSE/MISSING 命中即退出码 1（既有语义）")
     parser.add_argument("--only", default="")
     parser.add_argument("--skip-blank", action="store_true", help="跳过近空白检测（不下载图片）")
+    parser.add_argument(
+        "--fail-on-warn",
+        action="store_true",
+        help="把新增三类告警（TOPICS/INPLACE/CAPTION/ALT）纳入阻断（默认关闭，只告警）",
+    )
+    parser.add_argument("--fail-on-topics", action="store_true", help="仅 TOPICS 告警纳入阻断（默认关闭）")
+    parser.add_argument("--fail-on-inplace", action="store_true", help="仅 INPLACE 告警纳入阻断（默认关闭）")
+    parser.add_argument(
+        "--fail-on-caption",
+        action="store_true",
+        help="仅 CAPTION/ALT 告警纳入阻断（默认关闭）",
+    )
     args = parser.parse_args()
     only = {x.strip() for x in args.only.split(",") if x.strip()} or None
     blank = not args.skip_blank
 
     all_findings: list[str] = []
     all_warnings: list[str] = []
+    all_new_warnings: list[tuple[str, str]] = []
     repos = load_repos(only)
     print(f"README 图片来源审计 owner={OWNER} 仓库={len(repos)} blank_check={blank}")
     if blank and Image is None:
@@ -250,7 +404,7 @@ def main() -> int:
 
     for repo in repos:
         try:
-            findings, warnings = audit(repo, blank)
+            findings, warnings, new_warnings = audit(repo, blank)
         except urllib.error.HTTPError as exc:
             all_findings.append(f"{repo} | ERROR | HTTP {exc.code}")
             continue
@@ -259,6 +413,7 @@ def main() -> int:
         else:
             print(f"PASS {repo}")
         all_warnings.extend(warnings)
+        all_new_warnings.extend(new_warnings)
 
     if all_findings:
         print("\n发现问题：")
@@ -267,12 +422,34 @@ def main() -> int:
     else:
         print("clean：README 图与截图归档无同源")
 
+    if all_new_warnings:
+        counts: dict[str, int] = {}
+        for kind, _line in all_new_warnings:
+            counts[kind] = counts.get(kind, 0) + 1
+        summary = " ".join(f"{kind}={count}" for kind, count in sorted(counts.items()))
+        print(
+            f"\n新增检查告警（{len(all_new_warnings)} 条，默认不阻断；"
+            f"升级为阻断需 --fail-on-warn 或分项开关）：{summary}"
+        )
+        for _kind, line in all_new_warnings:
+            print(line)
+
     if all_warnings:
         print(f"\n近空白告警（{len(all_warnings)} 条，不阻断）：")
         for line in all_warnings:
             print(line)
 
-    return 1 if (args.fail_on_reuse and all_findings) else 0
+    block_kinds: set[str] = set()
+    if args.fail_on_warn:
+        block_kinds.update({"TOPICS", "INPLACE", "CAPTION", "ALT"})
+    if args.fail_on_topics:
+        block_kinds.add("TOPICS")
+    if args.fail_on_inplace:
+        block_kinds.add("INPLACE")
+    if args.fail_on_caption:
+        block_kinds.update({"CAPTION", "ALT"})
+    warn_hit = any(kind in block_kinds for kind, _line in all_new_warnings)
+    return 1 if (args.fail_on_reuse and all_findings) or warn_hit else 0
 
 
 if __name__ == "__main__":
