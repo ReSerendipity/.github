@@ -39,7 +39,7 @@
 | 文档 | 用途 | 状态 | 核对日期 |
 |---|---|---|---|
 | [`README.md`](../governance/README.md) | 治理手册入口：文件分工表、权威顺序、引用方式（含 2026-10-27 允许形态）、新建仓脚手架、变更流程 | 现行 | 2026-11-10 |
-| [`REPOSITORY_GUIDELINES.md`](../governance/REPOSITORY_GUIDELINES.md) | 治理规范 §1–§21（命名与目录、分支、密钥备份、变更流程、本地 `AGENTS.md`、README 双版本与展示图真实性、发布分发、许可证、结构与路径、治理分档、Markdown 文档健康、依赖升级、CI 远程化、仓库描述） | 现行 | 2026-11-10 |
+| [`REPOSITORY_GUIDELINES.md`](../governance/REPOSITORY_GUIDELINES.md) | 治理规范 §1–§21（命名与目录、分支、密钥备份、变更流程、本地 `AGENTS.md`、README 双版本与展示图真实性、§8.2 profile 仓简历式精简模板、发布分发、许可证、结构与路径、治理分档、Markdown 文档健康、依赖升级、CI 远程化、仓库描述） | 现行 | 2026-11-12 |
 | [`GOVERNANCE-EXCLUSIONS.md`](../governance/GOVERNANCE-EXCLUSIONS.md) | 治理分档与例外记录：现行口径、备份仓与命名/发布载体对照、四轮豁免历史原文、§六–§十 例外 | 现行 | 2026-11-10 |
 
 ### 3.2 决策记录 `decisions/`（ADR-0001 ~ ADR-0018，编号不重用）
