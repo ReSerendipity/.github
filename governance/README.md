@@ -45,6 +45,8 @@
 | 私有仓 | 建议放置，不作闸（私有仓不强制双版本分流） | §8 私有仓例外 |
 | `backup` 仓 | 不要求 | §15.3：`backup` 仅适用 §3 |
 
+> **profile 仓（2026-11-12，§8.2）**：与账号同名、`delivery=content` 的主页仓仍**必须**保留本引用行，但按 §8.2 的简历式精简模板执行——不要求展示图 / badges / Topics / 完整双语镜像，也不在根 README 维护全部公开项目表；其余最低要求与 CI 门禁见 §8.2。
+
 指向具体文件的变体（`REPOSITORY_GUIDELINES.md` / `CONTRIBUTING.md`）**不判为死链**，只在上述「必须」类仓要求补齐标准 `tree/main/governance` 引用行。
 
 **允许形态（2026-10-27 明确，按现网 16 仓实测收敛为两种）**：只要指向的 URL 是 `https://github.com/ReSerendipity/.github/tree/main/governance`，以下任一形态均合规，不强制统一——
