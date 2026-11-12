@@ -1,6 +1,6 @@
 # 文档索引（docs/INDEX）
 
-> 最后核对：2026-11-10　｜　维护：文档整理工单 WO-DOC-B01
+> 最后核对：2026-11-12　｜　维护：文档整理工单 WO-DOC-B01
 > 本文件是 `.github` 仓 Markdown 的机器可读总索引：仓根 7 篇 + `docs/` 1 篇 + `governance/` 32 篇 + `.github/` 3 篇 + `local/` 3 篇 = 46 篇；其中 `local/` 3 篇不入库，`git ls-files '*.md'` 计 43 篇。
 > **权威顺序**（照 [`governance/README.md`](../governance/README.md) 第 17–23 行）：本仓 `governance/` 政策文档 > 各仓 `docs/` > 各仓 `README.md`；本文件只是索引，不承载政策正文。
 
@@ -39,7 +39,7 @@
 | 文档 | 用途 | 状态 | 核对日期 |
 |---|---|---|---|
 | [`README.md`](../governance/README.md) | 治理手册入口：文件分工表、权威顺序、引用方式（含 2026-10-27 允许形态）、新建仓脚手架、变更流程 | 现行 | 2026-11-10 |
-| [`REPOSITORY_GUIDELINES.md`](../governance/REPOSITORY_GUIDELINES.md) | 治理规范 §1–§21（命名与目录、分支、密钥备份、变更流程、本地 `AGENTS.md`、README 双版本与展示图真实性、§8.2 profile 仓简历式精简模板、发布分发、许可证、结构与路径、治理分档、Markdown 文档健康、依赖升级、CI 远程化、仓库描述） | 现行 | 2026-11-12 |
+| [`REPOSITORY_GUIDELINES.md`](../governance/REPOSITORY_GUIDELINES.md) | 治理规范 §1–§21（命名与目录、分支、密钥备份、变更流程、本地 `AGENTS.md`、README 双版本与展示图真实性、§8.2 profile 仓简历式精简模板（2 个 pinned 代表项目）、发布分发、许可证、结构与路径、治理分档、Markdown 文档健康、依赖升级、CI 远程化、仓库描述） | 现行 | 2026-11-12 |
 | [`GOVERNANCE-EXCLUSIONS.md`](../governance/GOVERNANCE-EXCLUSIONS.md) | 治理分档与例外记录：现行口径、备份仓与命名/发布载体对照、四轮豁免历史原文、§六–§十 例外 | 现行 | 2026-11-10 |
 
 ### 3.2 决策记录 `decisions/`（ADR-0001 ~ ADR-0018，编号不重用）
