@@ -23,6 +23,7 @@ ADR-0012 标准化了 6 列表头，但把 4 个历史大台账的迁移列为**
    - 被迁移契约明文规定替换的旧抬头 / 章节标题 / 字段标签不计入「丢失」。
 4. **迁移后必刷基线**：任何**改变台账行数**（尤其缩表 / 回流）的迁移或重构完成后，必须对每个受影响仓重跑 `check-ledger-append.ps1 -Root <repo>`（非 `-Enforce`）重写 `local/agents/.ledger-baseline.json`，使 pre-push 严格 `>` 判据回到迁移后真实行数。此项与 ADR-0012「验收闸」的行数比对配套修订。
 5. **交付形态不变**：GOTCHAS / REVISION_LOG 与根 `AGENTS.md` 均为本地文件（`docs/agents/`、`/local/` 在 `.gitignore` 内），迁移结果**不入远端**；本 ADR 只改治理仓 `.github` 的规范与决策记录。
+   > **2026-11-12 本条被 [ADR-0019](ADR-0019-ledger-versioning.md) 取代**：台账改为纳入版本控制并推送远端，`AGENTS.md` 仍仅本地保留。本条保留原文以存历史，不再作为执行口径；第 4 条「迁移后必刷基线」仍然有效。
 
 ## 后果
 

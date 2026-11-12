@@ -391,7 +391,7 @@ updated: YYYY-MM-DD
 | 文件 | 定位 | 是否入库（公开仓） |
 |---|---|---|
 | 根目录 `README.md` | **对外展示版**：这是什么、怎么用、怎么参与，面向 GitHub 访客；只描述当前形态与用法 | 入库、GitHub 渲染 |
-| `local/README.internal.md` | **对内维护者说明**：本地环境约定、部署细节、内部字段引用、实验产物清单、维护者备忘 | **不入库**（§13.1 `local/` 容器整体 ignore；2026-10-19 由 `docs/README.internal.md` 迁位） |
+| `local/README.internal.md` | **对内维护者说明**：本地环境约定、部署细节、内部字段引用、实验产物清单、维护者备忘 | **不入库**（§13.1 `local/` 容器；容器内唯一入库例外是两份台账，见 ADR-0019；2026-10-19 由 `docs/README.internal.md` 迁位） |
 
 规则：
 
@@ -763,14 +763,20 @@ Q3 都不是（纯历史：审计快照 / 一次性评估 / 执行对照 / 实�
 
 - **公开 / 私有上传策略（2026-10-23 明确）**：公开仓遵循「非必要不上传」——只有陌生协作者能据此行动的文档才进 `docs/`，其余留在 `local/`；私有仓相反，**尽可能把可备份的 Markdown 上传入库**（密钥、token、口令除外；`AGENTS.md` 按 §7.1 始终只留本地），作为远程备份。
 
-**物理载体（`.gitignore` 模板，每仓统一，仅两条）**：
+**物理载体（`.gitignore` 模板，每仓统一；2026-11-12 由 ADR-0019 改为四段式）**：
 
 ```gitignore
-/local/      # 仅本地容器：内部说明、agent 上下文、实验记录、纯历史（§13.1）
-AGENTS.md    # §7 家族（无斜线模式，匹配任意深度）
+/local/*                    # 仅本地容器：内部说明、agent 上下文、实验记录、纯历史（§13.1）
+!/local/agents/             # 放行 agents 这一子目录本身
+/local/agents/*             # 其内容默认仍仅本地
+!/local/agents/GOTCHAS.md   # 自进化台账入库（ADR-0019）
+!/local/agents/REVISION_LOG.md
+AGENTS.md                   # §7 家族（无斜线模式，匹配任意深度）
 ```
 
-- `local/` 是**唯一**的仅本地容器，目录级一条规则、永不增长；`docs/` 由此保持**纯入库**语义（治理文档与对外文档不受任何 ignore 影响）。
+- `local/` 是**唯一**的仅本地容器；`docs/` 由此保持**纯入库**语义（治理文档与对外文档不受任何 ignore 影响）。
+- **例外只有台账**：`GOTCHAS.md` 与 `REVISION_LOG.md` 入库（ADR-0019），其余 `local/**` 一律不入库，含 `.ledger-baseline.json`（机器本地态）。
+- **写法铁律**：git 无法在父目录被排除时重新包含其子文件。必须先 `/local/*`（排除内容）再逐级反包含；在 `/local/` 之后叠 `!local/agents/GOTCHAS.md` **不生效**（`git check-ignore` 仍命中 `/local/`，`git add` 被拒）。存量形态等价改写：无前导斜杠的 `local/` 同法处理；已是 `/local/*` 的只补后三段；`docs/agents/` 形态写 `docs/agents/*` + 两条反包含。
 - 迁移映射：`docs/README.internal.md` → `local/README.internal.md`（§8）；`docs/agents/**` → `local/agents/**`（§7）；`docs/local/` 概念废除（未实施即由 `local/` 取代）。
 - **边界案例**：双语配对（`X.md` + `X.zh_CN.md`）跟随主文档判定；生成类文档（API docs / coverage 报告）属构建产物不入库（§9）；已在 `docs/` 下的存量历史文档**不迁移、保留原位**，新增的不提交。
 

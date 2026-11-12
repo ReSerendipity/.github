@@ -42,7 +42,7 @@
 | [`REPOSITORY_GUIDELINES.md`](../governance/REPOSITORY_GUIDELINES.md) | 治理规范 §1–§21（命名与目录、分支、密钥备份、变更流程、本地 `AGENTS.md`、README 双版本与展示图真实性、§8.2 profile 仓简历式精简模板（2 个 pinned 代表项目）、发布分发、许可证、结构与路径、治理分档、Markdown 文档健康、依赖升级、CI 远程化、仓库描述） | 现行 | 2026-11-12 |
 | [`GOVERNANCE-EXCLUSIONS.md`](../governance/GOVERNANCE-EXCLUSIONS.md) | 治理分档与例外记录：现行口径、备份仓与命名/发布载体对照、四轮豁免历史原文、§六–§十 例外 | 现行 | 2026-11-10 |
 
-### 3.2 决策记录 `decisions/`（ADR-0001 ~ ADR-0018，编号不重用）
+### 3.2 决策记录 `decisions/`（ADR-0001 ~ ADR-0019，编号不重用）
 
 | 文档 | 用途 | 状态 | 核对日期 |
 |---|---|---|---|
@@ -65,6 +65,7 @@
 | [`ADR-0016-account-password-vault-naming.md`](../governance/decisions/ADR-0016-account-password-vault-naming.md) | 账号级口令保险库 `KeyBackup-Passwords` 的命名例外 | 现行 | 2026-11-10 |
 | [`ADR-0017-dsh-superagent-upstream-naming.md`](../governance/decisions/ADR-0017-dsh-superagent-upstream-naming.md) | `dsh-superagent` 上游生态名例外与同批新增仓命名裁决 | 现行 | 2026-11-10 |
 | [`ADR-0018-new-repo-registration-and-archive-name.md`](../governance/decisions/ADR-0018-new-repo-registration-and-archive-name.md) | `dsh-superagent-archive` 例外名继承、`BookSpine-Wall` / `MirrorDuo` / `OrbitCube` 入账、遗留计数修正 | 现行 | 2026-11-10 |
+| [`ADR-0019-ledger-versioning.md`](../governance/decisions/ADR-0019-ledger-versioning.md) | 自进化台账纳入版本控制：取代 ADR-0013 第 5 条，修订 §13.1 `local/` 容器模板为四段式 | 现行 | 2026-11-12 |
 
 ### 3.3 模板 `templates/`
 
