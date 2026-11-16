@@ -31,6 +31,7 @@
 | [ADR-0017](ADR-0017-dsh-superagent-upstream-naming.md) | `dsh-superagent` 的上游生态名例外与同批新增仓命名裁决 | Accepted |
 | [ADR-0018](ADR-0018-new-repo-registration-and-archive-name.md) | `dsh-superagent-archive` 例外名继承与 `BookSpine-Wall` / `MirrorDuo` / `OrbitCube` 入账、遗留计数修正 | Accepted |
 | [ADR-0019](ADR-0019-ledger-versioning.md) | 自进化台账纳入版本控制（取代 ADR-0013 第 5 条；修订 §13.1 `local/` 容器模板） | Accepted |
+| [ADR-0020](ADR-0020-ledger-inventory-and-draftpeek-dual-track.md) | 台账盘点修正（补计 TTS-MultiModel，取代 ADR-0019 第 6 条）与 DraftPeek 双轨台账追认（取代 ADR-0019 第 3 条设想）；强化 §4/§6 平台动作顺序约束 | Accepted |
 
 ## 与规范的关系
 
