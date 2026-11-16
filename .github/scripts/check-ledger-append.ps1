@@ -1,6 +1,9 @@
 param(
   [string]$Root = (Get-Location).Path,
-  [switch]$Enforce
+  [switch]$Enforce,
+  # 可选：显式指定 GOTCHAS 台账路径（相对 $Root 或绝对）。用于台账已迁到
+  # docs/project/KNOWN_GOTCHAS.md（家族白名单路径）的仓；留空保持原有解析顺序。
+  [string]$GotchasPath = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -14,7 +17,12 @@ function Resolve-Ledger([string]$repo, [string]$name) {
 }
 
 $agents = Join-Path $Root 'AGENTS.md'
-$gotchas = Resolve-Ledger $Root 'GOTCHAS.md'
+$gotchas = if ($GotchasPath) {
+  $explicit = if ([IO.Path]::IsPathRooted($GotchasPath)) { $GotchasPath } else { Join-Path $Root $GotchasPath }
+  if (Test-Path -LiteralPath $explicit) { $explicit } else { $null }
+} else {
+  Resolve-Ledger $Root 'GOTCHAS.md'
+}
 $revision = Resolve-Ledger $Root 'REVISION_LOG.md'
 if (-not $gotchas -or -not $revision) {
   Write-Host "ledger-gate: 台账缺失，跳过（$Root）"
