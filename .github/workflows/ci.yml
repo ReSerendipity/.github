@@ -114,8 +114,8 @@ jobs:
   # 挪到远端后，任何 PR 与本仓推送都会自动对账文档与 GitHub 现网，本机不再需要跑它；
   # 周检 schedule 随 2026-10-30「远程优先」裁决保留，覆盖仓外动作引起的漂移。
   # 同一作业同时跑 check-governance-consistency.sh 的 --public-only 模式：
-  # desired-state / §4 / 文档计数的一致性也在每次 PR 与推送时校验；完整 55 仓
-  # （含 21 个私有仓）仍需本地 owner 凭据运行同一脚本的无参模式。
+  # desired-state / §4 / 文档计数的一致性也在每次 PR 与推送时校验；完整 61 仓
+  # （含 31 个私有仓）仍需本地 owner 凭据运行同一脚本的无参模式。
   # 退出码口径沿用脚本：1=文档与现网有差集，2=取数无法判定（网络/凭据/限流）；
   # 两者都判红，与本仓"失败关闭、不把空集合当通过"的口径一致。
   repo-registry:
@@ -143,7 +143,7 @@ jobs:
   # 且定位是"审计 + 进度对账"而非门禁（§10.7），故在 schedule 周检与 workflow_dispatch
   # 手动派发上跑，不进每 PR 流水线。
   # 退出码口径沿用脚本：1=存在与 §10 已裁决口径冲突的 FAIL 项，2=入参不可用；
-  # FAIL 判红。豁免仓（§10 排除清单 37 项 = 48 − 11 个 release 仓）由脚本内 EXCLUDED_FROM_RELEASE_STANDARD 声明，
+  # FAIL 判红。豁免仓（§10 排除清单 50 项 = 61 − 11 个 release 仓）由脚本内 EXCLUDED_FROM_RELEASE_STANDARD 声明，
   # 与 REPOSITORY_GUIDELINES.md §10 保持同源。
   # 门禁自身也需要被测试：正例必须绿、负例必须红，防止「把断言改松」这种静默退化。
   # 覆盖 registry / release / agents / signoff / agent-session 五类载体；不加入必需检查。
