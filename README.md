@@ -5,7 +5,7 @@
 ![CI](https://github.com/ReSerendipity/.github/actions/workflows/ci.yml/badge.svg)
 ![Last commit](https://img.shields.io/github/last-commit/ReSerendipity/.github)
 ![PRs welcome](https://img.shields.io/badge/PRs%20welcome-brightgreen)
-![Governance](https://img.shields.io/badge/governance-REPOSITORY_GUIDELINES_%C2%A71%E2%80%93%C2%A720-6e40c9)
+![Governance](https://img.shields.io/badge/governance-REPOSITORY_GUIDELINES_%C2%A71%E2%80%93%C2%A721-6e40c9)
 ![Governed repos](https://img.shields.io/badge/governed%20repos-61-1a7f37)
 
 [中文](#中文) | [English](#english)
@@ -18,7 +18,7 @@
 
 本仓库是 ReSerendipity 账号的**治理枢纽**，对外提供三类资产：
 
-1. **治理规范单一事实来源**：`governance/` 目录承载 `REPOSITORY_GUIDELINES.md`（§1–§20）、61 仓期望状态 `desired-state.json`、ADR 决策记录与模板；账号内 61 个仓库（截至 2026-11-11）以本目录为唯一权威口径。
+1. **治理规范单一事实来源**：`governance/` 目录承载 `REPOSITORY_GUIDELINES.md`（§1–§21）、61 仓期望状态 `desired-state.json`、ADR 决策记录与模板；账号内 61 个仓库（截至 2026-11-17）以本目录为唯一权威口径。
 2. **默认社区健康文件**：`CODE_OF_CONDUCT.md`、`CONTRIBUTING.md`、`SECURITY.md`、`SUPPORT.md` 与 Issue / PR 模板。当某个下属仓库没有自带同名文件时，GitHub 自动回退使用本仓库的默认版本。
 3. **家族复用工作流与校验脚本**：`self-purify.yml`（自净化，默认阻断）、`python-quality-baseline.yml`（质量底线）由各仓以 `workflow_call` 接入；`check-repo-registry.sh`、`check-governance-consistency.sh`、`check-release-standard.sh`、`check-signoff.sh` 等脚本将治理条款变成可复跑的只读门禁。
 
@@ -112,10 +112,10 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 | `CONTRIBUTING.md` | 贡献指南（Conventional Commits + DCO） |
 | `SECURITY.md` | 安全披露策略（默认版；各仓自带版本优先） |
 | `SUPPORT.md` | 支持渠道说明 |
-| `governance/REPOSITORY_GUIDELINES.md` | 仓库治理规范 §1–§20（命名/分支/密钥备份/两轴分档/发布分发/路径/归档/文档健康/依赖升级/CI 远程化等） |
+| `governance/REPOSITORY_GUIDELINES.md` | 仓库治理规范 §1–§21（命名/分支/密钥备份/两轴分档/发布分发/路径/归档/文档健康/依赖升级/CI 远程化/仓库描述等） |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外登记（10 备份仓豁免、命名例外等） |
 | `governance/desired-state.json` | 61 仓声明式期望状态；漂移审计与一致性检查的数据源 |
-| `governance/decisions/` | ADR-0001~0017 决策记录 |
+| `governance/decisions/` | ADR-0001~0019 决策记录 |
 | `governance/templates/` | 13 个模板件（含 `agent-contract.md`、`AGENTS_TEMPLATE.md` 等） |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓自带表单优先） |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | 通用 PR 检查清单 |
@@ -138,13 +138,14 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 3. **各仓怎么引用治理规范？** 一行引用即可（见「快速开始」第 2 步），不复制正文，避免多副本漂移；需要沉淀的细节拆到 `local/agents/**`。
 4. **`AGENTS.md` 为什么不入库？** §7 规定根 `AGENTS.md` 是单一本地维护者上下文（≤300 行），公开可分发入口是 `docs/agent-contract.md`（逐字节复制模板）；fresh clone / CI 检出中没有 `AGENTS.md` 属预期。
 5. **私有仓为什么没有服务器侧分支保护？** GitHub Free 计划对私有仓的 rulesets 与经典分支保护 API 返回 403（ADR-0004，平台能力缺口而非欠账）；替代控制是各仓本地 `.githooks/pre-push` 与本地预检脚本。
+6. **为什么公开治理仓会列出私有仓的名字？** 这是**台账透明度的设计权衡**（自 2026-10-22 两轴模型起生效）：对账脚本需要公开侧可校验公开子集，§4 台账因此统一登记全部仓的仓名、可见性与 delivery 分档。公开面只含元数据（仓名 / 可见性 / 分档 / 例外依据），不含任何私有仓内容、密钥或内部文档；私有仓明细的核对按 §20.4 需 owner 凭据本地执行。不接受该权衡时，需先立 ADR 变更台账公开口径。
 
 ### 文档与治理
 
-- 治理正文：[`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md)（§1–§20）
+- 治理正文：[`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md)（§1–§21）
 - 分档与例外：[`governance/GOVERNANCE-EXCLUSIONS.md`](governance/GOVERNANCE-EXCLUSIONS.md)
 - 期望状态：[`governance/desired-state.json`](governance/desired-state.json)（61 仓逐仓定位）
-- 决策记录：[`governance/decisions/`](governance/decisions/)（ADR-0001~0017）
+- 决策记录：[`governance/decisions/`](governance/decisions/)（ADR-0001~0019）
 - 治理手册索引：[`governance/README.md`](governance/README.md)
 - Agent 契约：[`docs/agent-contract.md`](docs/agent-contract.md)
 - 发布文档模板：[`governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md`](governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md)
@@ -168,7 +169,7 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 
 This repository is the **governance hub** of the ReSerendipity account. It provides three kinds of assets:
 
-1. **Single source of truth for governance policy**: `governance/` holds `REPOSITORY_GUIDELINES.md` (§1–§21), the desired-state manifest of 61 repositories (`desired-state.json`), ADR decision records and templates. All 61 repositories (as of 2026-11-11) defer to this directory.
+1. **Single source of truth for governance policy**: `governance/` holds `REPOSITORY_GUIDELINES.md` (§1–§21), the desired-state manifest of 61 repositories (`desired-state.json`), ADR decision records and templates. All 61 repositories (as of 2026-11-17) defer to this directory.
 2. **Default community health files**: `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md` plus Issue/PR templates. GitHub automatically falls back to these defaults when a downstream repository does not ship its own copy.
 3. **Family reusable workflows and gate scripts**: `self-purify.yml` (default-blocking self-cleanliness check) and `python-quality-baseline.yml` (quality floor) are consumed by other repos via `workflow_call`; `check-repo-registry.sh`, `check-governance-consistency.sh`, `check-release-standard.sh`, `check-signoff.sh` turn policy clauses into repeatable read-only gates.
 
@@ -262,10 +263,10 @@ When a downstream repository does not ship its own file of the same name, GitHub
 | `CONTRIBUTING.md` | Contribution guide (Conventional Commits + DCO) |
 | `SECURITY.md` | Security disclosure policy (default; repo-local version wins) |
 | `SUPPORT.md` | Support channels |
-| `governance/REPOSITORY_GUIDELINES.md` | Repository governance §1–§20 (naming/branching/secret backup/tiering/release-layout/archive/docs-health/dependency-upgrades/CI-remote-first) |
+| `governance/REPOSITORY_GUIDELINES.md` | Repository governance §1–§21 (naming/branching/secret backup/tiering/release-layout/archive/docs-health/dependency-upgrades/CI-remote-first/repo-description) |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | Tiering & exception registry (10 backup-repo exemptions, naming exceptions, etc.) |
 | `governance/desired-state.json` | Declarative desired state for 61 repos; data source for drift audit and consistency checks |
-| `governance/decisions/` | ADR-0001~0017 decision records |
+| `governance/decisions/` | ADR-0001~0019 decision records |
 | `governance/templates/` | 13 templates including `agent-contract.md` and `AGENTS_TEMPLATE.md` |
 | `.github/ISSUE_TEMPLATE/` | Generic issue forms (Bug / feature / question; repo-local forms win) |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | Generic pull request checklist |
@@ -288,13 +289,14 @@ When a downstream repository does not ship its own file of the same name, GitHub
 3. **How do downstream repos reference the policy?** A single one-line reference (see Quick Start, step 2) — never copy the body, avoiding multi-copy drift; details go into `local/agents/**`.
 4. **Why is `AGENTS.md` not committed?** §7 keeps a single root `AGENTS.md` as local maintainer context (≤300 lines); the public entry point is `docs/agent-contract.md` (byte-identical to the template). Fresh clones and CI checkouts are expected not to contain `AGENTS.md`.
 5. **Why no server-side branch protection for private repos?** GitHub Free returns 403 for rulesets and classic protection on private repos (ADR-0004: a platform capability gap, not an outstanding debt); the substitute controls are per-repo local `.githooks/pre-push` and local pre-flight scripts.
+6. **Why does this public governance repo list private repo names?** This is a deliberate **ledger-transparency trade-off** (in effect since the two-axis model, 2026-10-22): reconciliation scripts must be able to verify the public subset from the outside, so the §4 ledger registers every repo's name, visibility and delivery tier. Only metadata is exposed (names / visibility / tiers / exception rationale) — never private repo contents, secrets or internal docs; verifying private-repo details requires owner credentials locally (§20.4). Changing this trade-off requires an ADR first.
 
 ### Documentation & Governance
 
 - Policy text: [`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md) (§1–§21)
 - Tiering & exceptions: [`governance/GOVERNANCE-EXCLUSIONS.md`](governance/GOVERNANCE-EXCLUSIONS.md)
 - Desired state: [`governance/desired-state.json`](governance/desired-state.json) (per-repo positioning of all 61 repos)
-- Decision records: [`governance/decisions/`](governance/decisions/) (ADR-0001~0017)
+- Decision records: [`governance/decisions/`](governance/decisions/) (ADR-0001~0019)
 - Governance handbook index: [`governance/README.md`](governance/README.md)
 - Agent contract: [`docs/agent-contract.md`](docs/agent-contract.md)
 - Release document template: [`governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md`](governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md)

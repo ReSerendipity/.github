@@ -1,7 +1,7 @@
 # 文档索引（docs/INDEX）
 
-> 最后核对：2026-11-12　｜　维护：文档整理工单 WO-DOC-B01
-> 本文件是 `.github` 仓 Markdown 的机器可读总索引：仓根 7 篇 + `docs/` 1 篇 + `governance/` 32 篇 + `.github/` 3 篇 + `local/` 3 篇 = 46 篇；其中 `local/` 3 篇不入库，`git ls-files '*.md'` 计 43 篇。
+> 最后核对：2026-11-17　｜　维护：文档整理工单 WO-DOC-B01
+> 本文件是 `.github` 仓 Markdown 的机器可读总索引：仓根 6 篇（另有本地 `AGENTS.md` 不入库）+ `docs/` 2 篇 + `governance/` 33 篇 + `.github/` 3 篇 + `local/` 3 篇 = 48 篇；其中 `local/` 台账 2 篇自 2026-11-12 起 ADR-0019 入库（`local/README.internal.md` 仍仅本地），`git ls-files '*.md'` 计 46 篇。
 > **权威顺序**（照 [`governance/README.md`](../governance/README.md) 第 17–23 行）：本仓 `governance/` 政策文档 > 各仓 `docs/` > 各仓 `README.md`；本文件只是索引，不承载政策正文。
 
 ## 状态口径
@@ -42,7 +42,7 @@
 | [`REPOSITORY_GUIDELINES.md`](../governance/REPOSITORY_GUIDELINES.md) | 治理规范 §1–§21（命名与目录、分支、密钥备份、变更流程、本地 `AGENTS.md`、README 双版本与展示图真实性、§8.2 profile 仓简历式精简模板（2 个 pinned 代表项目）、发布分发、许可证、结构与路径、治理分档、Markdown 文档健康、依赖升级、CI 远程化、仓库描述） | 现行 | 2026-11-12 |
 | [`GOVERNANCE-EXCLUSIONS.md`](../governance/GOVERNANCE-EXCLUSIONS.md) | 治理分档与例外记录：现行口径、备份仓与命名/发布载体对照、四轮豁免历史原文、§六–§十 例外 | 现行 | 2026-11-10 |
 
-### 3.2 决策记录 `decisions/`（ADR-0001 ~ ADR-0019，编号不重用）
+### 3.2 决策记录 `decisions/`（ADR-0001 ~ ADR-0020，编号不重用）
 
 | 文档 | 用途 | 状态 | 核对日期 |
 |---|---|---|---|
@@ -66,6 +66,7 @@
 | [`ADR-0017-dsh-superagent-upstream-naming.md`](../governance/decisions/ADR-0017-dsh-superagent-upstream-naming.md) | `dsh-superagent` 上游生态名例外与同批新增仓命名裁决 | 现行 | 2026-11-10 |
 | [`ADR-0018-new-repo-registration-and-archive-name.md`](../governance/decisions/ADR-0018-new-repo-registration-and-archive-name.md) | `dsh-superagent-archive` 例外名继承、`BookSpine-Wall` / `MirrorDuo` / `OrbitCube` 入账、遗留计数修正 | 现行 | 2026-11-10 |
 | [`ADR-0019-ledger-versioning.md`](../governance/decisions/ADR-0019-ledger-versioning.md) | 自进化台账纳入版本控制：取代 ADR-0013 第 5 条，修订 §13.1 `local/` 容器模板为四段式 | 现行 | 2026-11-12 |
+| [`ADR-0020-ledger-inventory-and-draftpeek-dual-track.md`](../governance/decisions/ADR-0020-ledger-inventory-and-draftpeek-dual-track.md) | 修正 ADR-0019 第 6 条脱敏盘点（补计 TTS-MultiModel）并追认 DraftPeek「公开续写台账 + 本地历史分片」双轨 | 现行 | 2026-11-17 |
 
 ### 3.3 模板 `templates/`
 
@@ -96,9 +97,9 @@
 
 | 文档 | 用途 | 状态 | 核对日期 |
 |---|---|---|---|
-| [`local/README.internal.md`](../local/README.internal.md) | 本地维护层说明 | 本地 | 2026-11-10 |
-| [`local/agents/GOTCHAS.md`](../local/agents/GOTCHAS.md) | 坑点台账（§7.4.1） | 本地 | 2026-11-10 |
-| [`local/agents/REVISION_LOG.md`](../local/agents/REVISION_LOG.md) | 修订记录（§7.4.2） | 本地 | 2026-11-10 |
+| [`local/README.internal.md`](../local/README.internal.md) | 本地维护层说明 | 本地 | 2026-11-17 |
+| [`local/agents/GOTCHAS.md`](../local/agents/GOTCHAS.md) | 坑点台账（§7.4.1） | 现行（ADR-0019 起入库） | 2026-11-17 |
+| [`local/agents/REVISION_LOG.md`](../local/agents/REVISION_LOG.md) | 修订记录（§7.4.2） | 现行（ADR-0019 起入库） | 2026-11-17 |
 
 ## 六、索引维护规则
 
