@@ -220,7 +220,7 @@ Code-Time-Machine-1024
 ComfyUI-BatchPromptLoader
 ComfyUI-Experiment-Toolbox
 DraftPeek-KeyBackup
-DormitoryNotes-Godot
+DormitoryNotes
 dsh-superagent
 Free-Model-Probe
 GameShell

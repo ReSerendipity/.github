@@ -101,7 +101,7 @@
 | ChatGPT-Timezone-Fix | public | tool |
 | ComfyUI-BatchPromptLoader | public | tool |
 | ComfyUI-Experiment-Toolbox | public | tool |
-| DormitoryNotes-Godot | private | service |
+| DormitoryNotes | private | service |
 | Free-Model-Probe | public | service |
 | Github-Repo-Scan | public | tool |
 | Health-Info-Card | public | release |
@@ -118,7 +118,7 @@
 | Nekogal-DL | private | tool |
 | Object-Atlas | private | service |
 | OrbitCube | private | tool |
-| P0-Murder-Mystery | public | service |
+| P0-Murder-Mystery | private | service |
 | Prompt-Library | private | content |
 | Prompt-Provenance | private | tool |
 | RTX-VSR-Lite | public | library |
@@ -138,6 +138,8 @@
 > 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app
 >
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
+>
+> 2026-11-17 变更（**平台动作入账**，对账修复批次）：① `DormitoryNotes-Godot` 远程已改名为 **`DormitoryNotes`**（`gh api` 实测 `full_name=ReSerendipity/DormitoryNotes`，旧名重定向生效；改名推送时间 2026-11-16 15:35 UTC，先动远程后补台账，属流程反例，§4/§6 的「先改 §4 再动远程」顺序约束后续以 ADR-0020 强化）；本表行数不变（Train Case 内改名）。② `P0-Murder-Mystery` 可见性 public → **private**（远程实测 `private=true`，owner 平台动作；该仓本就属第四轮豁免、自带 `.github/dependabot.yml`，不新增豁免登记）。本表仍 51 行（例外名 10 + Train Case 41）；合计仍 61 仓（51 + 10 备份仓）。`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD` 与 `GOVERNANCE-EXCLUSIONS.md` §11.1 已同步改名。
 >
 > 2026-11-08 变更（转公开已执行，事实记录）：`dsh-superagent` 的可见性已由 private 切换为 **public**，远程仓库实测 `visibility=public`（`gh api repos/ReSerendipity/dsh-superagent`）。依据是分发方式——插件必须以公开仓库地址分发，外部才能用 `dsh plugin add "git+https://github.com/ReSerendipity/dsh-superagent.git#<commit>"` 安装。切换当日一次性完成了此前约定的四件事：① 远程 visibility 切为 public；② 本表该行改为 public；③ `desired-state.json` 改为 public；④ `GOVERNANCE-EXCLUSIONS.md` §11.1 移出该行（13 → 12）。切换前已补齐 `.github/dependabot.yml`（npm 与 github-actions 两生态，`cooldown.default-days: 7`，§19.1）。原 2026-11-07「先停在切换之前」的过渡态记录由本条事实替代。
 >
@@ -207,6 +209,7 @@
 
 ## 6. 本地目录与远程仓库一致性（§1.4 执行细则，2026-10-13 新增）
 
+- **平台动作先改台账（2026-11-17 新增，ADR-0020）**：改名 / 可见性 / 归档 / 平台设置（`delete_branch_on_merge`、`allow_auto_merge`、ruleset）一律**先改台账（§4 + `desired-state.json`）再动远程**；先动了远程的，当日按对账修复批次补录并在 §4 留痕（2026-11-17 变更条为首个先例）。
 - 本地克隆目录名必须与远程仓库名**逐字符一致**（含大小写）：远程 `Image-Scrapers` ↔ 本地 `Image-Scrapers`。
 - 远程重命名后本地同步三步：
   1. `gh repo rename <新名> -R <owner>/<旧名>`（GitHub 旧名自动重定向，外链不断）；
@@ -548,7 +551,7 @@ updated: YYYY-MM-DD
   - **镜像引用必须全小写**：`${{ github.repository }}` 展开带大写，而 OCI 引用规范只允许小写，Trivy 在解析阶段会直接 FATAL「could not parse reference」。TTS 与 SeedVR2 都踩过这个坑。
   - 镜像内不含模型权重（`.dockerignore` 排除 `model/`），运行时挂载。
 - **桌面分发**（Tauri / NSIS / APK）：签名密钥**不入库**，按 §3 走私有 `<项目名>-KeyBackup`；构建与签名在远端完成，密钥经 Actions Secrets 注入。**防伪造仅由 Tauri 的 ed25519 更新器签名承担**（`*.sig` / `*.sig.ed25519`）；`SHA256SUMS.txt` 只用于防传输损坏；**GPG 分离签名已撤掉**（见 §10.6）。
-- **npm**：目前仅 `Image-Scrapers` 使用；其 `node_modules` 入库属 §9 已登记的私有仓例外。
+- **npm**：`dsh-superagent` 以 npm 分发（`distribution=[npm]`，2026-11-08 登记，`@reserendipity/dsh-superagent`）；`Image-Scrapers` 的 `node_modules` 入库属 §9 已登记的私有仓例外（2026-10-18 时点口径）。
 
 ### 10.4 deployment（部署）
 
@@ -852,7 +855,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 | `tool` | §1、§2、§7、§8、§9、§11、§12（含原 §13）、§14 | §3、§10 |
 | `content` | §1、§2、§7、§8、§9、§12（含原 §13） | §3、§10、§11、§14 |
 | `backup` | §3（KeyBackup 结构、允许轮换更新） | 其余全部 |
-| `policy` | §1–§20 自身维护 | §10 发布链 |
+| `policy` | §1–§21 自身维护 | §10 发布链 |
 
 > **跨 delivery 通用条款（2026-10-23）**：§17、§18 不参与本表裁剪，对全部 `delivery` 类型生效；§16 已并入 §7，按 §7 的适用范围执行；`backup` 仓仅在其 §3 允许的维护动作中适用 §7 / §17 / §18。**2026-10-30 增补：§20（CI 远程化与本地最小化）同为跨档通用条款。**
 
@@ -864,6 +867,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 | `ghcr` | Trivy、provenance、SBOM |
 | `pages` | 部署回滚 |
 | `direct-ssh` | 部署脚本回滚 |
+| `npm` | 版本-tag 一致性、发布完整性（2026-11-17 补记，`desired-state.json` 已先行定义） |
 | `none` | 无发布检查 |
 
 ### 15.5 风险标签与例外
@@ -1097,7 +1101,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 1. **远端载体优先**：每条可执行检查必须有远端载体——PR / 推送门禁、`schedule`（公开仓走免费分钟数）、或 `workflow_dispatch` 手动，三者按 §15.2 频度择一或并存。**本地机器不得承载任何定时任务**。
 2. **天然本地载体**（允许、且只能留在本地）：`.githooks/pre-push`（私有仓无服务器侧保护的替代控制，ADR-0004）、`check-agents-md-size.sh`（AGENTS.md 不入库，CI 不可见）、`scaffold-repo.sh`（建仓动作），以及第 4 条补齐前的私有仓完整核对。
 3. **口径一致**：远端与本地跑同一脚本、同一退出码纪律（0=clean；1=gap/drift/FAIL；2=无法判定时失败关闭），不得出现「同一承诺两种判定」。
-4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 26 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 55 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
+4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 31 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 61 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
 5. **私有仓不加定时作业**：私有仓 Actions 分钟数受账号账单限制（§10.6 实测欠账），不得为其新增 `schedule`。
 
 **代价（如实写明）**：远端载体受 GitHub 可用性影响；`UNVERIFIABLE`/`PARTIAL` 不是通过——未配置 `GOVERNANCE_READ_PAT` 时，私有仓完整核对仍依赖 owner 本地凭据（第 2 条）。

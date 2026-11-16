@@ -18,7 +18,7 @@
       "tool": { "sections": ["1", "2", "7", "8", "9", "11", "12", "13", "14"] },
       "content": { "sections": ["1", "2", "7", "8", "9", "12", "13"] },
       "backup": { "sections": ["3"] },
-      "policy": { "sections": ["1-20"] }
+      "policy": { "sections": ["1-21"] }
     },
     "distribution": {
       "github-release": { "checks": ["sha256", "release-notes", "rollback"] },
@@ -42,7 +42,7 @@
     { "name": "Code-Time-Machine-1024", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "ComfyUI-BatchPromptLoader", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "ComfyUI-Experiment-Toolbox", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
-    { "name": "DormitoryNotes-Godot", "visibility": "private", "delivery": "service", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "DormitoryNotes", "visibility": "private", "delivery": "service", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "DraftPeek", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "DraftPeek-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "dsh-superagent", "visibility": "public", "delivery": "tool", "distribution": ["npm"], "lifecycle": "active", "risk": [], "backup": "github-only" },
@@ -66,7 +66,7 @@
     { "name": "Nekogal-DL", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Object-Atlas", "visibility": "private", "delivery": "service", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "OrbitCube", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
-    { "name": "P0-Murder-Mystery", "visibility": "public", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "P0-Murder-Mystery", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Prompt-Library", "visibility": "private", "delivery": "content", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Prompt-Provenance", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "ReSerendipity", "visibility": "public", "delivery": "content", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
