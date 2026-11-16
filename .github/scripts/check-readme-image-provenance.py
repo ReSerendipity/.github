@@ -39,6 +39,10 @@ except ImportError:  # pragma: no cover
 
 OWNER = "ReSerendipity"
 API = "https://api.github.com"
+# desired-state.json 以脚本自身定位解析（与 audit-drift.py 同口径），不从 CWD 推断，
+# 便于从任意工作目录调用。
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(os.path.dirname(SCRIPT_DIR))
 SHOT_RE = re.compile(r"(?i)(^|/)(screenshots?|shots|captures?|snapshots?|test-results|post-assets)/")
 MARKDOWN_IMG_RE = re.compile(
     r"!\[([^\]]*)\]\(\s*(?:<)?([^)\s>]+)(?:>)?(?:\s+['\"][^'\"]*['\"])?\s*\)"
@@ -93,7 +97,9 @@ def read_text(path: str) -> str:
 
 
 def load_repos(only: set[str] | None) -> list[str]:
-    desired = json.loads(open("governance/desired-state.json", encoding="utf-8-sig").read())
+    desired_path = os.path.join(REPO_ROOT, "governance", "desired-state.json")
+    with open(desired_path, encoding="utf-8-sig") as handle:
+        desired = json.load(handle)
     repos = []
     for repo in desired.get("repos", []):
         # §8 / §8.1：只审计公开仓的展示图；archived 与 backup 不追溯。

@@ -25,7 +25,7 @@ $gotchas = if ($GotchasPath) {
 }
 $revision = Resolve-Ledger $Root 'REVISION_LOG.md'
 if (-not $gotchas -or -not $revision) {
-  Write-Host "ledger-gate: 台账缺失，跳过（$Root）"
+  Write-Warning "ledger-gate: 台账缺失，闸口未生效（$Root）——ADR-0019 后所有仓都应有台账；若为新建仓请先跑 scaffold-repo.sh，路径非标时用 -GotchasPath 显式指定"
   exit 0
 }
 
