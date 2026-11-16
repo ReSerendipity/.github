@@ -1,0 +1,15 @@
+# 仅本地容器（§13.1；ADR-0019 四段式）。
+# 写法铁律：git 无法在父目录被排除时重新包含其子文件——必须先排除目录内容再逐级反包含；
+# 禁止在 /local/ 之后直接叠 !local/agents/GOTCHAS.md（实测不生效，git check-ignore 仍命中）。
+/local/*
+!/local/agents/
+/local/agents/*
+# 自进化台账两份入库（ADR-0019）；其余 local/** 一律仅本地，含 .ledger-baseline.json
+!/local/agents/GOTCHAS.md
+!/local/agents/REVISION_LOG.md
+
+# §7：AGENTS.md 家族一律仅本地保留（无斜线模式，匹配任意深度）
+AGENTS.md
+
+# 本模板只承载治理容器规则；密钥 / 大文件 / 构建产物 / 工具目录等规则
+# 由各仓按 §3 / §9 继续追加到本文件末尾，不是替换整个文件。

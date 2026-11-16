@@ -117,6 +117,16 @@ run_case "scaffold 公开 release 出全四件" 0 \
     && test -f "$1/Scaffold-Public-Test/ARCHITECTURE.md"' \
   "$SCRIPTS/scaffold-repo.sh" "$TMP"
 
+# ADR-0019 四段式 .gitignore：台账必须可入库、其余 local/ 与 AGENTS.md 必须仍被忽略。
+# （2026-11-17 对账修复：脚手架曾生成旧式单条 /local/，台账被父目录排除锁死无法入库。）
+run_case "scaffold 台账不被 ignore（ADR-0019 四段式）" 0 \
+  bash -c 'bash "$0" Scaffold-Ledger-Test --public --delivery tool --repos-root "$1" >/dev/null \
+    && ! git -C "$1/Scaffold-Ledger-Test" check-ignore -q local/agents/GOTCHAS.md \
+    && ! git -C "$1/Scaffold-Ledger-Test" check-ignore -q local/agents/REVISION_LOG.md \
+    && git -C "$1/Scaffold-Ledger-Test" check-ignore -q AGENTS.md \
+    && git -C "$1/Scaffold-Ledger-Test" check-ignore -q local/README.internal.md' \
+  "$SCRIPTS/scaffold-repo.sh" "$TMP"
+
 # ── signoff：正例 / 缺尾注 ──────────────────────────────────────
 git init -q -b main "$TMP/signoff"
 cd "$TMP/signoff" || exit 2

@@ -22,6 +22,7 @@ HOOK_TEMPLATE="$SCRIPT_DIR/templates/pre-push"
 EDITORCONFIG_TEMPLATE="$REPO_ROOT/governance/templates/editorconfig.template"
 CODEOWNERS_TEMPLATE="$REPO_ROOT/governance/templates/CODEOWNERS.template"
 DEPENDABOT_TEMPLATE="$REPO_ROOT/governance/templates/dependabot.template.yml"
+GITIGNORE_TEMPLATE="$REPO_ROOT/governance/templates/gitignore.template"
 ARCH_TEMPLATE="$REPO_ROOT/governance/templates/ARCHITECTURE_TEMPLATE.md"
 SECURITY_TEMPLATE="$REPO_ROOT/governance/templates/SECURITY_TEMPLATE.md"
 CONTRIBUTING_TEMPLATE="$REPO_ROOT/governance/templates/CONTRIBUTING_TEMPLATE.md"
@@ -66,6 +67,7 @@ case "$DELIVERY" in release|service|tool|content) ;; *) err "--delivery 只支�
 [ -f "$EDITORCONFIG_TEMPLATE" ] || { err "找不到 editorconfig 模板：$EDITORCONFIG_TEMPLATE"; exit 2; }
 [ -f "$CODEOWNERS_TEMPLATE" ] || { err "找不到 CODEOWNERS 模板：$CODEOWNERS_TEMPLATE"; exit 2; }
 [ -f "$DEPENDABOT_TEMPLATE" ] || { err "找不到 dependabot 模板：$DEPENDABOT_TEMPLATE"; exit 2; }
+[ -f "$GITIGNORE_TEMPLATE" ] || { err "找不到 gitignore 模板：$GITIGNORE_TEMPLATE"; exit 2; }
 [ -f "$ARCH_TEMPLATE" ] || { err "找不到 ARCHITECTURE 模板：$ARCH_TEMPLATE"; exit 2; }
 [ -f "$SECURITY_TEMPLATE" ] || { err "找不到 SECURITY 模板：$SECURITY_TEMPLATE"; exit 2; }
 [ -f "$CONTRIBUTING_TEMPLATE" ] || { err "找不到 CONTRIBUTING 模板：$CONTRIBUTING_TEMPLATE"; exit 2; }
@@ -115,11 +117,8 @@ cat > CHANGELOG.md <<'EOF'
 ## [Unreleased]
 EOF
 
-cat > .gitignore <<'EOF'
-# 新仓最小基线；密钥 / 大文件 / 构建产物等规则按 §3 / §9 继续追加
-/local/
-AGENTS.md
-EOF
+# §13.1 / ADR-0019：.gitignore 一律取四段式模板——旧式单条 /local/ 会让台账永远无法反包含入库
+cp "$GITIGNORE_TEMPLATE" .gitignore
 
 cp "$TEMPLATE" docs/release-governance.md
 cp "$CONTRACT_TEMPLATE" docs/agent-contract.md
@@ -189,12 +188,15 @@ cat <<EOF
     CONTRIBUTING.md      仅 --public 且 release|service|policy
     ARCHITECTURE.md      仅 release|service|policy 或显式 --architecture
 
-还需人工完成的五处同步（脚本不自动改文档）：
+还需人工完成的接入清单（脚本不自动改文档与平台设置；2026-11-17 由五处扩为七处——
+平台设置欠账曾导致 8 个新登记仓 delete_branch_on_merge=false，见对账修复批次）：
   1. governance/REPOSITORY_GUIDELINES.md §4 加一行（可见性 + delivery）
   2. governance/desired-state.json 的 repos 加一条（lifecycle 默认 active）
   3. governance/README.md 的计数（登记仓 +1）与根 README 索引（如涉及）
   4. 若为备份仓：governance/GOVERNANCE-EXCLUSIONS.md 加一条
   5. 治理仓改动按 §17.2：作者账号可直推，非作者走分支 + PR + DCO
+  6. 平台设置两件：delete_branch_on_merge=true（全部仓，§2）；allow_auto_merge=true（公开仓，§19.2）
+  7. 公开 active 仓的 ruleset 两件：governance-baseline + tag-protection-v（检查名只填实测近 60 天成功过的项，§2）
 EOF
 
 if [ "$CREATE_REMOTE" -eq 0 ]; then
