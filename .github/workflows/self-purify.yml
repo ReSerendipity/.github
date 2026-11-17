@@ -11,7 +11,8 @@ name: Family Self-Purify Check
 #      目录——例 SpiritPal 的 LOCAL_RULES.md 第 4 条（2026-10-17 更正）把 docs/execution/ 定为
 #      公开层归档处。豁免由调用仓自己声明，家族基线不放宽。
 #      私有仓同一口径：AGENTS.md 也不上传；唯一例外是已登记的私有资产备份仓（§十），不属本项违规。
-#   ② 根目录残留 CONTRIBUTING/CODE_OF_CONDUCT/SUPPORT（应继承 org 级 ReSerendipity/.github）
+#   ② 根目录残留 SUPPORT（应继承 org 级 ReSerendipity/.github；CONTRIBUTING / CODE_OF_CONDUCT
+#      自 2026-11-17 起按 §12.5 条款 10 分档自建或继承，不再拦）
 #   ③ README 未引用 org 级仓库（组织级健康文档链接缺失）
 #      ②③ 对 ReSerendipity/.github 本身跳过：该仓就是这些文件与引用的来源。
 # 说明：AGENTS.md 为本地独享文件（gitignored），CI 拉取的检出中不存在，故其行数上限无法
@@ -107,13 +108,17 @@ jobs:
         # 本仓库正是这些健康文件的提供方，对它套用 ② 会把自身的交付物判为违规。
         if: ${{ github.repository != 'ReSerendipity/.github' }}
         run: |
-          HITS=$(git ls-files -- 'CONTRIBUTING.md' 'CODE_OF_CONDUCT.md' 'SUPPORT.md')
+          # 2026-11-17（ADR-0020 批次）与 §12.5 条款 10 对齐：CONTRIBUTING / CODE_OF_CONDUCT
+          # 已被 §12.5 收编为公开仓（分档）必需件——公开 release/service/policy 必建 CONTRIBUTING，
+          # 全部公开仓必建 CODE_OF_CONDUCT；根 / .github/ / docs/ 三位置任一即合规（audit-drift 同口径）。
+          # 本检查只保留仍属「写了也是空壳」的 SUPPORT.md。
+          HITS=$(git ls-files -- 'SUPPORT.md')
           if [ -n "$HITS" ]; then
             echo "::error::根目录不应存在以下健康文件（继承自 ReSerendipity/.github）："
             echo "$HITS"
             exit 1
           fi
-          echo "OK：健康文件由 org 级仓库提供"
+          echo "OK：健康文件由 org 级仓库提供（CONTRIBUTING/CODE_OF_CONDUCT 按 §12.5 分档自建或继承）"
 
       - name: ③ README 必须引用 org 级仓库
         # 同理：要求默认仓的 README 引用它自己（字面量 ReSerendipity/.github）
