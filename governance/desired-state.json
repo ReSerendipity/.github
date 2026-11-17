@@ -84,7 +84,7 @@
     { "name": "TTS-MultiModel", "visibility": "public", "delivery": "release", "distribution": ["github-release", "ghcr"], "lifecycle": "active", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "TTS-MultiModel-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "Unfading-Wall", "visibility": "public", "delivery": "service", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
-    { "name": "VOSR2-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": [], "backup": "github-only" },
+    { "name": "VOSR2-Lite", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "active", "risk": ["signing-key"], "backup": "github-only" },
     { "name": "VOSR2-Lite-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "Website-Genshin-Impact", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Website-Honkai-Star-Rail", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
