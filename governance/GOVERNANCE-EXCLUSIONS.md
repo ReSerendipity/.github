@@ -143,6 +143,7 @@
 
 - `protected=true`（11）：`.github`、ComfyUI-Experiment-Toolbox、DraftPeek、GameShell（原 `GalgameShell`，2026-11-02 改名）、Github-Repo-Scan、Image-DuoModel、MiniMax-H3-Lite、ReSerendipity、SeedVR2-Lite、SpiritPal、TTS-MultiModel。
 - `protected=false`（30）：其中 23 仓属本豁免清单（2026-10-19 实测口径；清单现为 29 项，无需考量）；**候选 7 仓**：Agent-Knowledge、Card-Studio、Health-Info-Card、Image-Scrapers、Lineart-Painter、Nekogal-DL、Prompt-Library。（2026-10-21 第四轮豁免后，Card-Studio / Health-Info-Card / Lineart-Painter 已豁免，**候选 4 仓**：Agent-Knowledge、Image-Scrapers、Nekogal-DL、Prompt-Library。**2026-10-29 复核：这 4 仓均为私有仓，按 ADR-0004 属平台能力缺口，待立项项关闭，不再作为保护欠账。**）
+- **2026-11-17 普查刷新（对账修复批次收尾）**：`protected=true` 11 → **13 仓**（+`Saltline-plus`、`winlator-app`，经 ruleset `governance-baseline` 接入）；公开 maintenance 仓（Card-Studio / Health-Info-Card / Lineart-Painter）按 §15.2 不要求。逐仓真值以 `audit-drift.py` 为准（同日全量 rc=0）。
 
 ---
 
