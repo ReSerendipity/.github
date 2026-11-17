@@ -27,7 +27,7 @@
 
 ### 1.4 命名台账与本地一致性（原 §4、§6）
 
-- 现网命名台账以 **§4 表**为唯一数据源（51 行：10 个例外名 + 41 个 Train Case）；新增 / 改名先改 §4，再改远程。
+- 现网命名台账以 **§4 表**为唯一数据源（52 行：10 个例外名 + 42 个 Train Case）；新增 / 改名先改 §4，再改远程。
 - 本地克隆目录名必须与远程逐字符一致；远程重命名三步见 **§6**。
 - 命名例外须先落 ADR，再改 §4；§4 表由 `check-repo-registry.sh` 对账。
 - 本节是 §4 与 §6 的归口；两节保留原编号，分别作为数据附表与执行细则。
@@ -69,7 +69,7 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-11 更新，51 行）
+## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-11 更新，52 行）
 
 ### 例外名（品牌 / 系统保留名 / 已登记命名债务，10 个）
 
@@ -90,11 +90,12 @@
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
 
-### Train Case（41 个）
+### Train Case（42 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
 | Agent-Knowledge | private | content |
+| AI-Girls-Comic | private | content |
 | Android-IconAutoArrange | public | release |
 | Bilibili-Follow-Manager | private | tool |
 | BookSpine-Wall | private | tool |
@@ -141,6 +142,8 @@
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
 > 2026-11-17 变更（**平台动作入账**，对账修复批次）：① `DormitoryNotes-Godot` 远程已改名为 **`DormitoryNotes`**（`gh api` 实测 `full_name=ReSerendipity/DormitoryNotes`，旧名重定向生效；改名推送时间 2026-11-16 15:35 UTC，先动远程后补台账，属流程反例，§4/§6 的「先改 §4 再动远程」顺序约束后续以 ADR-0020 强化）；本表行数不变（Train Case 内改名）。② `P0-Murder-Mystery` 可见性 public → **private**（远程实测 `private=true`，owner 平台动作；该仓本就属第四轮豁免、自带 `.github/dependabot.yml`，不新增豁免登记）。本表仍 51 行（例外名 10 + Train Case 41）；合计仍 61 仓（51 + 10 备份仓）。`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD` 与 `GOVERNANCE-EXCLUSIONS.md` §11.1 已同步改名。
+>
+> 2026-11-17 变更（新仓入账）：登记 `AI-Girls-Comic`（private / content / active / none；AI 模型拟人漫画《模型事务所》的设定、资产与页面生产仓，图像走 Git LFS）。本表 51 → 52 行（例外名 10 + Train Case 42）；合计 61 → 62 仓（52 + 10 备份仓）。
 >
 > 2026-11-08 变更（转公开已执行，事实记录）：`dsh-superagent` 的可见性已由 private 切换为 **public**，远程仓库实测 `visibility=public`（`gh api repos/ReSerendipity/dsh-superagent`）。依据是分发方式——插件必须以公开仓库地址分发，外部才能用 `dsh plugin add "git+https://github.com/ReSerendipity/dsh-superagent.git#<commit>"` 安装。切换当日一次性完成了此前约定的四件事：① 远程 visibility 切为 public；② 本表该行改为 public；③ `desired-state.json` 改为 public；④ `GOVERNANCE-EXCLUSIONS.md` §11.1 移出该行（13 → 12）。切换前已补齐 `.github/dependabot.yml`（npm 与 github-actions 两生态，`cooldown.default-days: 7`，§19.1）。原 2026-11-07「先停在切换之前」的过渡态记录由本条事实替代。
 >
@@ -881,7 +884,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 ### 15.6 61 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 51 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 52 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）

@@ -7,13 +7,13 @@
 #   3. check-repo-registry.sh 的 EXCLUDED_FROM_REGISTRY：集合 == desired-state 的 backup 仓集合，
 #      项数 == 文档声明 == desired-state 的 backup 仓数（10）
 #   4. check-release-standard.sh 的 EXCLUDED_FROM_RELEASE_STANDARD：集合 == desired-state 的非 release 仓集合
-#   5. governance/README.md 的「51 个登记仓」+「10 个备份仓」== desired-state 总数 61
+#   5. governance/README.md 的「52 个登记仓」+「10 个备份仓」== desired-state 总数 62
 #   6. 根 README / 规范正文 / 分档矩阵 SVG 的硬编码计数与 desired-state 一致（中英 + 图文）
 #
 # 只读：仅向 GitHub 发 GET，不产生任何远端写入。
 # 用法：bash .github/scripts/check-governance-consistency.sh [--public-only]
 #   --public-only：只校验与公开仓有关的差集；Actions 默认 GITHUB_TOKEN 看不到
-#   其他私有仓，CI 用此模式；完整 61 仓校验需本地 owner 凭据。
+#   其他私有仓，CI 用此模式；完整 62 仓校验需本地 owner 凭据。
 # 退出码：0=clean；1=gap；2=无法判定（依赖/取数/文档结构失败）。
 set -uo pipefail
 
