@@ -2,12 +2,7 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-11-17（对账修复批次：§11.1 移除 `dsh-superagent-archive` 幽灵行、`DormitoryNotes-Godot` 随远程改名同步为 `DormitoryNotes`，16 → 15 仓；§四 台账口径 61 仓复核并登记 `P0-Murder-Mystery` 转私。2026-11-07：§11.1 私有 dependabot 豁免补登记 `dsh-superagent`，13 → 14 仓，理由含「运行期依赖已打进 `lib`」这一实测口径；同日稍后：§八 暂缓项与 §11.1/§11.2 的 `Unity` 404 残留以留痕方式移除，§11.1 14 → 13 仓；同日早前：账号级漂移裁决：新登记 `Prompt-Provenance`（private / tool / active / none）、`Superagent-Demo`（private / tool / active / none）、`Junction-Scanner`（public / tool / archived / none），`dsh-superagent` 转命名例外（上游生态名，ADR-0017）；`JunctionScanner` → `Junction-Scanner`、`superagent-demo` → `Superagent-Demo` 远程改名；`Offer-Landing-Kit` 与 `Unity` 远程 404，移出台账：总额 54 → 55、登记仓 44 → 45、备份仓 10、例外名维持 8（`dsh-superagent` 顶替 `Unity` 的位置）、Train Case 36 → 37、`EXCLUDED_FROM_RELEASE_STANDARD` 43 → 44；此前 2026-11-01 补登记 `Subject-Courseware-Studio` 与 `VOSR2-Lite-KeyBackup`；2026-10-31 登记 `Object-Atlas`；2026-10-30 定稿「远程优先、本地最少化」；`RELEASE_GOVERNANCE_TEMPLATE.md` 迁入 `governance/templates/`；`MiniMax-H3-Lite-KeyBackup` 与口令入库例外见 2026-10-29 记录；README 展示图例外见 2026-10-25 记录；self-purify 翻转与 SeedVR2-Lite 本地治理目录公开例外见 2026-10-24 记录）
-> **2026-11-17 新仓入账**：登记 `AI-Girls-Comic`（private / content / active / none）；总额 61 → 62、登记仓 51 → 52、Train Case 41 → 42、非 release 50 → 51。
->
-> **2026-11-08 更新**：§11.1 `dsh-superagent` 随转公开与 `dependabot.yml` 落地移出本表，13 → 12 仓（详见 §11.1 修订条）。
-> **2026-11-12 更新**：§九 登记 `ReSerendipity` 为 profile 仓 README 精简模板例外（展示图 / 完整双语镜像 / badges / 软件项目章节 / 全量项目表），依据 `REPOSITORY_GUIDELINES.md` 新增 §8.2；该仓是**换模板**而非免门禁，仍须满足 §8.2 的五条最低要求与 CI 校验。
-> **2026-11-12 二次修订**：代表项目收敛为账号当前 pinned、star 最高的 2 个仓库（`SeedVR2-Lite` / `TTS-MultiModel`），§8 正文补 §8.2 交叉引用、§8.2 数量口径由「5–10 个」改为「恰好 2 个」，CI 新增 pinned 一致性软校验；两仓索引、`docs/release-governance.md` 旧 CI 口径同步。
+> **最后更新**：2026-11-17（2026-10-29 起的登账 / 改名 / 移出台账明细见 `_archive/change-notes/2026-11-exclusions-updates.md`；口径真值见 §四 与 `desired-state.json`）
 >
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
@@ -27,90 +22,19 @@
 3. **命名例外**（品牌 / 系统保留名 / 上游生态名 / 已登记债务）见 §4「例外名」表；新增例外须先落 ADR。
 4. **`rewq` 的硬约束收窄**：`.gitignore` 必须排除 `ssh-backup/`、`.ssh/` 与 `*.pem` / `*.key` 等私钥；正常提交与推送不受限制（§15.5）。
 
-> 下面第一至五节是 2026-10-18 至 10-21 的四轮豁免**历史原文**，仅作留痕；「29 项不适用整部规范」的语义**已被 ADR-0006 取代**，不再作为执行依据。
+> §一–§二 是 2026-10-18 至 10-21 四轮豁免**历史原文**的归档指针（原文见 `_archive/exclusions/2026-10-four-rounds-legacy.md`）；「29 项不适用整部规范」的语义**已被 ADR-0006 取代**，不再作为执行依据。§三–§五 为现行记载。
 
 ---
 
-## 一、旧豁免语义（2026-10-19 / 10-21，已被 ADR-0006 取代）
+## 一、旧豁免语义（已归档）
 
-**清单内 29 个仓库不适用整个 `REPOSITORY_GUIDELINES.md`（§1-§14）**——升级前仅豁免 §10（发布规范）；2026-10-21 起明确 §12（结构）/§13（路径）/§14（硬编码）同样不适用。
+> 2026-10-19 / 10-21 的旧豁免语义（29 项不适用整部规范）已被 ADR-0006 取代，不再作为执行依据。
+> 原文见 `_archive/exclusions/2026-10-four-rounds-legacy.md`（§一）。
 
-| 维度 | 升级前（2026-10-18） | 升级后（2026-10-19） |
-|---|---|---|
-| §10 发布/分发 | 部分不适用 | **不适用**（全部 29 项） |
-| §1 命名 / §4 台账 | 部分适用（用户点名仓仍在台账内） | **不适用**（点名仓已移出台账，`EXCLUDED_FROM_REGISTRY` 25 项） |
-| §2 分支保护 | 逐仓实测时一并测量 | **无需保护考量**（实测时均无保护，保持现状） |
-| §7/§8 AGENTS.md / README | 私有仓按上传制 | **不受上传制约束**；此前已完成/已存在的上传**一律保留** |
-| §3 密钥备份 / §5-§6 / §9 / §11 | 按适用范围执行 | 不适用 |
+## 二、豁免清单（29 项，已归档）
 
-**不变的边界**：
-
-- **已交付产物一律保留**：17 个点名仓的 `docs/release-governance.md`、根级 `CHANGELOG.md`、发布链改动、AGENTS.md 上传——**不删除、不回滚**。豁免只表示"不再要求、不再审计"；将来要撤销产物属单独决定。
-- **仓库本体不动**：豁免≠删除；所有仓仍在 GitHub 上，可见性不变。
-- **`rewq` 绝对例外**：内含服务器密钥与 SSH 备份，**任何新增内容不上传**；冻结于本地，仅保留本地 git 管理（§7 条款同步记载）。（**已被 ADR-0006 取代**：自 2026-10-22 起 rewq 仅受 `.gitignore` 私钥排除约束，正常提交与推送不受限；见 §零 第 4 条。）
-
----
-
-## 二、豁免清单（29 项）
-
-### 1. 密钥 / 资产备份仓（8 个）
-
-按 §3 属备份仓，无发布链、无版本位；**均不在 §4 台账内**。此类仓**按性质即须豁免**（2026-10-20 用户裁决：密钥/资产备份仓不需要按规范管理），不逐仓审批。
-
-| 仓 | 私有 | 说明 |
-|---|---|---|
-| `DraftPeek-KeyBackup` | ✅ | §3 模式原型；仅含 `.enc.7z` + SHA256SUMS + README |
-| `Image-DuoModel-KeyBackup` | ✅ | 2026-10-19 由 `Image-MultiModel-KeyBackup` 改名（随父仓 `Image-DuoModel` 对齐 §3 模式） |
-| `SeedVR2-Lite-KeyBackup` | ✅ | 同结构 |
-| `TTS-MultiModel-KeyBackup` | ✅ | 同结构 |
-| `Android-IconAutoArrange-KeyBackup` | ✅ | 2026-10-18 补录（此前误记为"4 个 `*-KeyBackup`"） |
-| `Android-IconAutoArrange-Assets-Backup` | ✅ | 内含加密签名密钥的**口令台账** + PoC 运行时 APK（口令入库例外，风险见下） |
-| `SpiritPal-KeyBackup` | ✅ | 2026-10-20 补录（按 §3 模式新建于 2026-10-20，此前遗漏未入清单） |
-| `MiniMax-H3-Lite-KeyBackup` | ✅ | 2026-10-29 新建；old/new 两组 Ed25519 清单签名密钥，7z AES-256 + `-mhe=on`；含 `backup-passwords.txt`（口令入库例外，风险见下） |
-
-> **口令入库例外（2026-10-29）**：`Android-IconAutoArrange-Assets-Backup` 与 `MiniMax-H3-Lite-KeyBackup` 按 owner 决定在私有仓保存 `backup-passwords.txt`。这放弃了“加密包被单独泄漏”以外的全部防护：账号失守时加密等同失效；两仓 README 均写明该风险。
-
-### 2. 网站仓（4 个，均私有）
-
-`Website-Genshin-Impact`、`Website-Honkai-Star-Rail`、`Website-Wuthering-Waves`、`Website-Zenless-Zone-Zero`。
-这些仓历史 `AGENTS.md` 体积（43634/58432/66226/20462 字节，2026-10-19 复核）；按 §7 目标原应迁移为本地不入库文件，曾列入 §7.1 的 26 仓迁移欠账（归档仓另计），不因本节豁免而跳过。截至 2026-10-29 复核，四仓均已完成迁移，`AGENTS.md` 已不在 GitHub 跟踪；§7.1 的非归档仓迁移欠账已清零（`GalgameShell`、`Prompt-Library` 经现场核对已取消跟踪）。
-
-### 3. 非台账副本（1 个，私有）
-
-`rewq`——**冻结仓**（见上）。默认分支 `main` @ `baae7dd`（2026-10-16），内容含 `ssh-backup/`、`服务器信息备忘.md`、`push.sh`。
-
-### 4. 用户点名豁免（13 个，三轮）
-
-| 轮次 | 仓 | 可见性 |
-|---|---|---|
-| 第一轮（2026-10-18） | `ComfyUI-BatchPromptLoader` | public（默认分支 2026-10-19 起为 `main`） |
-| 第一轮（2026-10-18） | `Multi-Tracker` | public |
-| 第一轮（2026-10-18） | `Unfading-Wall` | public |
-| 第一轮（2026-10-18） | `Bilibili-Follow-Manager` | private |
-| 第一轮（2026-10-18） | `Hugging-Face` | private |
-| 第一轮（2026-10-18） | `Unity` | private |
-| 第二轮（2026-10-19） | `Mooncake-Deconstruction` | public |
-| 第二轮（2026-10-19） | `Offer-Landing-Kit` | public |
-| 第二轮（2026-10-19） | `Android-IconAutoArrange` | public |
-| 第二轮（2026-10-19） | `Free-Model-Probe` | public |
-| 第二轮（2026-10-19） | `ChatGPT-Timezone-Fix` | public |
-| 第二轮（2026-10-19） | `RTX-VSR-Lite` | public |
-| 第三轮（2026-10-20） | `Code-Time-Machine-1024` | public（TRAE 1024Builder 展示站；分段 `1024` 以数字开头，不合 §1 Train Case，因整体豁免不作整改；撤销豁免前须先改名为合规写法并补登 §4 台账） |
-
-> 这些仓此前已落地的产物（发布文档 / CHANGELOG / 流水线 / AGENTS.md）**全部保留**；
-> 历史收敛记录见规范仓 §10.6。
-
-### 5. 用户点名豁免（第四轮，2026-10-21，4 个）
-
-| 仓 | 可见性 | 理由 |
-|---|---|---|
-| `p0-murder-mystery` | public | 用户点名豁免；无豁免前置条件（当时不在 §4 台账内） |
-| `Health-Info-Card` | public | 用户点名豁免；原登记于 §4 短横线命名表，随本轮移出 |
-| `Lineart-Painter` | public | 用户点名豁免；原登记于 §4 短横线命名表，随本轮移出 |
-| `Card-Studio` | public | 用户点名豁免；原登记于 §4 短横线命名表，随本轮移出 |
-
-> 本轮四仓均为 public，**无豁免前置条件**（不依赖备份仓性质、不依赖可见性），语义沿用
-> 2026-10-19 裁决：不适用整部 `REPOSITORY_GUIDELINES.md`（§1-§14），已交付产物一律保留。
+> 清单随 ADR-0006 两轴模型停止维护；现行例外以 §零 与 §六–§十一 为准。
+> 原文见 `_archive/exclusions/2026-10-four-rounds-legacy.md`（§二）。
 
 ---
 

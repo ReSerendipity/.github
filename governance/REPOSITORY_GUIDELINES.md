@@ -504,7 +504,7 @@ updated: YYYY-MM-DD
 
 本节把此前散在各处的发布口径收敛为**一条标准**，同时覆盖 **release（发布）、package（打包）、deployment（部署）** 三类：源头是 Image-DuoModel / SeedVR2-Lite / TTS-MultiModel 的三份 `docs/release-governance.md`、DraftPeek `docs/VERSIONING.md`，以及各仓的 `release.yml` / `docker-publish.yml` / `pages-deploy.yml`。
 
-> **范围声明（2026-10-19 更新）**：**已完成对账号内现存仓库的下发**——共 **29 个仓**在默认分支上持有本地化 `docs/release-governance.md`，全部位于 `main`（`ComfyUI-BatchPromptLoader` 于 2026-10-19 由 `master` 迁移，`master` 分支已删），且均含「远端优先」标记。逐仓差异与剩余欠账见 §10.6。
+> **范围声明（2026-10-19 更新）**：**已完成对账号内现存仓库的下发**——共 **29 个仓**在默认分支上持有本地化 `docs/release-governance.md`，全部位于 `main`（`ComfyUI-BatchPromptLoader` 于 2026-10-19 由 `master` 迁移，`master` 分支已删），且均含「远端优先」标记。逐仓差异见 `_archive/execution-records/2026-10/release-convergence-2026-10-18.md`，剩余欠账见 §10.6。
 >
 > 2026-10-18 补：其中 **6 个仓**（`ComfyUI-BatchPromptLoader` / `Multi-Tracker` / `Bilibili-Follow-Manager` / `Hugging-Face` / `Unfading-Wall` / `Unity`）已由用户点名**豁免 §10**——其已落地的文档与流水线**保留不动**，仅不再纳入 §10 的要求与审计范围（详见下方排除清单）。
 >
@@ -537,7 +537,7 @@ updated: YYYY-MM-DD
 
 1. **远端优先**：发布链的构建、打包、签名、扫描、上传、推送**一律在 GitHub Actions 远端完成**；本地只保留三件轻量动作——改版本位、落 CHANGELOG、`git tag` + `git push`。**本地不执行打包 / 签名 / 镜像构建 / 发布上传**：既减少本机压力，也让产物可复现（runner 固定、依赖锁定）。
 2. **tag 驱动**：`push: tags: v*` 触发发布链；禁止在本地产出交付物后手工上传充当发布。
-3. **产物必须可校验（2026-10-18 修订）**：Release 资产须附 `SHA256SUMS.txt`；**防伪造**改由桌面壳的 **Tauri ed25519 签名**承担（`*.sig` / `*.sig.ed25519`，已在 SpiritPal / Image-DuoModel 实际产出）。**GPG 分离签名已裁决撤掉**——理由与善后见 §10.6。
+3. **产物必须可校验（2026-10-18 修订）**：Release 资产须附 `SHA256SUMS.txt`；**防伪造**改由桌面壳的 **Tauri ed25519 签名**承担（`*.sig` / `*.sig.ed25519`，已在 SpiritPal / Image-DuoModel 实际产出）。**GPG 分离签名已裁决撤掉**——理由与善后见 `_archive/execution-records/2026-10/release-convergence-2026-10-18.md`。
 
 ### 10.2 release（发布）
 
@@ -579,7 +579,7 @@ updated: YYYY-MM-DD
 
 **部署前扫描与供应链元数据（2026-10-18 收敛）**：
 - 部署前扫描：镜像发布前须经 **Trivy**（`CRITICAL,HIGH`、`ignore-unfixed`），**默认阻断**；豁免须在 `.trivyignore.yaml` 逐条登记理由与 expiration。**2026-10-18 收敛结果**：TTS 与 SeedVR2 的 `docker-publish.yml` 均为阻断（`exit-code: '1'`）；SeedVR2 转阻断前实测该镜像在门禁口径下**零发现**（日志中无 CVE 行、无 `Total:` 行），故不需要任何存量豁免条目。**2026-10-18 批 4 收敛**：MiniMax-H3-Lite 的 `docker-scan.yml` 亦已转阻断（PR #98），账号内镜像扫描已统一为阻断口径。
-- SBOM / provenance：**推荐开启**。SeedVR2-Lite 与 MiniMax-H3-Lite 用 buildx 内联字段（`provenance: true` + `sbom: true`）；TTS 因发布链是「build（`push: false`）→ Trivy 扫 → 手动 `docker push`」，buildx 内联 attestation 不可用，已改用 `actions/attest-sbom` + `attest-build-provenance` 绑定**已推送 digest**（机制等价替代，见 §10.6）。
+- SBOM / provenance：**推荐开启**。SeedVR2-Lite 与 MiniMax-H3-Lite 用 buildx 内联字段（`provenance: true` + `sbom: true`）；TTS 因发布链是「build（`push: false`）→ Trivy 扫 → 手动 `docker push`」，buildx 内联 attestation 不可用，已改用 `actions/attest-sbom` + `attest-build-provenance` 绑定**已推送 digest**（机制等价替代，实证见 `_archive/execution-records/2026-10/release-convergence-2026-10-18.md`）。
 
 ### 10.5 发布验证产物
 
@@ -587,33 +587,13 @@ updated: YYYY-MM-DD
 
 ### 10.6 收敛结果与剩余欠账（2026-10-18 实测更新）
 
-**已收敛（均经远端复核）**
-
-| 项 | 结果 | 落地证据 |
-|---|---|---|
-| 标准下发 | 29 仓默认分支均有本地化 `docs/release-governance.md`；2026-10-29 复核：全部含「远端优先」或其英文等价「Remote-first」标记（`Health-Info-Card` 为英文版） | 见 §10 范围声明；逐仓开分支 + PR 合并，排除 10 项已逐条留痕 |
-| 发布总纲统一 | 各仓文档以 `RELEASE_GOVERNANCE_TEMPLATE.md` 为结构、以本节为公共条款 | DraftPeek 原 `docs/VERSIONING.md` 已收敛为指向 `release-governance.md` 的迁移指针（184 行 → 3 行） |
-| 镜像 tag | **账号内已无仓启用 floating `latest`** | TTS-MultiModel `docker-publish.yml` 的 `type=raw,value=latest` 行已删（PR #190） |
-| 镜像扫描 | TTS 与 SeedVR2 的 `docker-publish.yml` 均转阻断（`exit-code: '1'`） | SeedVR2-Lite PR #164；转阻断前实测该镜像零发现，故未建豁免条目 |
-| GPG 分离签名 | 6 仓的 `gpg-signed-release.yml` 已**全部删除并合并** | SpiritPal #146 / MiniMax-H3-Lite #95 / DraftPeek #131 / Image-DuoModel #129 / SeedVR2-Lite #164 / TTS-MultiModel #190 |
-| 发布链最小修正 | 4 仓补上远端 SHA256SUMS 生成与挂载 | GalgameShell #10 / Health-Info-Card #3 / RTX-VSR-Lite #9 / ComfyUI-Experiment-Toolbox #2 —— 均只动 `release.yml` / `build-firmware.yml`，符合 §10.1 |
-| 根级 `CHANGELOG.md` | **29 仓全部建立**（Keep a Changelog）：Unity 由既有 `docs/CHANGELOG.md` 搬迁至根级并留指针、`Health-Info-Card` 按本仓惯例双语配对（`CHANGELOG.md` + `CHANGELOG.zh_CN.md`）；无 tag / Release 的仓仅含 `[Unreleased]` 并如实注明，未编造版本号与日期 | 21 单 PR：#2 Unity / #11 GalgameShell / #6 ReSerendipity / #3 ComfyUI-Experiment-Toolbox / #4 Github-Repo-Scan / #7 Lineart-Painter / #2 Unfading-Wall / #9 Multi-Tracker / #4 Health-Info-Card / #6 Card-Studio / #4 Mooncake-Deconstruction / #2 Offer-Landing-Kit / #3 Android-IconAutoArrange / #4 Free-Model-Probe / #2 ChatGPT-Timezone-Fix / #2 Bilibili-Follow-Manager / #2 Hugging-Face / #2 Nekogal-DL / #2 Agent-Knowledge / #2 Prompt-Library / #3 ComfyUI-BatchPromptLoader。有 tag 的 5 仓版本段日期逐仓与真实 tag 提交/发布时间核对一致 |
-
-| 镜像扫描双口径 | MiniMax-H3-Lite 的 `docker-scan.yml` 已由观察模式转**阻断**（`--exit-code 1`），与仓内 `trivy.yml` / `docker-gate.yml` 同口径 | PR #98 |
-| SBOM / provenance | SeedVR2 用 buildx 内联字段；MiniMax-H3-Lite `ghcr.yml` 补 `provenance: true` + `sbom: true`；TTS 改用 `actions/attest-sbom` + `attest-build-provenance` 绑定**已推送 digest**（机制说明见剩余欠账表） | PR #98 / TTS #191 |
-| 版本自动化 | Image-DuoModel 已**恢复 release-please 自动**（`release-type: simple`；`version.txt` 自动改写、`config.yaml` 人工补齐，与 TTS 口径统一） | PR #130 |
-| 发布链 draft 化 | Multi-Tracker / Lineart-Painter / ComfyUI-BatchPromptLoader 三条链改为 **draft + 远端资产（含 `SHA256SUMS.txt`）**，人工审核后 published | PR #10 / #8 / #4 |
-| 无发布链仓补链 | `Android-IconAutoArrange`（APK，runner 内手搓构建）与 `ChatGPT-Timezone-Fix`（MV3 扩展 zip）已补 tag 驱动 `release.yml` | PR #4 / #3 |
+> 2026-10-18 的收敛实证（29 仓发布规范落地、GPG 删除、draft 化、SBOM / provenance 等逐项证据）与非欠账说明已归档：`_archive/execution-records/2026-10/release-convergence-2026-10-18.md`。
 
 **剩余欠账（§10.7 的核验脚本定位为审计 + 进度对账，不是每 PR 门禁，故下面各项不阻断合并）**
 
 | 项 | 实测现状 | 待办 |
 |---|---|---|
 | 私有仓 Actions 账单/额度 | Prompt-Library / Image-Scrapers / Nekogal-DL 的作业因账号级账单注解无法启动（annotation 原文已取证） | **账号级问题、非仓库代码问题**；由账号所有者处理 Billing 后自动恢复（用户已指示本轮跳过） |
-
-**非欠账说明（列出仅为留痕，不构成待办）**
-**明确不补链的仓**：`Offer-Landing-Kit`（静态单文件站：无构建步骤、无打包脚本、无版本位，对外分发即 Pages 线上站点，已满足 §10.4 远端部署）、`Hugging-Face`（无 `.github/`、无构建产物）、`Unity`（Unity 工程需 Unity 授权，托管 runner 无法构建）——不补空链；待这些仓真正产生需版本化分发的产物时再立项。
-**TTS 镜像 attestation 机制**：TTS 因「先构建不推送 → 扫描 → 再推送」结构，无法用 buildx 内联 `provenance: true`（docker exporter 不承载 attestation），已改用官方 attest-action 绑定已推送 digest；属机制等价替代，非欠账。
 
 ### 10.7 本节的执行件
 
@@ -678,19 +658,10 @@ updated: YYYY-MM-DD
 - **验收标准（每 PR）**：①diff 仅含 rename + 引用修链 + `.gitignore`/workflow 路径同步；②修链后仓内 `git grep` 旧路径**零命中**（§13 允许的历史叙事除外，但"照此操作"引用必须更新）；③文档内相对链接渲染有效。
 - **完成判据**：普查复跑，根目录散落文档/脚本 = 0，本节欠账清零。
 
-### 12.3 存量收敛结果（2026-10-19 实测回填）
+### 12.3 存量收敛结果（2026-10-19，已归档）
 
-**批次执行**：17 个管辖仓全部经豆包 agent 并行迁移（本地电脑模式 14 单 + 云电脑模式 3 单），agent 只开 PR、编排方独立验收后合并。
-
-| 仓 | PR | 备注 |
-|---|---|---|
-| Agent-Knowledge / ComfyUI-Experiment-Toolbox / GalgameShell / Github-Repo-Scan / Image-DuoModel / Image-Scrapers / MiniMax-H3-Lite / Nekogal-DL / Prompt-Library / ReSerendipity / SeedVR2-Lite / SpiritPal / TTS-MultiModel | #4 / #4 / #12 / #5 / #132 / #22 / #99 / #4 / #4 / #7 / #165 / #154 / #192 | 提交全部为迁移 + 修链，纯净通过 |
-| Card-Studio | #7 | 含 §7 家族 `git rm --cached`（公开仓 local/ 保留） |
-| Health-Info-Card | #5 | 同上（AGENTS/CLAUDE 双语四件） |
-| Lineart-Painter | #9 + **#10（补漏）** | 工具脚本 7 个迁 scripts/、应用源码 8 个按语言惯例留根；复跑发现 2 个历史调研报告漏归档，补 PR 归档 `_archive/` |
-| DraftPeek | **#133（#132 拆分）** | agent 将本机 14 个未授权 WIP 提交一并打包进 #132，验收查出后拆分：3 个迁移提交 cherry-pick 零冲突重放为 #133 合并，WIP 剥离至本机 `wip/local-20261019` 分支待所有者处置，旧 PR 关闭留痕 |
-
-**复跑普查（收敛后，远端 main）**：14 仓根目录散落清零；4 项**合规保留**如实记录——`ComfyUI-Experiment-Toolbox/run.py`（唯一入口，语言惯例留根）、`Card-Studio/CONTRIBUTING.md`（GitHub 社区健康文件）、`Health-Info-Card` 的 `CHANGELOG.zh_CN.md` / `README.zh_CN.md`（双语配对跟随主文件留根）、`Prompt-Library` 根级 7 个中文规范文档（该仓内容主体即规范条目，属交付物非项目文档）。**本节欠账清零。**
+> 17 仓结构迁移完成：根目录散落文档 / 脚本清零，4 项合规保留如实记录，本节欠账 2026-10-19 清零。
+> 逐仓 PR 表与复跑普查原文见 `_archive/execution-records/2026-10/layout-migration-2026-10-19.md`。
 
 ### 12.4 路径与文档分流（原 §13）
 
@@ -1065,6 +1036,22 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 - 与现有执行件分工：`self-purify.yml` 查本地治理文档是否误入库，`audit-drift.py` 查期望状态与平台漂移，§18 查文档自身是否可用。
 - `AGENTS.md` 相关审查：按 §7 检查“是否只有一个本地根文件、是否被误跟踪、拆分文件标注是否完整”，不把本地文件缺失判为违规。
 - **README 专项**：根 README 的站内 / 站外链接、图片 / GIF / 视频、badges、Topics、Release 与许可证状态，按 §8 的对外更新触发复核；死链、失效 badge、过时版本或状态判红。
+
+### 18.4 活动区瘦身与归档可见性（2026-11-19 新增）
+
+**目标**：活动区（tracked 且非 `_archive/`）只承载现行条款与未完成事项；历史原文、已完成项、一次性执行记录迁入 `_archive/`。衡量指标是**单次读取的无效上下文占比**，不是仓库总字节（依据：2026-11-19 全账号 21 仓 3313 篇 Markdown 实测，P50 5.8 KB / P75 12.2 KB / P90 23.2 KB，各仓 P90 在 8.5–36.5 KB 之间，固定 8 KB 阈值会命中 P75 以下的大半文档，等于没有门槛）。
+
+1. **可迁 / 不可迁**
+   - 可迁：已完成 TODO 与勾选项；被 ADR 或后继文档取代的历史原文；一次性执行记录（PR 表、复跑结果、逐仓清单）；重复的变更叙事。
+   - 不可迁：未完成项；现行条款与仍被引用的定义；追加型台账（GOTCHAS / REVISION_LOG / CHANGELOG）；ADR 正文；§4 命名台账等事实源。
+2. **默认可见性**：归档不进入默认读取面——活跃文档不直接引用归档正文，只留「日期＋结论＋PR」一行摘要；`_archive/` 仅在 `_archive/INDEX.md` 登记并标「历史，仅追溯」。追溯时按索引单点打开，跳数 ≤1；检索默认排除 `_archive/**`。文档归档不改变 `lifecycle`，与 §15.7 仓归档区分。
+3. **归档件自述**：每个归档文件首行固定写「归档日｜原路径｜被谁取代或结论｜正文未改，不作执行依据」；按 `<类别>/<YYYY-MM>/` 分层；文件名避开 `todo` / `待办` / `roadmap` 等活跃关键词。
+4. **动迁门槛（按文档类型分轨，不设绝对值）**
+   - **TODO / 清单类**（文件名含 TODO、ROADMAP、PENDING、CHECKLIST、STATUS、进度）：不看体积，按**已完成条目占比 ≥ 30%**（按条数或已归档字节）判定。
+   - **记录 / 叙事类**（执行记录、历史原文、变更叙事、一次性报告）：单文件 ≥ **max(16 KB, 本仓 Markdown P90)**，且该段落 **90 天无修改、无入链引用**；两条不满足则先登记不动。
+   - **追加型台账**：不归档，按年 / 按季度分片，单片 ≤ 128 KB，索引保留入口（先例：`Image-Scrapers/CHANGELOG-2026-part1/part2`）。
+   - **全局上限**沿用 §18.2：单文件 > 256 KB 必须拆分。
+5. **索引维护**：`_archive/INDEX.md` 六列（原路径 / 归档后路径 / 归档日 / 类别 / 一句话结论 / 是否仍被引用），每季度复核；`docs/INDEX.md` 对应行状态改「历史」。
 
 ## 19. Dependabot 与依赖升级处置（2026-10-27 新增）
 

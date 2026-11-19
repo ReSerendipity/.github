@@ -40,7 +40,7 @@
 |---|---|---|---|
 | [`README.md`](../governance/README.md) | 治理手册入口：文件分工表、权威顺序、引用方式（含 2026-10-27 允许形态）、新建仓脚手架、变更流程 | 现行 | 2026-11-10 |
 | [`REPOSITORY_GUIDELINES.md`](../governance/REPOSITORY_GUIDELINES.md) | 治理规范 §1–§21（命名与目录、分支、密钥备份、变更流程、本地 `AGENTS.md`、README 双版本与展示图真实性、§8.2 profile 仓简历式精简模板（2 个 pinned 代表项目）、发布分发、许可证、结构与路径、治理分档、Markdown 文档健康、依赖升级、CI 远程化、仓库描述） | 现行 | 2026-11-12 |
-| [`GOVERNANCE-EXCLUSIONS.md`](../governance/GOVERNANCE-EXCLUSIONS.md) | 治理分档与例外记录：现行口径、备份仓与命名/发布载体对照、四轮豁免历史原文、§六–§十 例外 | 现行 | 2026-11-10 |
+| [`GOVERNANCE-EXCLUSIONS.md`](../governance/GOVERNANCE-EXCLUSIONS.md) | 治理分档与例外记录：现行口径、备份仓与命名/发布载体对照、§六–§十 例外；四轮豁免历史原文已归档（`_archive/exclusions/2026-10-four-rounds-legacy.md`） | 现行 | 2026-11-19 |
 
 ### 3.2 决策记录 `decisions/`（ADR-0001 ~ ADR-0020，编号不重用）
 
@@ -108,3 +108,9 @@
 3. **模板改动**：`templates/*` 改动即视为政策变更，须同步各仓已复制的副本（`agent-contract.md` 走漂移审计），本文件同步刷新「核对日期」。
 4. **`workflows/*`**：本索引只做登记，正文改动不在文档整理范围内。
 5. **核对日期**：整仓复核时统一刷新。
+
+## 七、_archive/（文档归档区，2026-11-19 新增）
+
+| 文档 | 用途 | 状态 | 核对日期 |
+|---|---|---|---|
+| [`INDEX.md`](../_archive/INDEX.md) | 归档索引：原路径 / 归档后路径 / 归档日 / 类别 / 一句话结论 / 引用状态；归档区按 §12.1 自动豁免 §10 审计 | 现行 | 2026-11-19 |
