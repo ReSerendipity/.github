@@ -71,7 +71,7 @@
 
 ## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-11 更新，52 行）
 
-### 例外名（品牌 / 系统保留名 / 已登记命名债务，10 个）
+### 例外名（品牌 / 系统保留名 / 已登记命名债务，11 个）
 
 > **何为例外名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断）。
 > `.github` 属 GitHub **系统保留名**；`Code-Time-Machine-1024` 是**已登记债务**，
@@ -89,8 +89,9 @@
 | rewq | private | service | 历史品牌名；按 §15.5 `credentials` 管理 |
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
+| whalemate | private | tool | 产品名连写（鲸伴 WhaleMate，桌面应用对外品牌名，非 Train Case；2026-11-20 登记） |
 
-### Train Case（42 个）
+### Train Case（43 个）
 
 | 仓库 | 可见性 | delivery |
 |---|---|---|
@@ -109,6 +110,7 @@
 | Health-Info-Card | public | release |
 | Hugging-Face | private | tool |
 | Image-DuoModel | public | release |
+| Image-DuoModel-Local | private | tool |
 | Image-Scrapers | private | tool |
 | Junction-Scanner | public | tool |
 | Lineart-Painter | public | release |
@@ -137,7 +139,9 @@
 | Website-Wuthering-Waves | private | service |
 | Website-Zenless-Zone-Zero | private | service |
 
-> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app
+> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app、whalemate
+>
+> 2026-11-20 变更（新仓入账，六轮分析落地批次）：登记 `Image-DuoModel-Local`（private / tool / active / none；Image-DuoModel 本地资产伴随仓，含 merge 脚本与 overlay 清单，对照 `MiniMax-H3-Lite-Local` 先例，无 AGENTS.md 故不设 `tracked_agents_allow`）与 `whalemate`（private / tool / active / none；Tauri 2 + React 桌面 AI 角色陪伴应用）。`whalemate` 取证确认无签名密钥 / 无 updater 配置 / 无 KeyBackup 仓，故 `risk=[]`；其当前 0 Release、无 CHANGELOG / release-governance，按 owner 裁决**先按 tool 登记真实状态**，待补齐发布链后再提 ADR 转 `release`。`Image-DuoModel-Local` 为合规 Train Case 名入 Train Case 表；`whalemate`（全小写产品名，非 Train Case）按 §1 入例外名表并在命名豁免声明行补录该名。本表 42 → 54 行（例外名 10 → 11 + Train Case 42 → 43），合计 62 → 64 仓（54 + 10 备份仓）；lifecycle active 24 → 26、maintenance 25 / archived 13 不变。`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD` 51 → 53 项已同步。
 >
 > 2026-11-20 变更（**归档入账**，owner 指令）：`MirrorDuo`（private / tool / none）由 `active` 改为 **`archived`**。按 §15.7 顺序执行：先在仓内根 `README.md` 顶部加入统一暂时归档声明块（`93e503c`，pre-push 8 项 PASS），推送确认远端 `refs/heads/main` 同为 `93e503c` 后 `gh repo archive` 置 GitHub 只读（复核 `isArchived=true`），最后同步 `desired-state.json` 与本表。本表行数不变（52 行 = 例外名 10 + Train Case 42），合计仍 62 仓（52 + 10 备份仓）；lifecycle 计数 active 25 → 24、archived 12 → 13，`maintenance` 维持 25。本地克隆按 owner 指令在本轮收尾删除，仓内可入库内容（含 `local/` 三份台账）删除前已全部推送。
 >

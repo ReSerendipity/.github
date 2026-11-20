@@ -7,7 +7,7 @@
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（10 项备份仓）
-> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（51 项非 release 仓，62 − 11）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（53 项非 release 仓，64 − 11）
 > 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
@@ -43,19 +43,19 @@
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
 | `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 52 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **51** | §10 收敛审计只覆盖 11 个 `release` 仓（62 − 11 = 51） |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **53** | §10 收敛审计只覆盖 11 个 `release` 仓（64 − 11 = 53） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
-## 四、账号仓总览（2026-11-17 复核，共 62 个）
+## 四、账号仓总览（2026-11-20 复核，共 64 个）
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
 | **§4 登记（含规范仓）** | 52 | 按 §15 派生适用条款；命名例外见 §4 |
 | **备份仓** | 10 | `delivery=backup`，只按 §3 管理，不进 §4 |
-| 合计 | 62 | 台账口径 62 个；2026-11-17 远程 `gh repo list` 实测 62 个，**零差额**（`AI-Girls-Comic` 新入账；`Saltline-plus`、`winlator-app` 已按业主裁决登记入账，`dsh-superagent-archive` 远程 404 已移出） |
+| 合计 | 64 | 台账口径 64 个；2026-11-20 新增登记 Image-DuoModel-Local / whalemate，**零差额**（`AI-Girls-Comic` 新入账；`Saltline-plus`、`winlator-app` 已按业主裁决登记入账，`dsh-superagent-archive` 远程 404 已移出） |
 
 > **2026-11-07 删除留痕**：`Offer-Landing-Kit`（public / service / archived）与 `Unity`（private / tool / maintenance）在 owner 凭据下 `GET /repos/ReSerendipity/<name>` 均返回 404（无改名跳转），判定为远程已不存在，从 `desired-state.json` 与 §4 台账移除；若后续确认是改名或转移，按 §6 改名流程重新入账。
 

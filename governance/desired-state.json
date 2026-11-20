@@ -53,6 +53,7 @@
     { "name": "Health-Info-Card", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Hugging-Face", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
     { "name": "Image-DuoModel", "visibility": "public", "delivery": "release", "distribution": ["github-release"], "lifecycle": "maintenance", "risk": ["signing-key"], "backup": "github-only" },
+    { "name": "Image-DuoModel-Local", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Image-DuoModel-KeyBackup", "visibility": "private", "delivery": "backup", "distribution": ["none"], "lifecycle": "maintenance", "risk": [], "backup": "key-only" },
     { "name": "Image-Scrapers", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Junction-Scanner", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "archived", "risk": [], "backup": "github-only" },
@@ -91,6 +92,7 @@
     { "name": "Website-Site-Toolchain", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Website-Wuthering-Waves", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Website-Zenless-Zone-Zero", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
+    { "name": "whalemate", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "winlator-app", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" }
   ],
   "exceptions": {

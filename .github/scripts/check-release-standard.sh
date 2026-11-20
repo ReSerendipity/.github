@@ -228,6 +228,7 @@ GameShell
 Github-Repo-Scan
 Hugging-Face
 Image-DuoModel-KeyBackup
+Image-DuoModel-Local
 Image-Scrapers
 Junction-Scanner
 KeyBackup-Passwords
@@ -257,6 +258,7 @@ Website-Honkai-Star-Rail
 Website-Site-Toolchain
 Website-Wuthering-Waves
 Website-Zenless-Zone-Zero
+whalemate
 winlator-app
 BookSpine-Wall
 MirrorDuo
