@@ -139,6 +139,8 @@
 
 > 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app
 >
+> 2026-11-20 变更（**归档入账**，owner 指令）：`MirrorDuo`（private / tool / none）由 `active` 改为 **`archived`**。按 §15.7 顺序执行：先在仓内根 `README.md` 顶部加入统一暂时归档声明块（`93e503c`，pre-push 8 项 PASS），推送确认远端 `refs/heads/main` 同为 `93e503c` 后 `gh repo archive` 置 GitHub 只读（复核 `isArchived=true`），最后同步 `desired-state.json` 与本表。本表行数不变（52 行 = 例外名 10 + Train Case 42），合计仍 62 仓（52 + 10 备份仓）；lifecycle 计数 active 25 → 24、archived 12 → 13，`maintenance` 维持 25。本地克隆按 owner 指令删除，仓内可入库内容（含 `local/` 三份台账）删除前已全部推送。
+>
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
 > 2026-11-17 变更（**平台动作入账**，对账修复批次）：① `DormitoryNotes-Godot` 远程已改名为 **`DormitoryNotes`**（`gh api` 实测 `full_name=ReSerendipity/DormitoryNotes`，旧名重定向生效；改名推送时间 2026-11-16 15:35 UTC，先动远程后补台账，属流程反例，§4/§6 的「先改 §4 再动远程」顺序约束后续以 ADR-0020 强化）；本表行数不变（Train Case 内改名）。② `P0-Murder-Mystery` 可见性 public → **private**（远程实测 `private=true`，owner 平台动作；该仓本就属第四轮豁免、自带 `.github/dependabot.yml`，不新增豁免登记）。本表仍 51 行（例外名 10 + Train Case 41）；合计仍 61 仓（51 + 10 备份仓）。`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD` 与 `GOVERNANCE-EXCLUSIONS.md` §11.1 已同步改名。
