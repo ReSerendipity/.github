@@ -32,6 +32,7 @@
 | [ADR-0018](ADR-0018-new-repo-registration-and-archive-name.md) | `dsh-superagent-archive` 例外名继承与 `BookSpine-Wall` / `MirrorDuo` / `OrbitCube` 入账、遗留计数修正 | Accepted |
 | [ADR-0019](ADR-0019-ledger-versioning.md) | 自进化台账纳入版本控制（取代 ADR-0013 第 5 条；修订 §13.1 `local/` 容器模板） | Accepted |
 | [ADR-0020](ADR-0020-ledger-inventory-and-draftpeek-dual-track.md) | 台账盘点修正（补计 TTS-MultiModel，取代 ADR-0019 第 6 条）与 DraftPeek 双轨台账追认（取代 ADR-0019 第 3 条设想）；强化 §4/§6 平台动作顺序约束 | Accepted |
+| [ADR-0021](ADR-0021-mirrordou-archive-agents-md.md) | `MirrorDuo` 归档时入库根 `AGENTS.md`，作为 §7.1「一律不入库」的单仓例外（`tracked_agents_allow`） | Accepted |
 
 ## 与规范的关系
 

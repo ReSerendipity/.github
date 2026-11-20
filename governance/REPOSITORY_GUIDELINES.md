@@ -139,7 +139,9 @@
 
 > 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app
 >
-> 2026-11-20 变更（**归档入账**，owner 指令）：`MirrorDuo`（private / tool / none）由 `active` 改为 **`archived`**。按 §15.7 顺序执行：先在仓内根 `README.md` 顶部加入统一暂时归档声明块（`93e503c`，pre-push 8 项 PASS），推送确认远端 `refs/heads/main` 同为 `93e503c` 后 `gh repo archive` 置 GitHub 只读（复核 `isArchived=true`），最后同步 `desired-state.json` 与本表。本表行数不变（52 行 = 例外名 10 + Train Case 42），合计仍 62 仓（52 + 10 备份仓）；lifecycle 计数 active 25 → 24、archived 12 → 13，`maintenance` 维持 25。本地克隆按 owner 指令删除，仓内可入库内容（含 `local/` 三份台账）删除前已全部推送。
+> 2026-11-20 变更（**归档入账**，owner 指令）：`MirrorDuo`（private / tool / none）由 `active` 改为 **`archived`**。按 §15.7 顺序执行：先在仓内根 `README.md` 顶部加入统一暂时归档声明块（`93e503c`，pre-push 8 项 PASS），推送确认远端 `refs/heads/main` 同为 `93e503c` 后 `gh repo archive` 置 GitHub 只读（复核 `isArchived=true`），最后同步 `desired-state.json` 与本表。本表行数不变（52 行 = 例外名 10 + Train Case 42），合计仍 62 仓（52 + 10 备份仓）；lifecycle 计数 active 25 → 24、archived 12 → 13，`maintenance` 维持 25。本地克隆按 owner 指令在本轮收尾删除，仓内可入库内容（含 `local/` 三份台账）删除前已全部推送。
+>
+> 2026-11-20 例外（**单仓 `AGENTS.md` 入库**，owner 指令「解除 ignore，push」「作为例外」）：`MirrorDuo` 即将删除本地克隆，其根 `AGENTS.md`（6.9 KB，承载构建/回归命令与素材形态铁律）按 §7.1 本应只留本地、删除即永久丢失，故临时解档 → 放开 ignore 入库（`6d3ce72`，因仓内 `pre-push` 第 1 项硬编码阻断而用 `--no-verify`）→ 重新归档（复核 `isArchived=true`、远端 `AGENTS.md` 6939 B）。例外在 `desired-state.json` 登记 `tracked_agents_allow: ["AGENTS.md"]`（`audit-drift.py` 已支持该字段），范围仅限本仓，见 **ADR-0021**，不作为其他仓库先例。
 >
 > 2026-11-03 变更：`GalgameShell` 于 2026-11-02 远程改名为 `GameShell`（本地目录与 remote 已同步，仍属例外名「品牌连写」）；新登记 `DormitoryNotes-Godot`（private / service / active / none）与 `KeyBackup-Passwords`（private / backup / maintenance，仅 §3、不进本表，账号级口令保险库，命名例外见 ADR-0016）；本表 42 → 43 行，Train Case 34 → 35；合计 51 → 53 仓（43 + 10 备份仓）。
 >
