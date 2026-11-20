@@ -49,9 +49,9 @@
 
 **③ 62 仓治理分档矩阵：lifecycle × delivery**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261111-r1.svg" alt="62 仓治理分档矩阵：lifecycle × delivery" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261120-r1.svg" alt="62 仓治理分档矩阵：lifecycle × delivery" width="880">
 
-lifecycle（active 25 / maintenance 25 / archived 12）决定变更许可与审计频率；delivery（policy 1 / release 11 / library 1 / service 12 / tool 22 / content 5 / backup 10）决定适用条款。逐仓定位以 `governance/desired-state.json` 为唯一事实来源。
+lifecycle（active 24 / maintenance 25 / archived 13）决定变更许可与审计频率；delivery（policy 1 / release 11 / library 1 / service 12 / tool 22 / content 5 / backup 10）决定适用条款。逐仓定位以 `governance/desired-state.json` 为唯一事实来源。
 
 ### 快速开始（使用与校验）
 
@@ -200,9 +200,9 @@ Per `REPOSITORY_GUIDELINES.md` §17: four pre-work checks before any task (fetch
 
 **③ 62-repo tiering matrix: lifecycle × delivery**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261111-r1.svg" alt="62-repo tiering matrix: lifecycle × delivery" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261120-r1.svg" alt="62-repo tiering matrix: lifecycle × delivery" width="880">
 
-Lifecycle (active 25 / maintenance 25 / archived 12) decides change permission and audit cadence; delivery (policy 1 / release 11 / library 1 / service 12 / tool 22 / content 5 / backup 10) decides which clauses apply. Per-repo positioning is authoritative only in `governance/desired-state.json`.
+Lifecycle (active 24 / maintenance 25 / archived 13) decides change permission and audit cadence; delivery (policy 1 / release 11 / library 1 / service 12 / tool 22 / content 5 / backup 10) decides which clauses apply. Per-repo positioning is authoritative only in `governance/desired-state.json`.
 
 ### Quick Start (usage & verification)
 
