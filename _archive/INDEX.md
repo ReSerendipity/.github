@@ -9,4 +9,5 @@
 | `governance/GOVERNANCE-EXCLUSIONS.md` 顶部 blockquote（原文行 5–10） | `_archive/change-notes/2026-11-exclusions-updates.md` | 2026-11-19 | 变更叙事 | 2026-10-29～2026-11-17 登账 / 改名 / 移出台账明细 | 否：原位只留最后更新行 |
 | `governance/REPOSITORY_GUIDELINES.md` §10.6「已收敛」表与非欠账说明（原文行 590–606、614–616） | `_archive/execution-records/2026-10/release-convergence-2026-10-18.md` | 2026-11-19 | 执行记录（已收敛） | 29 仓发布规范收敛逐项证据 + 非欠账留痕；§10.6「剩余欠账」原位保留 | 是：§10.6 指针 |
 | `governance/REPOSITORY_GUIDELINES.md` §12.3（原文行 681–694） | `_archive/execution-records/2026-10/layout-migration-2026-10-19.md` | 2026-11-19 | 执行记录（已收敛） | 17 仓结构迁移逐仓 PR 表与复跑普查，欠账清零 | 是：§12.3 指针 |
+| 工作区 `文档健康首次全仓审查报告.md`（非仓内文件） | `_archive/audits/2026-11/doc-health-first-audit-20261120.md` | 2026-11-20 | 审计报告（已被判据细化取代） | 28 仓 / 1,321 篇首审：v1 误报 725/100，v2 收敛 21/125；结论为判据不清，ADR-0023 细化 §18.1 后归档 | 是：§18.3 指针 |
 

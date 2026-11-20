@@ -34,6 +34,7 @@
 | [ADR-0020](ADR-0020-ledger-inventory-and-draftpeek-dual-track.md) | 台账盘点修正（补计 TTS-MultiModel，取代 ADR-0019 第 6 条）与 DraftPeek 双轨台账追认（取代 ADR-0019 第 3 条设想）；强化 §4/§6 平台动作顺序约束 | Accepted |
 | [ADR-0021](ADR-0021-mirrordou-archive-agents-md.md) | `MirrorDuo` 归档时入库根 `AGENTS.md`，作为 §7.1「一律不入库」的单仓例外（`tracked_agents_allow`） | Accepted |
 | [ADR-0022](ADR-0022-verification-trust-and-gate-coverage.md) | 验证可信度入规（§7.4 第6触发 + §17.4 防假绿自检）；门禁接入期望复用 `reusable_workflows.callers`，不新增 gates 字段 | Accepted |
+| [ADR-0023](ADR-0023-doc-health-criteria-refinement.md) | §18.1 文档健康判据细化（入链/路径/快照豁免）、首审结果归档，维持 §18.3 暂不绑门禁 | Accepted |
 
 ## 与规范的关系
 

@@ -115,7 +115,7 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 | `governance/REPOSITORY_GUIDELINES.md` | 仓库治理规范 §1–§21（命名/分支/密钥备份/两轴分档/发布分发/路径/归档/文档健康/依赖升级/CI 远程化/仓库描述等） |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | 治理分档与例外登记（10 备份仓豁免、命名例外等） |
 | `governance/desired-state.json` | 64 仓声明式期望状态；漂移审计与一致性检查的数据源 |
-| `governance/decisions/` | ADR-0001~0022 决策记录 |
+| `governance/decisions/` | ADR-0001~0023 决策记录 |
 | `governance/templates/` | 13 个模板件（含 `agent-contract.md`、`AGENTS_TEMPLATE.md` 等） |
 | `.github/ISSUE_TEMPLATE/` | 通用 Issue 表单（Bug / 功能 / 提问；各仓自带表单优先） |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | 通用 PR 检查清单 |
@@ -145,7 +145,7 @@ bash .github/scripts/check-agents-md-size.sh --root <仓库目录>
 - 治理正文：[`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md)（§1–§21）
 - 分档与例外：[`governance/GOVERNANCE-EXCLUSIONS.md`](governance/GOVERNANCE-EXCLUSIONS.md)
 - 期望状态：[`governance/desired-state.json`](governance/desired-state.json)（64 仓逐仓定位）
-- 决策记录：[`governance/decisions/`](governance/decisions/)（ADR-0001~0022）
+- 决策记录：[`governance/decisions/`](governance/decisions/)（ADR-0001~0023）
 - 治理手册索引：[`governance/README.md`](governance/README.md)
 - Agent 契约：[`docs/agent-contract.md`](docs/agent-contract.md)
 - 发布文档模板：[`governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md`](governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md)
@@ -266,7 +266,7 @@ When a downstream repository does not ship its own file of the same name, GitHub
 | `governance/REPOSITORY_GUIDELINES.md` | Repository governance §1–§21 (naming/branching/secret backup/tiering/release-layout/archive/docs-health/dependency-upgrades/CI-remote-first/repo-description) |
 | `governance/GOVERNANCE-EXCLUSIONS.md` | Tiering & exception registry (10 backup-repo exemptions, naming exceptions, etc.) |
 | `governance/desired-state.json` | Declarative desired state for 64 repos; data source for drift audit and consistency checks |
-| `governance/decisions/` | ADR-0001~0022 decision records |
+| `governance/decisions/` | ADR-0001~0023 decision records |
 | `governance/templates/` | 13 templates including `agent-contract.md` and `AGENTS_TEMPLATE.md` |
 | `.github/ISSUE_TEMPLATE/` | Generic issue forms (Bug / feature / question; repo-local forms win) |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | Generic pull request checklist |
@@ -296,7 +296,7 @@ When a downstream repository does not ship its own file of the same name, GitHub
 - Policy text: [`governance/REPOSITORY_GUIDELINES.md`](governance/REPOSITORY_GUIDELINES.md) (§1–§21)
 - Tiering & exceptions: [`governance/GOVERNANCE-EXCLUSIONS.md`](governance/GOVERNANCE-EXCLUSIONS.md)
 - Desired state: [`governance/desired-state.json`](governance/desired-state.json) (per-repo positioning of all 64 repos)
-- Decision records: [`governance/decisions/`](governance/decisions/) (ADR-0001~0022)
+- Decision records: [`governance/decisions/`](governance/decisions/) (ADR-0001~0023)
 - Governance handbook index: [`governance/README.md`](governance/README.md)
 - Agent contract: [`docs/agent-contract.md`](docs/agent-contract.md)
 - Release document template: [`governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md`](governance/templates/RELEASE_GOVERNANCE_TEMPLATE.md)
