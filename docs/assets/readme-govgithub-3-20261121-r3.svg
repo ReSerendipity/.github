@@ -6,16 +6,16 @@
 
   <text x="40" y="42" font-size="27" font-weight="700" fill="#1f2328">63 仓治理分档矩阵 · Tiering Matrix</text>
   <text x="40" y="66" font-size="14" fill="#57606a">lifecycle × delivery（截至 2026-11-21）｜逐仓定位以 governance/desired-state.json 为唯一事实来源（version 2，63 条）</text>
-  <text x="40" y="88" font-size="12.5" fill="#57606a">口径：§4 台账 53 行（例外名 10 + Train Case 43）+ 10 备份仓 = 63；逐格数量按 desired-state.json 63 条逐格核对（2026-11-21）</text>
+  <text x="40" y="88" font-size="12.5" fill="#57606a">口径：§4 台账 53 行（例外名 10 + Train Case 43）+ 10 备份仓 = 63；逐格数量按 desired-state.json 63 条逐格核对（2026-11-21，lifecycle 定位校准批次）</text>
 
   <!-- 列头：lifecycle -->
   <g>
     <rect x="268" y="118" width="300" height="52" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
     <text x="418" y="140" font-size="15" font-weight="700" fill="#0969da" text-anchor="middle">active（活跃）</text>
-    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 25 仓</text>
+    <text x="418" y="158" font-size="12" fill="#57606a" text-anchor="middle">变更许可 + 周检 · 29 仓</text>
     <rect x="576" y="118" width="300" height="52" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
     <text x="726" y="140" font-size="15" font-weight="700" fill="#9a6700" text-anchor="middle">maintenance（维护）</text>
-    <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 25 仓</text>
+    <text x="726" y="158" font-size="12" fill="#57606a" text-anchor="middle">仅修复 / 密钥轮换 · 月检 · 21 仓</text>
     <rect x="884" y="118" width="300" height="52" rx="6" fill="#eaeef2" stroke="#afbac4"/>
     <text x="1034" y="140" font-size="15" font-weight="700" fill="#57606a" text-anchor="middle">archived（归档）</text>
     <text x="1034" y="158" font-size="12" fill="#6e7781" text-anchor="middle">平台只读 · 不检 · 13 仓</text>
@@ -40,9 +40,9 @@
     <text x="56" y="256" font-size="14" font-weight="700" fill="#0969da">release（发布型）</text>
     <text x="56" y="274" font-size="11.5" fill="#0969da">§1–§14 · 11 仓</text>
     <rect x="268" y="232" width="300" height="52" rx="6" fill="#0969da" fill-opacity="0.55"/>
-    <text x="418" y="263" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
-    <rect x="576" y="232" width="300" height="52" rx="6" fill="#0969da" fill-opacity="0.72"/>
-    <text x="726" y="263" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">6</text>
+    <text x="418" y="263" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
+    <rect x="576" y="232" width="300" height="52" rx="6" fill="#0969da" fill-opacity="0.55"/>
+    <text x="726" y="263" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
     <rect x="884" y="232" width="300" height="52" rx="6" fill="#0969da" fill-opacity="0.22"/>
     <text x="1034" y="263" font-size="15" font-weight="700" fill="#0b5bab" text-anchor="middle">1</text>
   </g>
@@ -63,10 +63,10 @@
     <rect x="40" y="340" width="220" height="52" rx="6" fill="#f2fbf6" stroke="#a6d5b5"/>
     <text x="56" y="364" font-size="14" font-weight="700" fill="#1f7a6b">service（服务）</text>
     <text x="56" y="382" font-size="11.5" fill="#1f7a6b">§10 部署子集 · 12 仓</text>
-    <rect x="268" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.22"/>
-    <text x="418" y="371" font-size="15" font-weight="700" fill="#18594e" text-anchor="middle">3</text>
-    <rect x="576" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.72"/>
-    <text x="726" y="371" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">6</text>
+    <rect x="268" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.72"/>
+    <text x="418" y="371" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">7</text>
+    <rect x="576" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.36"/>
+    <text x="726" y="371" font-size="15" font-weight="700" fill="#18594e" text-anchor="middle">2</text>
     <rect x="884" y="340" width="300" height="52" rx="6" fill="#1f7a6b" fill-opacity="0.55"/>
     <text x="1034" y="371" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
   </g>
@@ -75,7 +75,7 @@
     <rect x="40" y="394" width="220" height="52" rx="6" fill="#f2fbf2" stroke="#a6d5b5"/>
     <text x="56" y="418" font-size="14" font-weight="700" fill="#1a7f37">tool（工具）</text>
     <text x="56" y="436" font-size="11.5" fill="#1a7f37">免 §3 / §10 · 23 仓</text>
-    <rect x="268" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.55"/>
+    <rect x="268" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.72"/>
     <text x="418" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">13</text>
     <rect x="576" y="394" width="300" height="52" rx="6" fill="#2da44e" fill-opacity="0.55"/>
     <text x="726" y="425" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
@@ -87,10 +87,10 @@
     <rect x="40" y="448" width="220" height="52" rx="6" fill="#fffbf0" stroke="#e6c06a"/>
     <text x="56" y="472" font-size="14" font-weight="700" fill="#9a6700">content（内容）</text>
     <text x="56" y="490" font-size="11.5" fill="#9a6700">免 §10 / §11 / §14 · 5 仓</text>
-    <rect x="268" y="448" width="300" height="52" rx="6" fill="#bf8700" fill-opacity="0.36"/>
-    <text x="418" y="479" font-size="15" font-weight="700" fill="#8a6000" text-anchor="middle">4</text>
-    <rect x="576" y="448" width="300" height="52" rx="6" fill="#bf8700" fill-opacity="0.22"/>
-    <text x="726" y="479" font-size="15" font-weight="700" fill="#8a6000" text-anchor="middle">1</text>
+    <rect x="268" y="448" width="300" height="52" rx="6" fill="#bf8700" fill-opacity="0.55"/>
+    <text x="418" y="479" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+    <rect x="576" y="448" width="300" height="52" rx="6" fill="#bf8700" fill-opacity="0.36"/>
+    <text x="726" y="479" font-size="15" font-weight="700" fill="#8a6000" text-anchor="middle">2</text>
     <rect x="884" y="448" width="300" height="52" rx="6" fill="#bf8700" fill-opacity="0"/>
     <text x="1034" y="479" font-size="15" font-weight="700" fill="#afbac4" text-anchor="middle">0</text>
   </g>
@@ -112,9 +112,9 @@
     <rect x="40" y="562" width="220" height="48" rx="6" fill="#eaeef2"/>
     <text x="56" y="592" font-size="14" font-weight="700" fill="#24292f">合计 · Total</text>
     <rect x="268" y="562" width="300" height="48" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
-    <text x="418" y="592" font-size="16" font-weight="700" fill="#0969da" text-anchor="middle">25</text>
+    <text x="418" y="592" font-size="16" font-weight="700" fill="#0969da" text-anchor="middle">29</text>
     <rect x="576" y="562" width="300" height="48" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
-    <text x="726" y="592" font-size="16" font-weight="700" fill="#9a6700" text-anchor="middle">25</text>
+    <text x="726" y="592" font-size="16" font-weight="700" fill="#9a6700" text-anchor="middle">21</text>
     <rect x="884" y="562" width="300" height="48" rx="6" fill="#eaeef2" stroke="#afbac4"/>
     <text x="1034" y="592" font-size="16" font-weight="700" fill="#57606a" text-anchor="middle">13</text>
   </g>
