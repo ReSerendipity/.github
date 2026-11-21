@@ -13,7 +13,7 @@
 # 只读：仅向 GitHub 发 GET，不产生任何远端写入。
 # 用法：bash .github/scripts/check-governance-consistency.sh [--public-only]
 #   --public-only：只校验与公开仓有关的差集；Actions 默认 GITHUB_TOKEN 看不到
-#   其他私有仓，CI 用此模式；完整 64 仓校验需本地 owner 凭据。
+#   其他私有仓，CI 用此模式；完整 63 仓校验需本地 owner 凭据。
 # 退出码：0=clean；1=gap；2=无法判定（依赖/取数/文档结构失败）。
 set -uo pipefail
 
@@ -97,6 +97,15 @@ for repo in data.get("repos") or []:
         if item not in distributions:
             errors.append(f"{name}: distribution={item!r} 无对应规则")
 
+pending = data.get("pending_delete") or []
+for item in pending:
+    if not isinstance(item, str) or not item:
+        errors.append(f"pending_delete 存在非法项：{item!r}")
+        continue
+    if item in names:
+        errors.append(f"pending_delete 与 repos 重叠：{item}")
+    print(f"PEND\t{item}")
+
 for name in sorted({item for item in names if names.count(item) > 1}):
     errors.append(f"仓名重复：{name}")
 
@@ -134,6 +143,8 @@ awk -F'\t' '$1=="VIS" && $3=="private"{print $2}' "$TMP_DIR/desired.tsv" | sort 
 awk -F'\t' '$1=="DEL" && $3=="backup"{print $2}' "$TMP_DIR/desired.tsv" | sort > "$TMP_DIR/desired.backup.names"
 awk -F'\t' '$1=="DEL" && $3!="release"{print $2}' "$TMP_DIR/desired.tsv" | sort > "$TMP_DIR/desired.nonrelease.names"
 PRIVATE_TOTAL=$(grep -c . "$TMP_DIR/desired.private.names" || true)
+awk -F'\t' '$1=="PEND"{print $2}' "$TMP_DIR/desired.tsv" | sort > "$TMP_DIR/pending.names"
+PEND_N=$(grep -c . "$TMP_DIR/pending.names" || true)
 
 if [ "$DESIRED_OWNER" != "$OWNER" ]; then
   err "desired-state.owner=$DESIRED_OWNER 与检查目标 owner=$OWNER 不一致"
@@ -179,6 +190,9 @@ extract_array() {
 
 extract_array "$REGISTRY_SCRIPT" "EXCLUDED_FROM_REGISTRY" | grep -v '^$' | sort > "$TMP_DIR/registry.names"
 extract_array "$RELEASE_SCRIPT" "EXCLUDED_FROM_RELEASE_STANDARD" | grep -v '^$' | sort > "$TMP_DIR/release.names"
+extract_array "$REGISTRY_SCRIPT" "PENDING_DELETE" | grep -v '^$' | sort > "$TMP_DIR/pending.registry.names"
+extract_array "$RELEASE_SCRIPT" "PENDING_DELETE" | grep -v '^$' | sort > "$TMP_DIR/pending.release.names"
+
 REGISTRY_N=$(grep -c . "$TMP_DIR/registry.names" || true)
 RELEASE_N=$(grep -c . "$TMP_DIR/release.names" || true)
 
@@ -208,6 +222,10 @@ else
 fi
 MISSING_ON_REMOTE=$(comm -23 "$COMPARE_DESIRED" "$TMP_DIR/remote.names")
 UNLISTED=$(comm -13 "$COMPARE_DESIRED" "$TMP_DIR/remote.names")
+# 待删除仓（desired-state.pending_delete）远端可能仍存在，属已知未登记，不计入漂移。
+if [ -n "$UNLISTED" ] && [ "${PEND_N:-0}" -gt 0 ]; then
+  UNLISTED=$(printf '%s\n' "$UNLISTED" | grep -v '^$' | comm -23 - "$TMP_DIR/pending.names" || true)
+fi
 if [ -n "$MISSING_ON_REMOTE" ]; then
   GAPS="${GAPS}desired-state 有、远程无：\n$(echo "$MISSING_ON_REMOTE" | sed 's/^/  - /')\n"
 fi
@@ -246,6 +264,15 @@ fi
 [ "$REGISTRY_N" = "$BACKUP_TOTAL" ] || GAPS="${GAPS}  - EXCLUDED_FROM_REGISTRY 实有 $REGISTRY_N 项，desired-state 的 backup 仓为 $BACKUP_TOTAL 个\n"
 [ "$README_BACKUP" = "$BACKUP_TOTAL" ] || GAPS="${GAPS}  - governance/README.md 声明 $README_BACKUP 个备份仓，desired-state 为 $BACKUP_TOTAL 个\n"
 [ "$RELEASE_N" = "$((DESIRED_TOTAL - RELEASE_TOTAL))" ] || GAPS="${GAPS}  - EXCLUDED_FROM_RELEASE_STANDARD 实有 $RELEASE_N 项，应为非 release 仓 $((DESIRED_TOTAL - RELEASE_TOTAL)) 个\n"
+PEND_REG=$(grep -c . "$TMP_DIR/pending.registry.names" || true)
+PEND_REL=$(grep -c . "$TMP_DIR/pending.release.names" || true)
+[ "$PEND_REG" = "${PEND_N:-0}" ] || GAPS="${GAPS}  - check-repo-registry.sh 的 PENDING_DELETE 为 $PEND_REG 项，desired-state.pending_delete 为 ${PEND_N:-0} 项\n"
+[ "$PEND_REL" = "${PEND_N:-0}" ] || GAPS="${GAPS}  - check-release-standard.sh 的 PENDING_DELETE 为 $PEND_REL 项，desired-state.pending_delete 为 ${PEND_N:-0} 项\n"
+if [ "${PEND_N:-0}" -gt 0 ]; then
+  [ -z "$(comm -3 "$TMP_DIR/pending.names" "$TMP_DIR/pending.registry.names" || true)" ] || GAPS="${GAPS}  - check-repo-registry.sh 的 PENDING_DELETE 名单与 desired-state.pending_delete 不一致\n"
+  [ -z "$(comm -3 "$TMP_DIR/pending.names" "$TMP_DIR/pending.release.names" || true)" ] || GAPS="${GAPS}  - check-release-standard.sh 的 PENDING_DELETE 名单与 desired-state.pending_delete 不一致\n"
+fi
+
 [ "$README_REGISTERED" = "$((DESIRED_TOTAL - BACKUP_TOTAL))" ] || GAPS="${GAPS}  - governance/README.md 声明 $README_REGISTERED 个登记仓，应为 $((DESIRED_TOTAL - BACKUP_TOTAL)) 个\n"
 
 ARITHMETIC=$((README_REGISTERED + README_BACKUP))
@@ -304,6 +331,7 @@ echo "  desired-state：$DESIRED_TOTAL 仓（release $RELEASE_TOTAL / backup $BA
 echo "  排除数组：EXCLUDED_FROM_REGISTRY=$REGISTRY_N（文档 $DOC_REGISTRY）；EXCLUDED_FROM_RELEASE_STANDARD=$RELEASE_N（文档 $DOC_RELEASE）"
 echo "  README 分组：登记 $README_REGISTERED + 备份 $README_BACKUP = $ARITHMETIC"
 echo "  文档计数：备份 zh=$DOC_BACKUP_ZH / en=$DOC_BACKUP_EN；台账=$DOC_LEDGER；规范 §2=$DOC_GUIDE_BACKUP_A §15.6=$DOC_GUIDE_BACKUP_B；lifecycle=${README_LC:-n/a}"
+echo "  待删除仓（不登记）：$PEND_N 个（远端可存在，不计入未登记漂移；见 GOVERNANCE-EXCLUSIONS.md §十二）"
 echo ""
 
 if [ -n "$GAPS" ]; then

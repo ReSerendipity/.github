@@ -208,7 +208,7 @@ if [ -n "$ROOT" ]; then
 else
   # 排除清单（2026-10-22 两轴模型）：§10 只覆盖 delivery=release 的 11 个仓，
   # 其中归档仓按 §15.2 跳过常规审计（Android-IconAutoArrange），实扫 10 个；
-  # 其余 51 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
+  # 其余 52 个仓按 delivery 派生条款，不参与发布规范审计（ADR-0006）。
   # 改清单须五处同步（§15、§4、check-repo-registry.sh、本声明、GOVERNANCE-EXCLUSIONS.md）。
   EXCLUDED_FROM_RELEASE_STANDARD=".github
 Agent-Knowledge
@@ -258,11 +258,14 @@ Website-Honkai-Star-Rail
 Website-Site-Toolchain
 Website-Wuthering-Waves
 Website-Zenless-Zone-Zero
-whalemate
 winlator-app
 BookSpine-Wall
 MirrorDuo
 OrbitCube"
+
+  # 待删除仓（2026-11-21 裁决）：远端仍存在但不入 §4 台账，本地残留目录也不纳入发布规范审计。
+  # 必须与 desired-state.json 的 pending_delete 一致（check-governance-consistency.sh 交叉校验）。
+  PENDING_DELETE="whalemate"
 
   # 多仓模式：只扫含 .git 的一级子目录。跳过项**逐条显式列出**，不静默吞。
   SKIPPED=()
@@ -281,6 +284,9 @@ OrbitCube"
     if [ "$skip" -eq 1 ]; then SKIPPED+=("$name（--skip 指定）"); continue; fi
     if printf '%s\n' "$EXCLUDED_FROM_RELEASE_STANDARD" | grep -qx "$name"; then
       SKIPPED+=("$name（§10 排除清单，不适用发布规范审计）"); continue
+    fi
+    if printf '%s\n' "$PENDING_DELETE" | grep -qx "$name"; then
+      SKIPPED+=("$name：待删除仓（不登记），不纳入发布规范审计"); continue
     fi
     if [ "$INCLUDE_ARCHIVED" -eq 0 ] && is_archived "$name"; then
       SKIPPED+=("$name（lifecycle=archived，按 §15.2 跳过；--include-archived 可强制）"); continue

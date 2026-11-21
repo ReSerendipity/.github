@@ -92,9 +92,9 @@
     { "name": "Website-Site-Toolchain", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "Website-Wuthering-Waves", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
     { "name": "Website-Zenless-Zone-Zero", "visibility": "private", "delivery": "service", "distribution": ["pages"], "lifecycle": "maintenance", "risk": [], "backup": "github-only" },
-    { "name": "whalemate", "visibility": "private", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" },
     { "name": "winlator-app", "visibility": "public", "delivery": "tool", "distribution": ["none"], "lifecycle": "active", "risk": [], "backup": "github-only" }
   ],
+  "pending_delete": ["whalemate"],
   "exceptions": {
     "rewq": { "rule": "no-private-key-upload", "scope": "ssh-backup/" }
   },

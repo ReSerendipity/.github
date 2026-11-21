@@ -477,6 +477,7 @@ def main(argv):
         return 2
 
     unregistered = []
+    pending_names = set(desired.get("pending_delete") or [])
     remote_counts = None
     filtered = bool(only or deliveries or lifecycles)
     if not filtered:
@@ -485,7 +486,11 @@ def main(argv):
             print(f"ERROR: 远程仓清单取数失败：{rerr}", file=sys.stderr)
             return 2
         known_all = {spec.get("name") for spec in repos}
-        unregistered = sorted(name for name in remote_names if name not in known_all)
+        unregistered = sorted(
+            name
+            for name in remote_names
+            if name not in known_all and name not in pending_names
+        )
         remote_counts = (len(remote_names), len(known_all))
 
     with ThreadPoolExecutor(max_workers=8) as pool:
@@ -562,6 +567,11 @@ def main(argv):
     if unregistered:
         lines.append(f"未登记仓：{len(unregistered)} 个（远程可见、desired-state 无；见漂移明细）")
         drift_details.extend(f"{name}: 未登记（远程有、desired-state 无）" for name in unregistered)
+    if pending_names:
+        lines.append(
+            f"待删除仓（不登记）：{len(pending_names)} 个 —— "
+            + "、".join(sorted(pending_names))
+        )
     if pins_result:
         lines.append(
             f"汇总：{len(results)} 仓 + 1 项横切校验 · PASS {counts['PASS']} · PARTIAL {counts['PARTIAL']} · "

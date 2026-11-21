@@ -50,7 +50,7 @@ REMOTE_PUBLIC=$(awk -F'\t' '$2=="false"{print $1}' "$REMOTE_TSV" | sort)
 REMOTE_ALL=$(cut -f1 "$REMOTE_TSV" | sort)
 
 # 「备份仓豁免」声明（2026-10-22 起）：10 个 delivery=backup 的密钥/资产备份仓不进 §4 台账，
-# 也不参与差集 B/C 与 §1 命名校验；其余 54 仓全部登记。豁免语义见 ADR-0006 与 §15。
+# 也不参与差集 B/C 与 §1 命名校验；其余 53 仓全部登记。豁免语义见 ADR-0006 与 §15。
 # 维护要求：本清单与 §4、§15、GOVERNANCE-EXCLUSIONS.md、check-release-standard.sh 同步修改。
 EXCLUDED_FROM_REGISTRY="DraftPeek-KeyBackup
 Image-DuoModel-KeyBackup
@@ -63,6 +63,13 @@ MiniMax-H3-Lite-KeyBackup
 VOSR2-Lite-KeyBackup
 KeyBackup-Passwords"
 is_excluded() { printf '%s\n' "$EXCLUDED_FROM_REGISTRY" | grep -qx "$1"; }
+
+# 待删除仓（2026-11-21 起）：远端仍存在，但已裁决不入 §4 台账、待删除。
+# 不参与差集 B（未登记）与差集 C（§1 命名校验）。
+# 必须与 desired-state.json 的 pending_delete 完全一致（check-governance-consistency.sh 交叉校验）。
+PENDING_DELETE="whalemate"
+PENDING_N=$(printf '%s\n' "$PENDING_DELETE" | grep -c . || true)
+is_pending() { printf '%s\n' "$PENDING_DELETE" | grep -qx "$1"; }
 
 # 解析 §4 两张表：抽取 (小节, 仓库名, 可见性) 与标题声明条数。
 ROWS=$(awk -v RS='\r?\n' '
@@ -114,6 +121,7 @@ UNLISTED=""
 while IFS= read -r n; do
   [ -n "$n" ] || continue
   is_excluded "$n" && continue
+  is_pending "$n" && continue
   echo "$REGISTRY_NAMES" | grep -qx "$n" || UNLISTED="${UNLISTED}  - $n\n"
 done <<EOF
 $(cut -f1 "$REMOTE_TSV")
@@ -132,6 +140,7 @@ while IFS= read -r n; do
     .*) continue ;;
   esac
   if is_excluded "$n"; then continue; fi
+  if is_pending "$n"; then continue; fi
   if echo "$EXEMPT_NAMES" | grep -qx "$n"; then continue; fi
   if [ -n "$DOC_EXEMPT" ] && echo "$DOC_EXEMPT" | grep -qx "$n"; then continue; fi
   if echo "$n" | grep -q '_'; then
@@ -159,6 +168,11 @@ echo "  口径说明：users/<owner>/repos 只返回公开仓，表内标为 pri
   echo "  本脚本只排除 10 个备份仓；§10 审计的 50 项排除（另按 §15.2 跳过归档 release 仓）见 check-release-standard.sh。"
 if [ -n "$DOC_EXEMPT" ]; then
   echo "  命名欠账（§4 已登记、待远程改名授权后消解，本轮不参与差集 C）：$(echo "$DOC_EXEMPT" | tr '\n' ' ')"
+fi
+echo ""
+
+if [ "$PENDING_N" -gt 0 ]; then
+  echo "  待删除不登记：$PENDING_N 个（远端存在、不入 §4 台账；见 GOVERNANCE-EXCLUSIONS.md §十二）"
 fi
 echo ""
 

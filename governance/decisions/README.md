@@ -35,6 +35,7 @@
 | [ADR-0021](ADR-0021-mirrordou-archive-agents-md.md) | `MirrorDuo` 归档时入库根 `AGENTS.md`，作为 §7.1「一律不入库」的单仓例外（`tracked_agents_allow`） | Accepted |
 | [ADR-0022](ADR-0022-verification-trust-and-gate-coverage.md) | 验证可信度入规（§7.4 第6触发 + §17.4 防假绿自检）；门禁接入期望复用 `reusable_workflows.callers`，不新增 gates 字段 | Accepted |
 | [ADR-0023](ADR-0023-doc-health-criteria-refinement.md) | §18.1 文档健康判据细化（入链/路径/快照豁免）、首审结果归档，维持 §18.3 暂不绑门禁 | Accepted |
+| [ADR-0024](ADR-0024-pending-delete-repos.md) | 待删除仓不登记（`pending_delete`）：远端仍存在但已裁决不入 §4 台账的仓不计未登记漂移、不参与 §1 命名校验与发布审计；`whalemate` 据此撤登记 | Accepted |
 
 ## 与规范的关系
 
