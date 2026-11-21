@@ -13,7 +13,7 @@
 # 只读：仅向 GitHub 发 GET，不产生任何远端写入。
 # 用法：bash .github/scripts/check-governance-consistency.sh [--public-only]
 #   --public-only：只校验与公开仓有关的差集；Actions 默认 GITHUB_TOKEN 看不到
-#   其他私有仓，CI 用此模式；完整 62 仓校验需本地 owner 凭据。
+#   其他私有仓，CI 用此模式；完整 64 仓校验需本地 owner 凭据。
 # 退出码：0=clean；1=gap；2=无法判定（依赖/取数/文档结构失败）。
 set -uo pipefail
 
