@@ -2,12 +2,12 @@
 
 > **本文件定位**：治理分档与例外记录的**正式载体**，承载于规范仓（2026-10-19 由本地根目录移入，随仓版本管理）。
 > **权威条款**：`REPOSITORY_GUIDELINES.md` §15（治理分档）与 §4（命名台账）。
-> **最后更新**：2026-11-17（2026-10-29 起的登账 / 改名 / 移出台账明细见 `_archive/change-notes/2026-11-exclusions-updates.md`；口径真值见 §四 与 `desired-state.json`）
+> **最后更新**：2026-11-21（2026-10-29 起的登账 / 改名 / 移出台账明细见 `_archive/change-notes/2026-11-exclusions-updates.md`；口径真值见 §四 与 `desired-state.json`）
 >
 > **同步规则（改一处即改五处）**：
 > 1. 规范仓 `REPOSITORY_GUIDELINES.md` 的 §15 与 §4
 > 2. 校验脚本 `check-repo-registry.sh` 的 `EXCLUDED_FROM_REGISTRY`（10 项备份仓）
-> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（53 项非 release 仓，64 − 11）
+> 3. 校验脚本 `check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD`（52 项非 release 仓，63 − 11）
 > 4. `governance/README.md` 与根 `README.md` 的索引
 > 5. 本文件
 
@@ -18,7 +18,7 @@
 **本文件自 2026-10-22 起是「治理分档与例外记录」，不再是「整部规范不适用」的白名单。** 现行规则：
 
 1. **`delivery=backup` 的 10 个仓**（密钥 / 资产备份仓）整部规范不适用，只按 §3 的 `<项目名>-KeyBackup` 结构、`SHA256SUMS.txt` 与轮换更新要求管理；不进 §4 台账，不参与 §1 命名与 §10 审计。**2026-11-03 补登记**：`KeyBackup-Passwords`（账号级口令保险库，名字不取 `<项目名>-KeyBackup` 形态，命名例外见 ADR-0016；内含明文口令台账，风险口径同下表「口令入库例外」）。现行 10 仓清单以 `desired-state.json` 为准。
-2. **其余 51 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
+2. **其余 52 个仓**按 §15 的 `delivery × lifecycle` 派生适用条款；`lifecycle` 只决定变更许可与审计频率，不改变条款范围。
 3. **命名例外**（品牌 / 系统保留名 / 上游生态名 / 已登记债务）见 §4「例外名」表；新增例外须先落 ADR。
 4. **`rewq` 的硬约束收窄**：`.gitignore` 必须排除 `ssh-backup/`、`.ssh/` 与 `*.pem` / `*.key` 等私钥；正常提交与推送不受限制（§15.5）。
 
@@ -42,26 +42,26 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 54 仓全部参与 §1 命名校验 |
-| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **53** | §10 收敛审计只覆盖 11 个 `release` 仓（64 − 11 = 53） |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 53 仓全部参与 §1 命名校验 |
+| `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **52** | §10 收敛审计只覆盖 11 个 `release` 仓（63 − 11 = 52） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
 
 ---
 
-## 四、账号仓总览（2026-11-20 复核，共 64 个）
+## 四、账号仓总览（2026-11-21 复核，共 63 个）
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
-| **§4 登记（含规范仓）** | 54 | 按 §15 派生适用条款；命名例外见 §4 |
+| **§4 登记（含规范仓）** | 53 | 按 §15 派生适用条款；命名例外见 §4 |
 | **备份仓** | 10 | `delivery=backup`，只按 §3 管理，不进 §4 |
-| 合计 | 64 | 台账口径 64 个；2026-11-20 新增登记 Image-DuoModel-Local / whalemate，**零差额**（`AI-Girls-Comic` 新入账；`Saltline-plus`、`winlator-app` 已按业主裁决登记入账，`dsh-superagent-archive` 远程 404 已移出） |
+| 合计 | 63 | 台账口径 63 个（2026-11-21 `whalemate` 撤登记转 §十二，ADR-0024）；2026-11-20 新增登记 Image-DuoModel-Local，**零差额**（`AI-Girls-Comic` 新入账；`Saltline-plus`、`winlator-app` 已按业主裁决登记入账，`dsh-superagent-archive` 远程 404 已移出） |
 
 > **2026-11-07 删除留痕**：`Offer-Landing-Kit`（public / service / archived）与 `Unity`（private / tool / maintenance）在 owner 凭据下 `GET /repos/ReSerendipity/<name>` 均返回 404（无改名跳转），判定为远程已不存在，从 `desired-state.json` 与 §4 台账移除；若后续确认是改名或转移，按 §6 改名流程重新入账。
 
-### §4 台账现状（2026-11-11 复核）
+### §4 台账现状（2026-11-21 复核）
 
-- 台账登记 **54 条**（例外名 11 + Train Case 43），覆盖全部非 `backup` 仓。
+- 台账登记 **53 条**（例外名 10 + Train Case 43），覆盖全部非 `backup` 仓。
 - 台账之外的备份仓 **10 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
 - 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 
@@ -227,3 +227,19 @@
 | `Lineart-Painter` | `scripts/webui_test.py` | 起 Web 请求处理检查，需运行环境 | 同上 |
 | `Lineart-Painter` | `scripts/_a2s_test.py` | 独立推理脚本，下划线前缀本就不被 pytest 收集 | 同上 |
 
+---
+
+## 十二、待删除仓（不登记，2026-11-21）
+
+有些仓在远端仍然存在，但已裁决**不纳入 §4 台账**（内容近乎为空、无发布链、不承担任何治理职责），计划直接删除。这类仓既不该占用命名例外，也不该被漂移审计长期报「未登记」，故单列本节。
+
+| 仓库 | 可见性 | delivery | 裁决 | 载体 |
+|---|---|---|---|---|
+| `whalemate` | private | tool | 2026-11-21 owner 裁决「不需要登记，里面几乎没有什么内容，后续是直接删除的」，从 §4 台账与 `desired-state.json` 移出 | `desired-state.json` 的 `pending_delete: ["whalemate"]`；`check-repo-registry.sh` / `check-release-standard.sh` 的 `PENDING_DELETE`；`audit-drift.py` 与 `check-governance-consistency.sh` 按该字段放行 |
+
+**约束**：
+
+1. `pending_delete` 是**唯一事实源**；两个 bash 脚本的 `PENDING_DELETE` 必须与它逐名一致，`check-governance-consistency.sh` 交叉校验（数量与名单双向）。
+2. 本节仓**不计入** §四 总览、§4 台账与 `EXCLUDED_FROM_RELEASE_STANDARD`；`pending_delete` 与 `repos[]` 不得重叠（脚本判错）。
+3. 仓删除后，须在**同一批提交**里从 `desired-state.json` 的 `pending_delete` 与两个脚本的 `PENDING_DELETE` 移除，并删掉本节对应行；本节不留空壳条目。
+4. 若某仓从「待删除」改回正式治理对象，须按新仓登记流程重新入账（§4 + `desired-state.json`），不得只删 `pending_delete` 条目。

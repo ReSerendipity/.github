@@ -27,7 +27,7 @@
 
 ### 1.4 命名台账与本地一致性（原 §4、§6）
 
-- 现网命名台账以 **§4 表**为唯一数据源（54 行：11 个例外名 + 43 个 Train Case）；新增 / 改名先改 §4，再改远程。
+- 现网命名台账以 **§4 表**为唯一数据源（53 行：10 个例外名 + 43 个 Train Case）；新增 / 改名先改 §4，再改远程。
 - 本地克隆目录名必须与远程逐字符一致；远程重命名三步见 **§6**。
 - 命名例外须先落 ADR，再改 §4；§4 表由 `check-repo-registry.sh` 对账。
 - 本节是 §4 与 §6 的归口；两节保留原编号，分别作为数据附表与执行细则。
@@ -69,9 +69,9 @@
 - 双保险：远程私有仓 + 本地加密副本。
 - 参考实现：`DraftPeek-KeyBackup`（该模式的原型）。
 
-## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-21 更新，54 行）
+## 4. 现网仓库命名对照（§1.4 数据附表，2026-11-21 更新，53 行）
 
-### 例外名（品牌 / 系统保留名 / 已登记命名债务，11 个）
+### 例外名（品牌 / 系统保留名 / 已登记命名债务，10 个）
 
 > **何为例外名**：已对外使用、改名代价高于规范收益的名字（外链、徽章、搜索结果、用户记忆都会断）。
 > `.github` 属 GitHub **系统保留名**；`Code-Time-Machine-1024` 是**已登记债务**，
@@ -89,7 +89,6 @@
 | rewq | private | service | 历史品牌名；按 §15.5 `credentials` 管理 |
 | .github | public | policy | 系统保留名（§1） |
 | Code-Time-Machine-1024 | public | service | `1024` 为活动品牌，长期登记 |
-| whalemate | private | tool | 产品名连写（鲸伴 WhaleMate，桌面应用对外品牌名，非 Train Case；2026-11-20 登记） |
 
 ### Train Case（43 个）
 
@@ -139,7 +138,9 @@
 | Website-Wuthering-Waves | private | service |
 | Website-Zenless-Zone-Zero | private | service |
 
-> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app、whalemate
+> 已登记命名例外（品牌与待改名债务，不参与 §1 命名校验）：rewq、Code-Time-Machine-1024、dsh-superagent、Saltline-plus、winlator-app
+>
+> 2026-11-21 变更（**撤登记**，owner 裁决「这个不需要登记，它里面几乎没有什么内容，后续是直接删除的」）：`whalemate` 从本表与 `desired-state.json` 移出，改由 `desired-state.json` 的 `pending_delete` 声明（远端仍存在、不入 §4 台账、不参与 §1 命名校验与差集 B/C，待删除），机制见 **ADR-0024** 与 `GOVERNANCE-EXCLUSIONS.md` §十二。本表 54 → 53 行（例外名 11 → 10，Train Case 43 不变），合计 64 → 63 仓（53 + 10 备份仓）；lifecycle active 26 → 25，`maintenance` 25 / `archived` 13 不变；`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD` 53 → 52 项已同步。原 2026-11-20 登记条保留为历史记录，不再作为执行依据。
 >
 > 2026-11-20 变更（新仓入账，六轮分析落地批次）：登记 `Image-DuoModel-Local`（private / tool / active / none；Image-DuoModel 本地资产伴随仓，含 merge 脚本与 overlay 清单，对照 `MiniMax-H3-Lite-Local` 先例，无 AGENTS.md 故不设 `tracked_agents_allow`）与 `whalemate`（private / tool / active / none；Tauri 2 + React 桌面 AI 角色陪伴应用）。`whalemate` 取证确认无签名密钥 / 无 updater 配置 / 无 KeyBackup 仓，故 `risk=[]`；其当前 0 Release、无 CHANGELOG / release-governance，按 owner 裁决**先按 tool 登记真实状态**，待补齐发布链后再提 ADR 转 `release`。`Image-DuoModel-Local` 为合规 Train Case 名入 Train Case 表；`whalemate`（全小写产品名，非 Train Case）按 §1 入例外名表并在命名豁免声明行补录该名。本表 42 → 54 行（例外名 10 → 11 + Train Case 42 → 43），合计 62 → 64 仓（54 + 10 备份仓）；lifecycle active 24 → 26、maintenance 25 / archived 13 不变。`check-release-standard.sh` 的 `EXCLUDED_FROM_RELEASE_STANDARD` 51 → 53 项已同步。
 >
@@ -861,10 +862,12 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
   排除 `ssh-backup/` 与私钥，不限制正常提交。
 - 命名例外（品牌 / 系统保留名 / 已登记债务）见 §4；任何新增例外须先落 ADR，再改 §4。
 
-### 15.6 64 仓定位
+### 15.6 63 仓定位
 
 完整定位（含 visibility、distribution、risk、backup）以 `governance/desired-state.json`
-为唯一事实来源；§4 的 54 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
+为唯一事实来源；§4 的 53 行是其中**非备份仓**的命名台账，10 个 `backup` 仓不登记。
+已裁决**不登记、待删除**的远端仓（当前仅 `whalemate`）以 JSON 顶层 `pending_delete` 声明：不计入 63 仓、
+不计未登记漂移、不参与 §1 命名校验与发布审计，台账口径见 `GOVERNANCE-EXCLUSIONS.md` §十二，机制见 ADR-0024。
 修改定位须同时改文档与 JSON，`check-governance-consistency.sh` 会校验计数一致。
 
 ### 15.7 归档操作规范（暂时归档，2026-10-23 新增）
@@ -1107,7 +1110,7 @@ active 与 maintenance 的**适用条款完全相同**，差别只有变更许�
 1. **远端载体优先**：每条可执行检查必须有远端载体——PR / 推送门禁、`schedule`（公开仓走免费分钟数）、或 `workflow_dispatch` 手动，三者按 §15.2 频度择一或并存。**本地机器不得承载任何定时任务**。
 2. **天然本地载体**（允许、且只能留在本地）：`.githooks/pre-push`（私有仓无服务器侧保护的替代控制，ADR-0004）、`check-agents-md-size.sh`（AGENTS.md 不入库，CI 不可见）、`scaffold-repo.sh`（建仓动作），以及第 4 条补齐前的私有仓完整核对。
 3. **口径一致**：远端与本地跑同一脚本、同一退出码纪律（0=clean；1=gap/drift/FAIL；2=无法判定时失败关闭），不得出现「同一承诺两种判定」。
-4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 31 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 64 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
+4. **私有仓远端盲区（可选补齐）**：Actions 默认令牌对 31 个私有仓记 `UNVERIFIABLE`（§15.2）；可配置只读 fine-grained PAT 到本仓 Secret `GOVERNANCE_READ_PAT`（权限取最小：Contents / Metadata / Administration 只读，设到期日）。`drift-audit.yml` 在 **schedule / workflow_dispatch** 使用它，**PR 触发表达式层固定回退默认令牌**——Secret 不进任何 PR 运行上下文。配置后周检即远程覆盖 63 仓，无需 owner 本机凭据；同时按「远程可见而 desired-state 无」判 DRIFT，自动发现未登记仓（公开仓无需 PAT，私有仓需 PAT）。
 5. **私有仓不加定时作业**：私有仓 Actions 分钟数受账号账单限制（§10.6 实测欠账），不得为其新增 `schedule`。
 
 **代价（如实写明）**：远端载体受 GitHub 可用性影响；`UNVERIFIABLE`/`PARTIAL` 不是通过——未配置 `GOVERNANCE_READ_PAT` 时，私有仓完整核对仍依赖 owner 本地凭据（第 2 条）。
