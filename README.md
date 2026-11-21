@@ -6,7 +6,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/ReSerendipity/.github)
 ![PRs welcome](https://img.shields.io/badge/PRs%20welcome-brightgreen)
 ![Governance](https://img.shields.io/badge/governance-REPOSITORY_GUIDELINES_%C2%A71%E2%80%93%C2%A721-6e40c9)
-![Governed repos](https://img.shields.io/badge/governed%20repos-62-1a7f37)
+![Governed repos](https://img.shields.io/badge/governed%20repos-64-1a7f37)
 
 [中文](#中文) | [English](#english)
 
@@ -49,7 +49,7 @@
 
 **③ 64 仓治理分档矩阵：lifecycle × delivery**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261120-r1.svg" alt="62 仓治理分档矩阵：lifecycle × delivery" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261121-r1.svg" alt="64 仓治理分档矩阵：lifecycle × delivery" width="880">
 
 lifecycle（active 26 / maintenance 25 / archived 13）决定变更许可与审计频率；delivery（policy 1 / release 11 / library 1 / service 12 / tool 24 / content 5 / backup 10）决定适用条款。逐仓定位以 `governance/desired-state.json` 为唯一事实来源。
 
@@ -200,7 +200,7 @@ Per `REPOSITORY_GUIDELINES.md` §17: four pre-work checks before any task (fetch
 
 **③ 64-repo tiering matrix: lifecycle × delivery**
 
-<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261120-r1.svg" alt="64-repo tiering matrix: lifecycle × delivery" width="880">
+<img src="https://gcore.jsdelivr.net/gh/ReSerendipity/.github@main/docs/assets/readme-govgithub-3-20261121-r1.svg" alt="64-repo tiering matrix: lifecycle × delivery" width="880">
 
 Lifecycle (active 26 / maintenance 25 / archived 13) decides change permission and audit cadence; delivery (policy 1 / release 11 / library 1 / service 12 / tool 24 / content 5 / backup 10) decides which clauses apply. Per-repo positioning is authoritative only in `governance/desired-state.json`.
 

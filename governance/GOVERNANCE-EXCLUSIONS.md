@@ -42,7 +42,7 @@
 
 | 脚本 | 清单名 | 项数 | 覆盖维度 |
 |---|---|---|---|
-| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 52 仓全部参与 §1 命名校验 |
+| `check-repo-registry.sh` | `EXCLUDED_FROM_REGISTRY` | **10** | 差集 B/C 只看备份仓；其余 54 仓全部参与 §1 命名校验 |
 | `check-release-standard.sh` | `EXCLUDED_FROM_RELEASE_STANDARD` | **53** | §10 收敛审计只覆盖 11 个 `release` 仓（64 − 11 = 53） |
 
 > 如某备份仓**转为公开**，仍需保留在 `EXCLUDED_FROM_REGISTRY`（否则差集 B/C 报红）——脚本注释已写明。
@@ -53,7 +53,7 @@
 
 | 分组 | 数量 | 说明 |
 |---|---|---|
-| **§4 登记（含规范仓）** | 52 | 按 §15 派生适用条款；命名例外见 §4 |
+| **§4 登记（含规范仓）** | 54 | 按 §15 派生适用条款；命名例外见 §4 |
 | **备份仓** | 10 | `delivery=backup`，只按 §3 管理，不进 §4 |
 | 合计 | 64 | 台账口径 64 个；2026-11-20 新增登记 Image-DuoModel-Local / whalemate，**零差额**（`AI-Girls-Comic` 新入账；`Saltline-plus`、`winlator-app` 已按业主裁决登记入账，`dsh-superagent-archive` 远程 404 已移出） |
 
@@ -61,7 +61,7 @@
 
 ### §4 台账现状（2026-11-11 复核）
 
-- 台账登记 **52 条**（例外名 10 + Train Case 42），覆盖全部非 `backup` 仓。
+- 台账登记 **54 条**（例外名 11 + Train Case 43），覆盖全部非 `backup` 仓。
 - 台账之外的备份仓 **10 个**，全部在 `EXCLUDED_FROM_REGISTRY` 显式声明。
 - 合并前 `check-repo-registry.sh` 与 `check-governance-consistency.sh` 必须 `rc=0`。
 
